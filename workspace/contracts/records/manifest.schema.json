@@ -1,0 +1,1364 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "maxLength": 256
+    },
+    "ruleset_version": {
+      "type": "string",
+      "maxLength": 256
+    },
+    "physics_version": {
+      "type": "string",
+      "maxLength": 256
+    },
+    "map_version": {
+      "type": "string",
+      "maxLength": 256
+    },
+    "bot_protocol_version": {
+      "const": "1.0.0"
+    },
+    "match_id": {
+      "type": "string",
+      "maxLength": 256
+    },
+    "seed": {
+      "type": "string",
+      "pattern": "-?(0|[1-9][0-9]*)",
+      "maxLength": 20
+    },
+    "run_mode": {
+      "enum": [
+        "formal",
+        "diagnostic"
+      ]
+    },
+    "tick_rate_hz": {
+      "const": 120
+    },
+    "regulation_ticks": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10000000
+    },
+    "rules_config": {
+      "type": "object",
+      "properties": {
+        "tick_rate_hz": {
+          "const": 120
+        },
+        "decision_interval_ticks": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "regulation_ticks": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "plate_appearance_setup_ticks": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "pitch_reset_ticks": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "half_inning_change_ticks": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "pitch_release_deadline_ticks": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "max_ticks": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "max_pitches": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "settle_ticks": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "loose_ball_recovery_ticks": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "swing_delay_ticks": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "swing_duration_ticks": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "half_run_cap": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "half_pa_cap": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        }
+      },
+      "required": [
+        "tick_rate_hz",
+        "decision_interval_ticks",
+        "regulation_ticks",
+        "plate_appearance_setup_ticks",
+        "pitch_reset_ticks",
+        "half_inning_change_ticks",
+        "pitch_release_deadline_ticks",
+        "max_ticks",
+        "max_pitches",
+        "settle_ticks",
+        "loose_ball_recovery_ticks",
+        "swing_delay_ticks",
+        "swing_duration_ticks",
+        "half_run_cap",
+        "half_pa_cap"
+      ],
+      "additionalProperties": false
+    },
+    "physics_config": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "const": "1.0.0-dev.P4"
+        },
+        "gravity_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 256
+        },
+        "ball_radius_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 256
+        },
+        "ground_restitution_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 256
+        },
+        "wall_restitution_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 256
+        },
+        "ground_retention_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 256
+        },
+        "rolling_deceleration_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 256
+        },
+        "stop_speed_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 256
+        },
+        "rolling_threshold_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 256
+        },
+        "player_speed_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 256
+        },
+        "player_acceleration_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 256
+        },
+        "catch_radius_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 256
+        },
+        "catch_height_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 256
+        },
+        "tag_radius_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 256
+        },
+        "pitch_height_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 256
+        },
+        "throw_height_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 256
+        },
+        "pitch_min_speed_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 256
+        },
+        "pitch_max_speed_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 256
+        },
+        "throw_min_speed_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 256
+        },
+        "throw_max_speed_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 256
+        },
+        "bat_min_speed_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 256
+        },
+        "bat_max_speed_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 256
+        }
+      },
+      "required": [
+        "version",
+        "gravity_q",
+        "ball_radius_q",
+        "ground_restitution_q",
+        "wall_restitution_q",
+        "ground_retention_q",
+        "rolling_deceleration_q",
+        "stop_speed_q",
+        "rolling_threshold_q",
+        "player_speed_q",
+        "player_acceleration_q",
+        "catch_radius_q",
+        "catch_height_q",
+        "tag_radius_q",
+        "pitch_height_q",
+        "throw_height_q",
+        "pitch_min_speed_q",
+        "pitch_max_speed_q",
+        "throw_min_speed_q",
+        "throw_max_speed_q",
+        "bat_min_speed_q",
+        "bat_max_speed_q"
+      ],
+      "additionalProperties": false
+    },
+    "field_config": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "const": "1.0.0-dev.P4"
+        },
+        "base_radius_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 256
+        },
+        "wall_radius_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 256
+        },
+        "wall_height_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 256
+        },
+        "xmin_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 256
+        },
+        "xmax_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 256
+        },
+        "ymin_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 256
+        },
+        "ymax_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 256
+        },
+        "strike_xmin_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 256
+        },
+        "strike_xmax_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 256
+        },
+        "strike_zmin_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 256
+        },
+        "strike_zmax_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 256
+        },
+        "bases_q": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "-?(0|[1-9][0-9]*)",
+              "maxLength": 256
+            },
+            "maxItems": 2,
+            "minItems": 2
+          },
+          "maxItems": 4,
+          "minItems": 4
+        },
+        "defense_q": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "-?(0|[1-9][0-9]*)",
+              "maxLength": 256
+            },
+            "maxItems": 2,
+            "minItems": 2
+          },
+          "maxItems": 9,
+          "minItems": 9
+        },
+        "bat_box_q": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "-?(0|[1-9][0-9]*)",
+            "maxLength": 256
+          },
+          "maxItems": 6,
+          "minItems": 6
+        },
+        "body_box_q": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "-?(0|[1-9][0-9]*)",
+            "maxLength": 256
+          },
+          "maxItems": 6,
+          "minItems": 6
+        }
+      },
+      "required": [
+        "version",
+        "base_radius_q",
+        "wall_radius_q",
+        "wall_height_q",
+        "xmin_q",
+        "xmax_q",
+        "ymin_q",
+        "ymax_q",
+        "strike_xmin_q",
+        "strike_xmax_q",
+        "strike_zmin_q",
+        "strike_zmax_q",
+        "bases_q",
+        "defense_q",
+        "bat_box_q",
+        "body_box_q"
+      ],
+      "additionalProperties": false
+    },
+    "config": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "version": {
+          "enum": [
+            "1.0.0-dev.P4",
+            "1.0.0-dev.P5"
+          ]
+        },
+        "rules": {
+          "type": "object",
+          "properties": {
+            "tick_rate_hz": {
+              "const": 120
+            },
+            "decision_interval_ticks": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000000
+            },
+            "regulation_ticks": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000000
+            },
+            "plate_appearance_setup_ticks": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000000
+            },
+            "pitch_reset_ticks": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000000
+            },
+            "half_inning_change_ticks": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000000
+            },
+            "pitch_release_deadline_ticks": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000000
+            },
+            "max_ticks": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000000
+            },
+            "max_pitches": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000000
+            },
+            "settle_ticks": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000000
+            },
+            "loose_ball_recovery_ticks": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000000
+            },
+            "swing_delay_ticks": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000000
+            },
+            "swing_duration_ticks": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000000
+            },
+            "half_run_cap": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000000
+            },
+            "half_pa_cap": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000000
+            }
+          },
+          "required": [
+            "tick_rate_hz",
+            "decision_interval_ticks",
+            "regulation_ticks",
+            "plate_appearance_setup_ticks",
+            "pitch_reset_ticks",
+            "half_inning_change_ticks",
+            "pitch_release_deadline_ticks",
+            "max_ticks",
+            "max_pitches",
+            "settle_ticks",
+            "loose_ball_recovery_ticks",
+            "swing_delay_ticks",
+            "swing_duration_ticks",
+            "half_run_cap",
+            "half_pa_cap"
+          ],
+          "additionalProperties": false
+        },
+        "physics": {
+          "type": "object",
+          "properties": {
+            "version": {
+              "const": "1.0.0-dev.P4"
+            },
+            "gravity_q": {
+              "type": "string",
+              "pattern": "-?(0|[1-9][0-9]*)",
+              "maxLength": 256
+            },
+            "ball_radius_q": {
+              "type": "string",
+              "pattern": "-?(0|[1-9][0-9]*)",
+              "maxLength": 256
+            },
+            "ground_restitution_q": {
+              "type": "string",
+              "pattern": "-?(0|[1-9][0-9]*)",
+              "maxLength": 256
+            },
+            "wall_restitution_q": {
+              "type": "string",
+              "pattern": "-?(0|[1-9][0-9]*)",
+              "maxLength": 256
+            },
+            "ground_retention_q": {
+              "type": "string",
+              "pattern": "-?(0|[1-9][0-9]*)",
+              "maxLength": 256
+            },
+            "rolling_deceleration_q": {
+              "type": "string",
+              "pattern": "-?(0|[1-9][0-9]*)",
+              "maxLength": 256
+            },
+            "stop_speed_q": {
+              "type": "string",
+              "pattern": "-?(0|[1-9][0-9]*)",
+              "maxLength": 256
+            },
+            "rolling_threshold_q": {
+              "type": "string",
+              "pattern": "-?(0|[1-9][0-9]*)",
+              "maxLength": 256
+            },
+            "player_speed_q": {
+              "type": "string",
+              "pattern": "-?(0|[1-9][0-9]*)",
+              "maxLength": 256
+            },
+            "player_acceleration_q": {
+              "type": "string",
+              "pattern": "-?(0|[1-9][0-9]*)",
+              "maxLength": 256
+            },
+            "catch_radius_q": {
+              "type": "string",
+              "pattern": "-?(0|[1-9][0-9]*)",
+              "maxLength": 256
+            },
+            "catch_height_q": {
+              "type": "string",
+              "pattern": "-?(0|[1-9][0-9]*)",
+              "maxLength": 256
+            },
+            "tag_radius_q": {
+              "type": "string",
+              "pattern": "-?(0|[1-9][0-9]*)",
+              "maxLength": 256
+            },
+            "pitch_height_q": {
+              "type": "string",
+              "pattern": "-?(0|[1-9][0-9]*)",
+              "maxLength": 256
+            },
+            "throw_height_q": {
+              "type": "string",
+              "pattern": "-?(0|[1-9][0-9]*)",
+              "maxLength": 256
+            },
+            "pitch_min_speed_q": {
+              "type": "string",
+              "pattern": "-?(0|[1-9][0-9]*)",
+              "maxLength": 256
+            },
+            "pitch_max_speed_q": {
+              "type": "string",
+              "pattern": "-?(0|[1-9][0-9]*)",
+              "maxLength": 256
+            },
+            "throw_min_speed_q": {
+              "type": "string",
+              "pattern": "-?(0|[1-9][0-9]*)",
+              "maxLength": 256
+            },
+            "throw_max_speed_q": {
+              "type": "string",
+              "pattern": "-?(0|[1-9][0-9]*)",
+              "maxLength": 256
+            },
+            "bat_min_speed_q": {
+              "type": "string",
+              "pattern": "-?(0|[1-9][0-9]*)",
+              "maxLength": 256
+            },
+            "bat_max_speed_q": {
+              "type": "string",
+              "pattern": "-?(0|[1-9][0-9]*)",
+              "maxLength": 256
+            }
+          },
+          "required": [
+            "version",
+            "gravity_q",
+            "ball_radius_q",
+            "ground_restitution_q",
+            "wall_restitution_q",
+            "ground_retention_q",
+            "rolling_deceleration_q",
+            "stop_speed_q",
+            "rolling_threshold_q",
+            "player_speed_q",
+            "player_acceleration_q",
+            "catch_radius_q",
+            "catch_height_q",
+            "tag_radius_q",
+            "pitch_height_q",
+            "throw_height_q",
+            "pitch_min_speed_q",
+            "pitch_max_speed_q",
+            "throw_min_speed_q",
+            "throw_max_speed_q",
+            "bat_min_speed_q",
+            "bat_max_speed_q"
+          ],
+          "additionalProperties": false
+        },
+        "field": {
+          "type": "object",
+          "properties": {
+            "version": {
+              "const": "1.0.0-dev.P4"
+            },
+            "base_radius_q": {
+              "type": "string",
+              "pattern": "-?(0|[1-9][0-9]*)",
+              "maxLength": 256
+            },
+            "wall_radius_q": {
+              "type": "string",
+              "pattern": "-?(0|[1-9][0-9]*)",
+              "maxLength": 256
+            },
+            "wall_height_q": {
+              "type": "string",
+              "pattern": "-?(0|[1-9][0-9]*)",
+              "maxLength": 256
+            },
+            "xmin_q": {
+              "type": "string",
+              "pattern": "-?(0|[1-9][0-9]*)",
+              "maxLength": 256
+            },
+            "xmax_q": {
+              "type": "string",
+              "pattern": "-?(0|[1-9][0-9]*)",
+              "maxLength": 256
+            },
+            "ymin_q": {
+              "type": "string",
+              "pattern": "-?(0|[1-9][0-9]*)",
+              "maxLength": 256
+            },
+            "ymax_q": {
+              "type": "string",
+              "pattern": "-?(0|[1-9][0-9]*)",
+              "maxLength": 256
+            },
+            "strike_xmin_q": {
+              "type": "string",
+              "pattern": "-?(0|[1-9][0-9]*)",
+              "maxLength": 256
+            },
+            "strike_xmax_q": {
+              "type": "string",
+              "pattern": "-?(0|[1-9][0-9]*)",
+              "maxLength": 256
+            },
+            "strike_zmin_q": {
+              "type": "string",
+              "pattern": "-?(0|[1-9][0-9]*)",
+              "maxLength": 256
+            },
+            "strike_zmax_q": {
+              "type": "string",
+              "pattern": "-?(0|[1-9][0-9]*)",
+              "maxLength": 256
+            },
+            "bases_q": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "-?(0|[1-9][0-9]*)",
+                  "maxLength": 256
+                },
+                "maxItems": 2,
+                "minItems": 2
+              },
+              "maxItems": 4,
+              "minItems": 4
+            },
+            "defense_q": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "-?(0|[1-9][0-9]*)",
+                  "maxLength": 256
+                },
+                "maxItems": 2,
+                "minItems": 2
+              },
+              "maxItems": 9,
+              "minItems": 9
+            },
+            "bat_box_q": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "-?(0|[1-9][0-9]*)",
+                "maxLength": 256
+              },
+              "maxItems": 6,
+              "minItems": 6
+            },
+            "body_box_q": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "-?(0|[1-9][0-9]*)",
+                "maxLength": 256
+              },
+              "maxItems": 6,
+              "minItems": 6
+            }
+          },
+          "required": [
+            "version",
+            "base_radius_q",
+            "wall_radius_q",
+            "wall_height_q",
+            "xmin_q",
+            "xmax_q",
+            "ymin_q",
+            "ymax_q",
+            "strike_xmin_q",
+            "strike_xmax_q",
+            "strike_zmin_q",
+            "strike_zmax_q",
+            "bases_q",
+            "defense_q",
+            "bat_box_q",
+            "body_box_q"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "version",
+        "rules",
+        "physics",
+        "field"
+      ],
+      "additionalProperties": false
+    },
+    "bots": {
+      "type": "object",
+      "properties": {
+        "away": {
+          "type": "object",
+          "properties": {
+            "program_sha256": {
+              "type": "string",
+              "pattern": "[0-9a-f]{64}"
+            },
+            "seed": {
+              "type": "string",
+              "pattern": "-?(0|[1-9][0-9]*)",
+              "maxLength": 20
+            },
+            "resource_limits": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "const": "host_ready"
+                },
+                "memory_limit_bytes": {
+                  "const": 268435456
+                },
+                "active_process_limit": {
+                  "const": 2
+                }
+              },
+              "required": [
+                "type",
+                "memory_limit_bytes",
+                "active_process_limit"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "program_sha256",
+            "seed",
+            "resource_limits"
+          ],
+          "additionalProperties": false
+        },
+        "home": {
+          "type": "object",
+          "properties": {
+            "program_sha256": {
+              "type": "string",
+              "pattern": "[0-9a-f]{64}"
+            },
+            "seed": {
+              "type": "string",
+              "pattern": "-?(0|[1-9][0-9]*)",
+              "maxLength": 20
+            },
+            "resource_limits": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "const": "host_ready"
+                },
+                "memory_limit_bytes": {
+                  "const": 268435456
+                },
+                "active_process_limit": {
+                  "const": 2
+                }
+              },
+              "required": [
+                "type",
+                "memory_limit_bytes",
+                "active_process_limit"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "program_sha256",
+            "seed",
+            "resource_limits"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "numeric_format": {
+      "const": "Q32.32"
+    },
+    "canonicalization_version": {
+      "const": "bb-canon-v1"
+    },
+    "hash_algorithm": {
+      "const": "SHA-256"
+    },
+    "file_index": {
+      "type": "object",
+      "properties": {
+        "initial_state.json": {
+          "type": "object",
+          "properties": {
+            "size_bytes": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1073741824
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "[0-9a-f]{64}"
+            }
+          },
+          "required": [
+            "size_bytes",
+            "sha256"
+          ],
+          "additionalProperties": false
+        },
+        "actions.jsonl": {
+          "type": "object",
+          "properties": {
+            "size_bytes": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1073741824
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "[0-9a-f]{64}"
+            }
+          },
+          "required": [
+            "size_bytes",
+            "sha256"
+          ],
+          "additionalProperties": false
+        },
+        "events.jsonl": {
+          "type": "object",
+          "properties": {
+            "size_bytes": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1073741824
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "[0-9a-f]{64}"
+            }
+          },
+          "required": [
+            "size_bytes",
+            "sha256"
+          ],
+          "additionalProperties": false
+        },
+        "checkpoints.jsonl": {
+          "type": "object",
+          "properties": {
+            "size_bytes": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1073741824
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "[0-9a-f]{64}"
+            }
+          },
+          "required": [
+            "size_bytes",
+            "sha256"
+          ],
+          "additionalProperties": false
+        },
+        "summary.json": {
+          "type": "object",
+          "properties": {
+            "size_bytes": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1073741824
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "[0-9a-f]{64}"
+            }
+          },
+          "required": [
+            "size_bytes",
+            "sha256"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "record_status": {
+      "enum": [
+        "recording",
+        "complete",
+        "aborted",
+        "incomplete"
+      ]
+    },
+    "engine_build_id": {
+      "type": "string",
+      "pattern": "[0-9a-f]{64}"
+    },
+    "native_build_id": {
+      "type": "string",
+      "pattern": "[0-9a-f]{64}"
+    },
+    "rosters": {
+      "type": "object",
+      "properties": {
+        "away": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "maxLength": 256
+              },
+              "role": {
+                "type": "string",
+                "maxLength": 256
+              }
+            },
+            "required": [
+              "id",
+              "role"
+            ],
+            "additionalProperties": false
+          },
+          "maxItems": 9,
+          "minItems": 9
+        },
+        "home": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "maxLength": 256
+              },
+              "role": {
+                "type": "string",
+                "maxLength": 256
+              }
+            },
+            "required": [
+              "id",
+              "role"
+            ],
+            "additionalProperties": false
+          },
+          "maxItems": 9,
+          "minItems": 9
+        }
+      },
+      "required": [
+        "away",
+        "home"
+      ],
+      "additionalProperties": false
+    },
+    "batting_orders": {
+      "type": "object",
+      "properties": {
+        "away": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "maxItems": 9,
+          "minItems": 9
+        },
+        "home": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "maxItems": 9,
+          "minItems": 9
+        }
+      },
+      "required": [
+        "away",
+        "home"
+      ],
+      "additionalProperties": false
+    },
+    "initial_defense": {
+      "type": "object",
+      "properties": {
+        "away.P01": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "-?(0|[1-9][0-9]*)",
+            "maxLength": 20
+          },
+          "maxItems": 2,
+          "minItems": 2
+        },
+        "away.P02": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "-?(0|[1-9][0-9]*)",
+            "maxLength": 20
+          },
+          "maxItems": 2,
+          "minItems": 2
+        },
+        "away.P03": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "-?(0|[1-9][0-9]*)",
+            "maxLength": 20
+          },
+          "maxItems": 2,
+          "minItems": 2
+        },
+        "away.P04": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "-?(0|[1-9][0-9]*)",
+            "maxLength": 20
+          },
+          "maxItems": 2,
+          "minItems": 2
+        },
+        "away.P05": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "-?(0|[1-9][0-9]*)",
+            "maxLength": 20
+          },
+          "maxItems": 2,
+          "minItems": 2
+        },
+        "away.P06": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "-?(0|[1-9][0-9]*)",
+            "maxLength": 20
+          },
+          "maxItems": 2,
+          "minItems": 2
+        },
+        "away.P07": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "-?(0|[1-9][0-9]*)",
+            "maxLength": 20
+          },
+          "maxItems": 2,
+          "minItems": 2
+        },
+        "away.P08": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "-?(0|[1-9][0-9]*)",
+            "maxLength": 20
+          },
+          "maxItems": 2,
+          "minItems": 2
+        },
+        "away.P09": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "-?(0|[1-9][0-9]*)",
+            "maxLength": 20
+          },
+          "maxItems": 2,
+          "minItems": 2
+        },
+        "home.P01": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "-?(0|[1-9][0-9]*)",
+            "maxLength": 20
+          },
+          "maxItems": 2,
+          "minItems": 2
+        },
+        "home.P02": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "-?(0|[1-9][0-9]*)",
+            "maxLength": 20
+          },
+          "maxItems": 2,
+          "minItems": 2
+        },
+        "home.P03": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "-?(0|[1-9][0-9]*)",
+            "maxLength": 20
+          },
+          "maxItems": 2,
+          "minItems": 2
+        },
+        "home.P04": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "-?(0|[1-9][0-9]*)",
+            "maxLength": 20
+          },
+          "maxItems": 2,
+          "minItems": 2
+        },
+        "home.P05": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "-?(0|[1-9][0-9]*)",
+            "maxLength": 20
+          },
+          "maxItems": 2,
+          "minItems": 2
+        },
+        "home.P06": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "-?(0|[1-9][0-9]*)",
+            "maxLength": 20
+          },
+          "maxItems": 2,
+          "minItems": 2
+        },
+        "home.P07": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "-?(0|[1-9][0-9]*)",
+            "maxLength": 20
+          },
+          "maxItems": 2,
+          "minItems": 2
+        },
+        "home.P08": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "-?(0|[1-9][0-9]*)",
+            "maxLength": 20
+          },
+          "maxItems": 2,
+          "minItems": 2
+        },
+        "home.P09": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "-?(0|[1-9][0-9]*)",
+            "maxLength": 20
+          },
+          "maxItems": 2,
+          "minItems": 2
+        }
+      },
+      "required": [
+        "away.P01",
+        "away.P02",
+        "away.P03",
+        "away.P04",
+        "away.P05",
+        "away.P06",
+        "away.P07",
+        "away.P08",
+        "away.P09",
+        "home.P01",
+        "home.P02",
+        "home.P03",
+        "home.P04",
+        "home.P05",
+        "home.P06",
+        "home.P07",
+        "home.P08",
+        "home.P09"
+      ],
+      "additionalProperties": false
+    },
+    "native_build": {
+      "type": "object",
+      "properties": {
+        "source_sha256": {
+          "type": "string",
+          "pattern": "[0-9a-f]{64}"
+        },
+        "binary_sha256": {
+          "type": "string",
+          "pattern": "[0-9a-f]{64}"
+        },
+        "compiler_version": {
+          "type": "string",
+          "maxLength": 256
+        },
+        "flags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "maxItems": 10
+        }
+      },
+      "required": [
+        "source_sha256",
+        "binary_sha256",
+        "compiler_version",
+        "flags"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schema_version",
+    "ruleset_version",
+    "physics_version",
+    "map_version",
+    "bot_protocol_version",
+    "match_id",
+    "seed",
+    "run_mode",
+    "tick_rate_hz",
+    "regulation_ticks",
+    "rules_config",
+    "physics_config",
+    "field_config",
+    "config",
+    "bots",
+    "numeric_format",
+    "canonicalization_version",
+    "hash_algorithm",
+    "file_index",
+    "record_status",
+    "engine_build_id",
+    "native_build_id",
+    "rosters",
+    "batting_orders",
+    "initial_defense",
+    "native_build"
+  ],
+  "additionalProperties": false
+}

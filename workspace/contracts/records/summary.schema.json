@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "status": {
+      "enum": [
+        "completed",
+        "aborted"
+      ]
+    },
+    "score": {
+      "type": "object",
+      "properties": {
+        "away": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "home": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        }
+      },
+      "required": [
+        "away",
+        "home"
+      ],
+      "additionalProperties": false
+    },
+    "winner": {
+      "anyOf": [
+        {
+          "enum": [
+            "away",
+            "home"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "completed_halves": {
+      "type": "object",
+      "properties": {
+        "away": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "home": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        }
+      },
+      "required": [
+        "away",
+        "home"
+      ],
+      "additionalProperties": false
+    },
+    "finish_after_inning": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "sim_tick": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10000000
+    },
+    "reason": {
+      "type": "string",
+      "maxLength": 256
+    },
+    "final_state_hash": {
+      "type": "string",
+      "pattern": "[0-9a-f]{64}"
+    }
+  },
+  "required": [
+    "status",
+    "score",
+    "winner",
+    "completed_halves",
+    "finish_after_inning",
+    "sim_tick",
+    "reason",
+    "final_state_hash"
+  ],
+  "additionalProperties": false
+}

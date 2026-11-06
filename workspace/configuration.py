@@ -3,7 +3,8 @@ from pathlib import Path
 from numeric import strict_loads
 
 ROOT = Path(__file__).resolve().parent
-VERSION = "1.0.0-dev.P4"
+VERSION = "1.0.0-dev.P5"
+SUPPORTED_RULES = ("1.0.0-dev.P4", VERSION)
 
 
 def default_config():
@@ -32,7 +33,7 @@ def validate_config(config):
             if expected.lstrip("-").isdigit():
                 if str(int(value)) != value or abs(int(value)) > 1000 * (1 << 32):
                     raise ValueError(f"{path}: invalid_fixed_point")
-            elif value != expected:
+            elif value != expected and not (path=="config.version" and value in SUPPORTED_RULES):
                 raise ValueError(f"{path}: unsupported_version")
     check(config, template, "config")
     r, p, f = (config[k] for k in ("rules", "physics", "field"))

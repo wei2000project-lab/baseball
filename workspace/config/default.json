@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0-dev.P4",
+  "version": "1.0.0-dev.P5",
   "rules": {
     "tick_rate_hz": 120,
     "decision_interval_ticks": 6,

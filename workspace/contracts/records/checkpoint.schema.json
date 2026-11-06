@@ -1,0 +1,824 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "stage": {
+      "const": "POST_BOUNDARY"
+    },
+    "resume_tick": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10000000
+    },
+    "state": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "enum": [
+            "1.0.0-dev.P4",
+            "1.0.0-dev.P5"
+          ]
+        },
+        "sim_tick": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "phase": {
+          "enum": [
+            "INIT",
+            "PLATE_APPEARANCE_SETUP",
+            "PITCH_READY",
+            "PITCH_IN_FLIGHT",
+            "PITCH_RESET",
+            "BALL_IN_PLAY",
+            "HALF_TRANSITION",
+            "GAME_OVER",
+            "ABORTED",
+            "BALL_RECOVERY"
+          ]
+        },
+        "phase_start_tick": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "phase_deadline_tick": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "inning": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "half": {
+          "type": "string",
+          "pattern": "[\\s\\S]*",
+          "maxLength": 256
+        },
+        "transition_from_half": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 256
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "pending_transition": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 256
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "regulation_expired": {
+          "type": "boolean"
+        },
+        "finish_after_inning": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "score": {
+          "type": "object",
+          "properties": {
+            "away": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000000
+            },
+            "home": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000000
+            }
+          },
+          "required": [
+            "away",
+            "home"
+          ],
+          "additionalProperties": false
+        },
+        "outs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "balls": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "strikes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "batting_order_index_by_team": {
+          "type": "object",
+          "properties": {
+            "away": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000000
+            },
+            "home": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000000
+            }
+          },
+          "required": [
+            "away",
+            "home"
+          ],
+          "additionalProperties": false
+        },
+        "completed_halves": {
+          "type": "object",
+          "properties": {
+            "away": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000000
+            },
+            "home": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000000
+            }
+          },
+          "required": [
+            "away",
+            "home"
+          ],
+          "additionalProperties": false
+        },
+        "play_id": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "plate_appearance_id": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "pitch_id": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "pitches_total": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "ball": {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "type": "string",
+              "pattern": "[\\s\\S]*",
+              "maxLength": 256
+            },
+            "position_q": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "-?(0|[1-9][0-9]*)",
+                "maxLength": 256
+              },
+              "maxItems": 3,
+              "minItems": 3
+            },
+            "velocity_q": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "-?(0|[1-9][0-9]*)",
+                "maxLength": 256
+              },
+              "maxItems": 3,
+              "minItems": 3
+            },
+            "holder_id": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 256
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "origin": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 256
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "has_touched_ground_since_bat": {
+              "type": "boolean"
+            },
+            "fair_foul_status": {
+              "type": "string",
+              "pattern": "[\\s\\S]*",
+              "maxLength": 256
+            }
+          },
+          "required": [
+            "mode",
+            "position_q",
+            "velocity_q",
+            "holder_id",
+            "origin",
+            "has_touched_ground_since_bat",
+            "fair_foul_status"
+          ],
+          "additionalProperties": false
+        },
+        "players": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "[\\s\\S]*",
+                "maxLength": 256
+              },
+              "team_id": {
+                "type": "string",
+                "pattern": "[\\s\\S]*",
+                "maxLength": 256
+              },
+              "role": {
+                "type": "string",
+                "pattern": "[\\s\\S]*",
+                "maxLength": 256
+              },
+              "position_q": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "-?(0|[1-9][0-9]*)",
+                  "maxLength": 256
+                },
+                "maxItems": 2,
+                "minItems": 2
+              },
+              "velocity_q": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "-?(0|[1-9][0-9]*)",
+                  "maxLength": 256
+                },
+                "maxItems": 2,
+                "minItems": 2
+              },
+              "active_intents": {
+                "type": "object",
+                "properties": {
+                  "move": {
+                    "type": "array",
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "items": {
+                      "type": "string",
+                      "pattern": "-?(0|[1-9][0-9]*)",
+                      "maxLength": 20
+                    }
+                  },
+                  "catch": {
+                    "type": "boolean"
+                  },
+                  "tag": {
+                    "type": "string",
+                    "maxLength": 256
+                  },
+                  "appeal_return": {
+                    "type": "string",
+                    "maxLength": 256
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "id",
+              "team_id",
+              "role",
+              "position_q",
+              "velocity_q",
+              "active_intents"
+            ],
+            "additionalProperties": false
+          },
+          "maxItems": 18,
+          "minItems": 18
+        },
+        "runners": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "maxLength": 256
+              },
+              "origin_base": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 10000000
+              },
+              "last_legal_base": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 10000000
+              },
+              "target_base": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 10000000
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "force_obligation": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 10000000
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "retouch_obligation": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 10000000
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "alive": {
+                "type": "boolean"
+              },
+              "touched_bases": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 10000000
+                },
+                "maxItems": 100
+              },
+              "leg_base": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 10000000
+              },
+              "running_direction": {
+                "enum": [
+                  -1,
+                  1
+                ]
+              },
+              "initial_order": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 10000000
+              },
+              "has_first": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "id",
+              "origin_base",
+              "last_legal_base",
+              "target_base",
+              "force_obligation",
+              "retouch_obligation",
+              "alive",
+              "touched_bases",
+              "leg_base",
+              "running_direction",
+              "initial_order",
+              "has_first"
+            ],
+            "additionalProperties": false
+          },
+          "maxItems": 9
+        },
+        "pitch_start_bases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "maxLength": 256
+              },
+              "origin_base": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 10000000
+              },
+              "last_legal_base": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 10000000
+              },
+              "target_base": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 10000000
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "force_obligation": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 10000000
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "retouch_obligation": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 10000000
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "alive": {
+                "type": "boolean"
+              },
+              "touched_bases": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 10000000
+                },
+                "maxItems": 100
+              },
+              "leg_base": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 10000000
+              },
+              "running_direction": {
+                "enum": [
+                  -1,
+                  1
+                ]
+              },
+              "initial_order": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 10000000
+              },
+              "has_first": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "id",
+              "origin_base",
+              "last_legal_base",
+              "target_base",
+              "force_obligation",
+              "retouch_obligation",
+              "alive",
+              "touched_bases",
+              "leg_base",
+              "running_direction",
+              "initial_order",
+              "has_first"
+            ],
+            "additionalProperties": false
+          },
+          "maxItems": 9
+        },
+        "force_state": {
+          "type": "array",
+          "items": {},
+          "maxItems": 10000
+        },
+        "pending_runs": {
+          "type": "array",
+          "items": {},
+          "maxItems": 10000
+        },
+        "pending_appeals": {
+          "type": "array",
+          "items": {},
+          "maxItems": 10000
+        },
+        "swing_windows": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "start_tick": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 10000000
+                },
+                "end_tick": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 10000000
+                },
+                "action": {
+                  "type": "object"
+                }
+              },
+              "required": [
+                "start_tick",
+                "end_tick",
+                "action"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "settle_counter": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "recovery_counter": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "scheduled_actions": {
+          "type": "array",
+          "items": {},
+          "maxItems": 10000
+        },
+        "pending_boundary_events": {
+          "type": "array",
+          "items": {},
+          "maxItems": 10000
+        },
+        "rng_stream_states": {
+          "type": "object",
+          "properties": {
+            "setup": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "-?(0|[1-9][0-9]*)",
+                "maxLength": 256
+              },
+              "maxItems": 10000
+            },
+            "engine": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "-?(0|[1-9][0-9]*)",
+                "maxLength": 256
+              },
+              "maxItems": 10000
+            }
+          },
+          "required": [
+            "setup",
+            "engine"
+          ],
+          "additionalProperties": false
+        },
+        "action_cursor": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "last_event_seq": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "terminal_status": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 256
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "termination_reason": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 256
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "ruleset_version": {
+          "enum": [
+            "1.0.0-dev.P4",
+            "1.0.0-dev.P5"
+          ]
+        },
+        "physics_version": {
+          "const": "1.0.0-dev.P4"
+        },
+        "map_version": {
+          "const": "1.0.0-dev.P4"
+        },
+        "config_hash": {
+          "type": "string",
+          "pattern": "[0-9a-f]{64}"
+        },
+        "batter_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 256
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "half_runs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "half_pa": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "swing_used": {
+          "type": "boolean"
+        },
+        "third_out": {
+          "anyOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "throw_start_bases": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          },
+          "maxItems": 9
+        },
+        "original_runner_order": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "maxItems": 9
+        }
+      },
+      "required": [
+        "schema_version",
+        "sim_tick",
+        "phase",
+        "phase_start_tick",
+        "phase_deadline_tick",
+        "inning",
+        "half",
+        "transition_from_half",
+        "pending_transition",
+        "regulation_expired",
+        "finish_after_inning",
+        "score",
+        "outs",
+        "balls",
+        "strikes",
+        "batting_order_index_by_team",
+        "completed_halves",
+        "play_id",
+        "plate_appearance_id",
+        "pitch_id",
+        "pitches_total",
+        "ball",
+        "players",
+        "runners",
+        "pitch_start_bases",
+        "force_state",
+        "pending_runs",
+        "pending_appeals",
+        "swing_windows",
+        "settle_counter",
+        "recovery_counter",
+        "scheduled_actions",
+        "pending_boundary_events",
+        "rng_stream_states",
+        "action_cursor",
+        "last_event_seq",
+        "terminal_status",
+        "termination_reason",
+        "ruleset_version",
+        "physics_version",
+        "map_version",
+        "config_hash",
+        "batter_id",
+        "half_runs",
+        "half_pa",
+        "swing_used",
+        "third_out",
+        "throw_start_bases",
+        "original_runner_order"
+      ],
+      "additionalProperties": false
+    },
+    "state_hash": {
+      "type": "string",
+      "pattern": "[0-9a-f]{64}"
+    },
+    "action_cursor": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10000000
+    },
+    "last_event_seq": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10000000
+    }
+  },
+  "required": [
+    "stage",
+    "resume_tick",
+    "state",
+    "state_hash",
+    "action_cursor",
+    "last_event_seq"
+  ],
+  "additionalProperties": false
+}

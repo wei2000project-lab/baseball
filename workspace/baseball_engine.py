@@ -1,6 +1,6 @@
 """The sole authoritative rules coordinator; never selects Bot strategy."""
 import copy
-from configuration import validate_config, VERSION
+from configuration import validate_config, VERSION, SUPPORTED_RULES
 from native import Native
 from numeric import digest, RNG, stream_seed, q
 from contracts import validate_named, validate, SCHEMAS
@@ -29,7 +29,7 @@ class BaseballEngine:
             for i, (role, position) in enumerate(zip(ROLES, config["field"]["defense_q"])):
                 players.append({"id": f"{team}.P{i+1:02}", "team_id": team, "role": role,
                                 "position_q": position[:], "velocity_q": ["0", "0"], "active_intents": {}})
-        return {"schema_version": VERSION, "ruleset_version": config["version"],
+        return {"schema_version": config["version"], "ruleset_version": config["version"],
                 "physics_version": config["physics"]["version"], "map_version": config["field"]["version"],
                 "config_hash": digest(config), "sim_tick": 0, "phase": "INIT", "phase_start_tick": 0,
                 "phase_deadline_tick": 0, "inning": 1, "half": "top", "transition_from_half": None,
@@ -58,8 +58,11 @@ class BaseballEngine:
 
     def restore(self, snapshot):
         validate_named(snapshot, "state")
-        if snapshot["schema_version"] != VERSION:
+        if snapshot["schema_version"] not in SUPPORTED_RULES:
             raise ValueError("unsupported_version")
+        if self.config is not None and (snapshot["schema_version"]!=self.config["version"] or snapshot["ruleset_version"]!=self.config["version"]
+            or snapshot["physics_version"]!=self.config["physics"]["version"] or snapshot["map_version"]!=self.config["field"]["version"]):
+            raise ValueError("state_configuration_version_mismatch")
         if self.config is not None and snapshot["config_hash"] != digest(self.config):
             raise ValueError("configuration_mismatch")
         self.state = copy.deepcopy(snapshot)
@@ -122,7 +125,7 @@ class BaseballEngine:
         sub = getattr(self, "_sub", 0)
         tick = s["sim_tick"]
         if sub == ONE: tick += 1; sub = 0
-        self.events.append({"schema_version": VERSION, "seq": s["last_event_seq"], "sim_tick": tick,
+        self.events.append({"schema_version": s["schema_version"], "seq": s["last_event_seq"], "sim_tick": tick,
                             "sub_tick_q": sub, "play_id": s["play_id"], "type": kind, "payload": payload})
 
     def _time(self,sub):
@@ -320,7 +323,10 @@ class BaseballEngine:
                 accepted.append(normalized)
                 results.append({"status":"accepted" if normalized == action else "clamped", "action_id":action["action_id"]})
             except (ValueError, KeyError, StopIteration, TypeError, OverflowError) as error:
-                results.append({"status":"rejected", "action_id":action.get("action_id") if isinstance(action,dict) else None, "reason":str(error)})
+                audit_id=action.get("action_id") if isinstance(action,dict) else None
+                try:digest(audit_id)
+                except ValueError:audit_id=None
+                results.append({"status":"rejected", "action_id":audit_id, "reason":str(error)})
         return {"team_id":team_id,"requested_actions":copy.deepcopy(requested),"accepted_intents":accepted,"validation_results":results}
 
     def _apply(self, action):
@@ -684,7 +690,8 @@ class BaseballEngine:
                     remaining-=consumed;elapsed+=consumed;forces=False
                     if not remaining:return
                     continue
-                self._pitch_call(strike=active or (kind=="plane" and self.native.strike(ball["position_q"],self.config)),hbp=kind=="body" and not active)
+                attempted=active if s["ruleset_version"]=="1.0.0-dev.P4" else window is not None and window["start_tick"]<=s["sim_tick"]
+                self._pitch_call(strike=attempted or (kind=="plane" and self.native.strike(ball["position_q"],self.config)),hbp=kind=="body" and not attempted)
                 return
             ball["position_q"] = result["position_q"]; ball["velocity_q"] = result["velocity_q"]
             self._sub = elapsed+result["consumed_q"]

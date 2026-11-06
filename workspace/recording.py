@@ -2,6 +2,7 @@
 import hashlib
 from pathlib import Path
 import os
+import json
 from numeric import canonical, digest
 from configuration import VERSION
 
@@ -46,7 +47,7 @@ class Recorder:
         if self.path.exists() and any(self.path.iterdir()): raise ValueError("output_not_empty")
         self.path.mkdir(parents=True,exist_ok=True)
         (self.path/"diagnostics").mkdir()
-        self.manifest = {"schema_version":VERSION,"ruleset_version":engine.config["version"],
+        self.manifest = {"schema_version":engine.state["schema_version"],"ruleset_version":engine.config["version"],
                          "physics_version":engine.config["physics"]["version"],"map_version":engine.config["field"]["version"],
                          "bot_protocol_version":"1.0.0","match_id":self.path.name,"seed":seed,"run_mode":run_mode,
                          "tick_rate_hz":120,"regulation_ticks":engine.config["rules"]["regulation_ticks"],
@@ -68,7 +69,10 @@ class Recorder:
         self.checkpoint(engine)
 
     def append(self, name, value):
-        self.streams[name].write(canonical(value)+b"\n")
+        # Rejected raw numeric inputs are audit data, not authoritative Q32.32.
+        # Preserve finite JSON fractions here; accepted intents still use strict schemas.
+        data=json.dumps(value,ensure_ascii=True,allow_nan=False,separators=(",",":"),sort_keys=True).encode("utf-8") if name=="actions" else canonical(value)
+        self.streams[name].write(data+b"\n")
 
     def checkpoint(self, engine):
         state = engine.snapshot()

@@ -1,6 +1,6 @@
 # 開發進度
 
-目前階段：**P4 已通過，準備進入 P5**。已封存 `p0`、`p1`、`p2`、`p3`（`3cdf6bd`）。
+目前階段：**P5 已通過，準備進入 P6**。已封存 `p0`–`p4`（P4 `537aa8b`）。
 
 依序 P0 → P7；每期先通過該期全部出口測試，再提交 `P<n>: 說明` 並建立 `p<n>` tag。未通過不可進下一期。
 
@@ -11,7 +11,7 @@
 | P2 打席與半局 | 通過（tag: `p2`） | T01–T07、T18；全套 39 tests；診斷控制器完成上下半局並封存記錄 |
 | P3 活球與限時規則 | 通過（tag: `p3`） | T08–T22、限時／交換邊界、回壘 checkpoint；全套 68 tests |
 | P4 Bot 與端到端對戰 | 通過（tag: `p4`） | 78 tests；20 seeds × 2 輪全 completed、動作／事件／checkpoint／終局逐檔 byte 一致；預設 15 分鐘對戰完成 |
-| P5 重算與驗證器 | 未開始 | — |
+| P5 重算與驗證器 | 通過（tag: `p5`） | 全套 96 tests；D1/D2 各 10 次、20 舊版完整驗證、100 隨機 seek、全部 checkpoint 恢復、篡改與 incomplete |
 | P6 Electron 回放 | 未開始 | — |
 | P7 整合封存 | 未開始 | — |
 
@@ -42,5 +42,18 @@
 - 已實測 Job Object 256 MiB committed-memory 限制（300 MiB 配置引發 MemoryError），含 worker 的程序數限制 2、2 秒 watchdog、超長 stdout／stale ID／非法 JSON／Bot crash 與中止封存；Python 被動 Bot vs JavaScript 被動 Bot 可完整對戰，不改規則。
 - 已修正出手者殘留 catch 意圖導致原地接回傳球；納入回歸測試。規則／合約版本提升為 `1.0.0-dev.P4`。DLL 建置指紋會檢查來源及二進位是否過期。
 - 已知限制：Job Object 是程序／資源隔離，不是檔案或網路安全沙箱；只執行信任的 Bot。非 Windows 尚不支援正式 BotHost。第一份探索記錄 `results/p4-smoke-42` 因上述已修正問題而手動中斷，維持 incomplete，不納入驗收。
-- 下一期 P5：無 Bot 重算、完整性與版本拒絕、第一差異、checkpoint seek 與 16.4 測試。Electron 與最終整合尚未開始，不宣稱首版已完成。
+- 下一期 P6：Electron 回放介面、播放／倍速／單步／精確 seek、重要事件與視覺偏移。最終整合尚未開始，不宣稱首版已完成。
+
+## P5 驗收紀錄
+
+- 最終 `python -m pytest workspace/tests -q` → **96 passed in 15.93s**；compileall 通過。
+
+- `replay.py verify/seek/frames` 已完成，無 Bot 啟動；headers／檔案索引／版本／Schema／觀察／意圖／逐事件／checkpoint／summary 均校驗。差異回報首個 tick、seq、欄位與預期／實際值。
+- 20 個 P4 基準 seed 與預設 132898-tick 對戰，於 P5 的版本相容路徑重新完整驗證皆為 verified_full；報告 `workspace/tests/reports/p5-replay-acceptance.json`。
+- 同一完整輸入重算 10 次；每個 checkpoint 恢復至終局；額外涵蓋活躍揮棒窗、持球／半局交換、欠回壘及回壘中狀態。
+- 相同 seed 42 的基本 Bot 重賽 **10 次**，accepted intents／逐事件／終局雜湊一致；首份亦完整重算。見 `workspace/tests/reports/p5-d2-acceptance.json`。
+- 100+ 個隨機 tick 定位與順序推進一致。實際基準賽 100 次 hot seek：中位 48 ms、P95 175 ms、最長 241 ms；索引首次載入 572 ms。見 `workspace/tests/reports/p5-seek-performance.json`。
+- 篡改 accepted intent、事件、checkpoint（含重算封存雜湊）、截斷、未知版本、非法 Unicode、有限小數拒絕稽核、程序故障同 tick 終局、incomplete 前綴、映射／回覆順序測試通過。分塊影格每塊最多 600 格，損壞或刪除 chunk 可重建。
+- 發現並版本化修正過早揮棒的窗口結束後仍應計揮空好球；新 rules/schema 為 `1.0.0-dev.P5`，物理／場地維持 P4，明確保留 P4 舊規則與指定建置相容指紋，未悄改舊回放。
+- 已知限制：尚無 Electron 介面；跨平台 D3 尚未宣告。P0–P3 開發記錄須使用對應 Git tag；目前驗證器支援已驗收的 P4 與 P5。
 - `results/`、工具鏈、建置產物、node_modules 與快取不納入 Git。

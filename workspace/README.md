@@ -36,3 +36,19 @@ python workspace/match.py --away bots/examples/minimal.py --home bots/examples/n
 正式模式使用 Windows Job Object：worker 與 Bot 合計 256 MiB committed memory、最多兩個程序（可信任 worker + 一個 Bot）、關閉即終止程序樹；每次回覆 watchdog 2 秒、stdout 每行上限 64 KiB、stderr 上限 1 MiB。未能安裝限制時直接中止。這是程序與資源隔離，不是檔案／網路權限沙箱，只執行可信任的 Bot。[Windows Job Objects](https://learn.microsoft.com/en-us/windows/win32/procthread/job-objects)。
 
 每份記錄包含設定、名單／打序／站位、來源與原生建置指紋、Bot 程式雜湊、原始回覆／拒絕原因與接受意圖。DLL 與建置來源不符時要求重新建置，沒有 Python 物理備援。
+
+P5 無 Bot 重算、精確定位與分塊影格：
+
+```powershell
+python workspace/replay.py verify --input results/demo-0042 --from-start
+python workspace/replay.py seek --input results/demo-0042 --tick 720
+python workspace/replay.py frames --input results/demo-0042 --output results/demo-0042/cache/frames
+python workspace/verify_acceptance.py --input results/p4-final-batch --report workspace/tests/reports/p5-replay-acceptance.json
+python workspace/determinism_acceptance.py --repeats 10 --output results/p5-d2 --report workspace/tests/reports/p5-d2-acceptance.json
+```
+
+verify 預設從頭重算；`--checkpoint <索引>` 只會回報 verified_prefix。seek 由較早 checkpoint 還原後推進，不會啟動 Bot；單獨 seek 回報 unverified，不能代替整場驗證。未封存記錄只驗證到最後完整 checkpoint，回報 incomplete／verified_prefix。完整性不符為 mismatch，未知規則或建置指紋為 unsupported_version；退出碼 2。
+
+影格以每 4 ticks 與重要事件邊界輸出，每塊最多 600 影格；快取包含來源雜湊與驗證報告，過期／損壞的 chunk 自動重建。刪除整個 cache 也能從原記錄重算。`--progress` 可輸出 JSONL 進度。
+
+P5 規則版本 `1.0.0-dev.P5` 修正已啟動但窗口結束的揮空仍須計好球；原 `1.0.0-dev.P4` 保留舊判定分支，指定的 P4 建置指紋經完整回放驗收後列入相容表，無近似套用新判決。原生物理／場地版本仍為 P4。被拒絕的有限小數輸入只保留在稽核欄位，不進入權威數值；NaN、Infinity、非法 Unicode 在 JSON 邊界拒絕。

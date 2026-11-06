@@ -50,8 +50,15 @@ def strict_loads(text):
                 raise ValueError("duplicate_json_key")
             result[k] = v
         return result
-    return json.loads(text, parse_constant=lambda _: (_ for _ in ()).throw(ValueError("non_finite")),
-                      object_pairs_hook=pairs)
+    value=json.loads(text, parse_constant=lambda _: (_ for _ in ()).throw(ValueError("non_finite")),object_pairs_hook=pairs)
+    def unicode_check(v):
+        if isinstance(v,str):v.encode("utf-8",errors="strict")
+        elif isinstance(v,list):
+            for x in v:unicode_check(x)
+        elif isinstance(v,dict):
+            for k,x in v.items():unicode_check(k);unicode_check(x)
+    unicode_check(value)
+    return value
 
 
 def stream_seed(seed, name):
