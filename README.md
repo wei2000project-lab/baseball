@@ -57,6 +57,7 @@ UI 驗收只建立自己的隱藏離屏視窗，不切換視窗或注入鍵盤�
 - [BALANCE.md](BALANCE.md)：改前、a–f、調參與目標。
 - [使用與故障排查](workspace/README.md)、[數值公式](workspace/PHYSICS.md)、[版本](workspace/VERSIONS.md)、[驗收](workspace/ACCEPTANCE.md)。
 - [Bot 協定](bots/protocol/README.md)：更換 --away／--home 路徑即可替換 Bot。
+- [AI 開發 Bot 參考](bots/BOT_REFERENCE.md)：基本規則、雙方座標／固定 ID、JSONL 與動作欄位，沒有策略。`--away bots/my_bot/bot.cpp` 可自動編譯 C++17 後對戰；無策略範例在 `bots/examples/cpp_passive/`。
 
 決策機會為每 tick，120 Hz 下為 8.33 ms 模擬時間；Bot 故障 watchdog 另為 2 秒牆鐘時間。舊 P0–P7 記錄在新版回報 unsupported_version，請使用原 Git tag 查看。verified_record 表示 TXT 完整性通過，不宣稱重算物理。
 

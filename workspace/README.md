@@ -25,6 +25,8 @@ python workspace/determinism_acceptance.py --repeats 10 --output results/repeat-
 
 一隊一個 JSONL Bot 程序，兩隊先取得同 tick 快照，收齊回覆才套用。觀察不提供 RNG。每 tick 有一次決策機會（8.33 ms 模擬時間），不是要求程序在 8.33 ms 牆鐘內回覆。移動與接球意圖持續生效，無須每 tick 重送相同動作。
 
+支援 `bot.cpp` 自動編譯（C++17），或直接傳 `.cpp`／`.exe`；資料夾依 `bot.json` → `bot.cpp` → `bot.py` 選擇。編譯在程序 watchdog 開始前完成，快取與錯誤 log 在 workspace/build/cpp-bots，原始碼／本地標頭變更會重建。`BASEBALL_BOT_CXX` 可指定 Zig／Clang／GCC 執行檔；亦可單獨執行 `python workspace/build_bot.py bots/my_bot/bot.cpp`。參考 bots/BOT_REFERENCE.md 與無策略 cpp_passive 範例。
+
 Windows Job Object：worker 與 Bot 合計 256 MiB、2 程序、watchdog 2 秒、stdout 每行 64 KiB、stderr 1 MiB。這是資源限制，請執行可信任 Bot。診斷移至忽略的 workspace/build/runlogs/<輸出路徑雜湊>/。
 
 | 訊息 | 處理 |

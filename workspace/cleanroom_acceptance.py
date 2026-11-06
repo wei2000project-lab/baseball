@@ -27,6 +27,7 @@ def main():
     env['npm_config_cache']=str(ROOT/'.tools/npm-cache')
     env['BASEBALL_ELECTRON_CACHE']=str(ROOT/'workspace/build/electron-cache')
     compiler=ROOT/'.tools/ziglang/zig.exe';npm=ROOT/'.tools/npm-runtime/package/bin/npm-cli.js'
+    env['BASEBALL_BOT_CXX']=str(compiler)
     def run(args):
         print('CHECK '+args[0]+' '+str(args[1:4]),flush=True)
         start=time.perf_counter();p=subprocess.run(args,cwd=target,env=env,capture_output=True,text=True,encoding='utf-8',errors='replace',timeout=240)

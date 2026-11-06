@@ -1,5 +1,7 @@
 # Bot JSONL 協定 1.0.0
 
+給其他 AI 的完整規則／通訊參考（無策略）：[BOT_REFERENCE.md](../BOT_REFERENCE.md)。C++ 可使用 bot.cpp，由主機在啟動前自動編譯；Python／自訂執行檔沿用同一協定。
+
 一隊一程序。stdin/stdout 各行為 UTF-8 JSON；stderr 為診斷。
 `init → ready → observe/action → shutdown`。
 回覆必須包含相同 decision_id 與 protocol_version；不可超過 64 KiB。

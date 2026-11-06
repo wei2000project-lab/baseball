@@ -8,6 +8,7 @@ import sys
 import threading
 import time
 from numeric import canonical,strict_loads
+from build_bot import build_cpp_bot,source_files
 
 LIMIT=64*1024
 PROTOCOL="1.0.0"
@@ -26,16 +27,24 @@ def bot_command(path):
             command=config["command"][:]
             if command[0]=="python":command[0]=sys.executable
             elif (path/command[0]).is_file():command[0]=str(path/command[0])
-        else:command=[sys.executable,"-u",str(path/"bot.py")]
+        elif (path/"bot.cpp").is_file():command=[str(path/"bot.cpp")]
+        elif (path/"bot.py").is_file():command=[sys.executable,"-u",str(path/"bot.py")]
+        else:raise ValueError("bot_not_found: expected bot.json, bot.cpp or bot.py")
         directory=path
     else:
         if not path.is_file():raise ValueError("bot_not_found")
         command=[sys.executable,"-u",str(path)] if path.suffix==".py" else [str(path)]
         directory=path.parent
+    compiled=None
+    if Path(command[0]).suffix.lower() in (".cpp",".cc",".cxx"):
+        source=Path(command[0])
+        compiled=build_cpp_bot(source if source.is_absolute() else directory/source)
+        command[0]=str(compiled)
     # Only program and descriptor sources, no environment credentials.
-    sources=sorted(p for p in directory.rglob("*") if p.is_file() and p.suffix in (".py",".js",".mjs",".cjs",".json",".exe",".dll",".so",".cpp",".hpp") and "__pycache__" not in p.parts and "node_modules" not in p.parts)
+    sources=sorted(source_files(directory,{".py",".js",".mjs",".cjs",".json",".exe",".dll",".so",".cpp",".cc",".cxx",".h",".hpp",".hxx",".inl"}))
     sha=hashlib.sha256()
     for p in sources:sha.update(str(p.relative_to(directory)).replace("\\","/").encode());sha.update(p.read_bytes())
+    if compiled:sha.update(b"compiled_cpp_binary");sha.update(compiled.read_bytes())
     return command,directory,sha.hexdigest()
 
 

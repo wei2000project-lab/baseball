@@ -1,0 +1,54 @@
+{
+  "tag": "cpp-bot-v1",
+  "ruleset_version": "2.0.0",
+  "protocol_version": "1.0.0",
+  "config_hash": "36a03082ed0802660176ca27bde7ed5f04b308fc2833e8f26beb1ea92acc78d5",
+  "program_hash": "9388189cb33ee4506579fcae8a432c583326c5be0dfa1ebaed2c2d25c62470c0",
+  "cpp_build": {
+    "signature": {
+      "source": "C:\\Users\\weiwei\\Desktop\\ai_project\\baseball\\bots\\examples\\cpp_passive\\bot.cpp",
+      "compiler": [
+        "C:\\Users\\weiwei\\Desktop\\ai_project\\baseball\\.tools\\ziglang\\zig.exe",
+        "c++"
+      ],
+      "compiler_version": "0.13.0",
+      "flags": [
+        "-std=c++17",
+        "-O2",
+        "-I",
+        "C:\\Users\\weiwei\\Desktop\\ai_project\\baseball\\bots\\vendor"
+      ],
+      "inputs": {
+        "bot/bot.cpp": "b21fba31a57c43758f4a26a3e2760fa1660b7a3d02f3a348e3adb762d380c6db",
+        "vendor/nlohmann/json.hpp": "9bea4c8066ef4a1c206b2be5a36302f8926f7fdc6087af5d20b417d0cf103ea6"
+      }
+    },
+    "program": "04cc530d30a1/bot.exe",
+    "binary_sha256": "bf111f91b6fb3632950f0f869d5463c518d65e6cfb259a62372631bb633709c2"
+  },
+  "validation": {
+    "cpp_tests": 8,
+    "python_tests": 119,
+    "javascript_tests_in_cleanroom": 7,
+    "cleanroom_commands": 9,
+    "entrypoints": [
+      "directory/bot.cpp",
+      "source.cpp",
+      "executable",
+      "bot.json source command"
+    ],
+    "observations": "C++ receives both teams, all 18 stable IDs and full Q32.32 positions/velocities; coordinates update on subsequent observe; private RNG absent",
+    "engine_control": "C++ move output validated and applied by the existing engine",
+    "complete_matches": [
+      "C++ vs C++",
+      "C++ vs Python"
+    ],
+    "cache": "Local header edits create a new build; earlier executable bytes remain unchanged; repeated unchanged build reuses the cache",
+    "failure": "Invalid C++ fails explicitly with a compiler log"
+  },
+  "reference": "bots\\BOT_REFERENCE.md",
+  "reference_sha256": "94f3a240c442a9621418bdaef9f95c71a27812d5c6c9b90ab7ec182b6eca74c0",
+  "cleanroom_report": "workspace/tests/reports/cpp-cleanroom.json",
+  "strategy_changed": false,
+  "desktop_control_used": false
+}

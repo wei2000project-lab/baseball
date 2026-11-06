@@ -4,6 +4,14 @@
 
 目前操作限制：使用者正在使用電腦；不得要求電腦控制權限或操作／切換使用者視窗。後續改用 CLI、隱藏離屏 renderer、記錄副本與背景測試驗收。
 
+## C++ Bot 相容與 AI 參考文件（完成；tag: cpp-bot-v1）
+
+- 已加入 `bot.cpp`／直接 .cpp／自訂 bot.json C++ 入口的自動 C++17 編譯；產物與編譯 log 在忽略的 workspace/build/cpp-bots。支援 Zig／Clang／GCC、來源／本地標頭／工具鏈快取指紋，編譯不占用 Bot 回覆 watchdog。
+- 新增 bots/BOT_REFERENCE.md，只含基本規則、JSONL 生命週期、座標／ID、觀察與動作欄位，不含策略；cpp_passive 是無策略協定範例，附離線固定版本 JSON 標頭與 MIT 授權。
+- 已實測 C++ 收到雙方18名球員與穩定ID、Q32.32座標／速度；連續 observe 的座標更新、ID 不變。可輸出動作由原引擎執行，私有 RNG 不公開。C++ 對 C++／Python 完整短賽通過；**新增 8 項 C++ 測試與整套 119 項 Python 測試全部通過**。
+- 隔離來源重新建置／離線 npm ci／完整測試（119 Python、7 JS）／對戰／TXT 驗證／快取／範例解壓共 **9 個命令全過**，包含指定共享編譯器的 C++ 編譯。報告 workspace/tests/reports/cpp-cleanroom.json、cpp-support.json。
+- 沒有修改基本 Bot 策略、規則或物理參數，也沒有操作桌面。既有 C++／Python／執行檔 Bot 共用 JSONL 1.0.0；規則／物理仍為 2.0.0，沒有改變舊 TXT 回放的解讀。
+
 依序 P0 → P7；每期先通過該期全部出口測試，再提交 `P<n>: 說明` 並建立 `p<n>` tag。未通過不可進下一期。
 
 | 階段 | 狀態 | 出口驗證 |

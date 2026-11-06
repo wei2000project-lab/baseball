@@ -1,5 +1,11 @@
 # 2.0.0 驗收與需求追蹤
 
+## C++ Bot 擴充
+
+`cpp-bot-v1`：新增 bot.cpp 自動 C++17 編譯、資料夾／原始檔／執行檔／bot.json 入口、來源與本地標頭快取、離線 JSON 標頭及無策略的 bots/BOT_REFERENCE.md。規則、物理與基本 Bot 策略未變。
+
+新增 8 項測試涵蓋實際編譯、快取與標頭變更、編譯錯誤、descriptor 優先、完整雙方18人觀察、連續 tick 更新、動作控制及 C++／Python 混合對戰；整套 119 Python tests 通過。隔離來源 9 個命令（含 119 Python、7 JS）全部通過，見 tests/reports/cpp-cleanroom.json 與 cpp-support.json。先前 111 項與平衡統計為下方 2.0.0 封存時的結果。
+
 P0–P7 已依原出口測試封存於 p0–p7 tags。以下為使用者追加的平衡與 TXT 需求；回放直接讀差分取代原計畫的逐動作重算。
 
 | 需求 | 實作與證據 |
