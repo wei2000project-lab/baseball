@@ -34,7 +34,7 @@ function render(f,exact=false){
 async function seek(tick){
   if(!metadata||loading)return;setPlaying(false);const epoch=++seekEpoch;
   cursor=clamp(Math.round(tick),0,metadata.total_ticks);$('seek-state').textContent='從檢查點重算…';
-  try{const result=await api.seek(cursor);if(epoch!==seekEpoch)return;exactHash=result.state_hash;trail=[];render(result.frame,true);message(`精確定位完成 · ${result.elapsed_ms} ms · ${exactHash}`);await updateEvents(cursor);}
+  try{const result=await api.seek(cursor);if(epoch!==seekEpoch)return;exactHash=result.state_hash;trail=[];render(result.frame,true);message(`精確定位完成 · ${result.elapsed_ms} ms · ${exactHash}${profile.load_warning?' · '+profile.load_warning:''}`);await updateEvents(cursor);}
   catch(e){if(epoch===seekEpoch)error(e);}
 }
 async function loaded(data){

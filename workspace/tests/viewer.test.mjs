@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {Q,timeLabel,floorIndex,sample,ChunkCache,visualPosition,advanceCursor} from '../viewer/core.mjs';
+import profileValidation from '../viewer/profile.cjs';
+import fs from 'node:fs';
 const make=(tick,x,cut=false)=>({tick,cut,inning:1,half:'top',phase:'BALL_IN_PLAY',score:{away:0,home:0},ball:{mode:'batted_airborne',holder_id:null,position_q:[String(x*Q),'0',String(Q)]},players:[{id:'away.P01',position_q:['0','0']}]});
 test('binary search includes exact ticks and chunk boundaries',()=>{
   assert.equal(floorIndex([{tick:0},{tick:4},{tick:8}],4),1);
@@ -36,4 +38,13 @@ test('LRU keeps at most three chunks and coalesces concurrent requests',async()=
   assert.deepEqual(await Promise.all([cache.get(0),cache.get(0)]),[{index:0},{index:0}]);assert.equal(calls,1);
   for(let i=1;i<20;i++)await cache.get(i);
   assert.equal(cache.cache.size,3);assert.equal(cache.pending.size,0);
+});
+test('delivered visual profile accepts finite offsets and stays independent',()=>{
+  const raw=JSON.parse(fs.readFileSync(new URL('../../model/visual_profiles/default.json',import.meta.url),'utf8'));
+  const value=profileValidation.validateProfile(raw);assert.equal(value.visual_profile_id,'primitive-v1');
+  value.model_scale=4;assert.equal(raw.model_scale,1);
+});
+test('invalid visual transforms and unknown fields fail closed',()=>{
+  const raw=structuredClone(profileValidation.DEFAULT_PROFILE);
+  for(const invalid of [{...raw,model_scale:NaN},{...raw,model_scale:Infinity},{...raw,visual_offset_local:[0,0]},{...raw,typo:1}])assert.throws(()=>profileValidation.validateProfile(invalid));
 });

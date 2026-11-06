@@ -7,9 +7,9 @@ import subprocess
 import sys
 import hashlib
 import json
+import importlib.util
 
 ROOT = Path(__file__).resolve().parent
-LIB = ROOT / "build" / ("baseball.dll" if os.name == "nt" else "libbaseball.so")
 
 
 def source_digest():
@@ -19,24 +19,32 @@ def source_digest():
     return sha.hexdigest()
 
 
+# A new build never overwrites a DLL held by an already-running viewer.
+LIB = ROOT / "build" / ("native-"+source_digest()[:16]) / ("baseball.dll" if os.name == "nt" else "libbaseball.so")
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--compiler")
+    parser.add_argument("--cache-root",help="Optional explicit shared compiler cache; project output stays local")
     args = parser.parse_args()
     local = ROOT.parent / ".tools/ziglang" / ("zig.exe" if os.name == "nt" else "zig")
+    if not local.exists():
+        package=importlib.util.find_spec("ziglang")
+        if package and package.origin:local=Path(package.origin).parent/("zig.exe" if os.name=="nt" else "zig")
     compiler = args.compiler or (str(local) if local.exists() else shutil.which("clang++") or shutil.which("g++"))
     if not compiler:
         sys.exit("Install: python -m pip install --target .tools ziglang==0.13.0")
     command = [compiler]
     if Path(compiler).stem == "zig":
         command += ["c++"]
-    LIB.parent.mkdir(exist_ok=True)
+    LIB.parent.mkdir(parents=True,exist_ok=True)
     command += ["-std=c++17", "-O2", "-shared", str(ROOT / "native_bindings.cpp"),
                 str(ROOT / "baseball.cpp"), str(ROOT / "map.cpp"), "-o", str(LIB)]
     if os.name != "nt":
         command += ["-fPIC"]
     env = os.environ.copy()
-    env["ZIG_GLOBAL_CACHE_DIR"] = str(ROOT / "build/zig-cache")
+    env["ZIG_GLOBAL_CACHE_DIR"] = str(Path(args.cache_root).resolve() if args.cache_root else ROOT / "build/zig-cache")
     env["ZIG_LOCAL_CACHE_DIR"] = str(ROOT / "build/zig-local-cache")
     temp = ROOT / "build/tmp"
     temp.mkdir(exist_ok=True)

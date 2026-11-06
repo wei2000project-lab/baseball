@@ -5,7 +5,8 @@
     "version": {
       "enum": [
         "1.0.0-dev.P4",
-        "1.0.0-dev.P5"
+        "1.0.0-dev.P5",
+        "1.0.0-dev.P7"
       ]
     },
     "rules": {
@@ -246,7 +247,10 @@
       "type": "object",
       "properties": {
         "version": {
-          "const": "1.0.0-dev.P4"
+          "enum": [
+            "1.0.0-dev.P4",
+            "1.0.0-dev.P7"
+          ]
         },
         "base_radius_q": {
           "type": "string",

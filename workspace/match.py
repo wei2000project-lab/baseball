@@ -18,7 +18,9 @@ def run_match(away,home,config,seed,output,timeout=2.0,max_record_bytes=512*1024
         for team,path in (("away",away),("home",home)):
             bot_seed=stream_seed(str(seed),"bot:"+team)
             try:
-                hosts[team]=BotHost(path,team,bot_seed,recorder.path/"diagnostics",timeout)
+                hosts[team]=BotHost(path,team,bot_seed,recorder.path/"diagnostics",timeout,capabilities={
+                    "field_config":config["field"],"physics_config":config["physics"],"rules_config":config["rules"],
+                    "action_types":["pitch","swing","take","move","catch","throw","tag","run_to_base","return_to_base","hold","appeal_return","noop"]})
                 recorder.manifest["bots"][team]={"program_sha256":hosts[team].program_hash,"seed":str(bot_seed),"resource_limits":hosts[team].capability}
             except Exception as error:
                 seq+=1;record=decision_record(engine,team,None,seq)

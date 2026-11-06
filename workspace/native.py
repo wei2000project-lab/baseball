@@ -41,6 +41,8 @@ class Native:
             "bb_strike": ([PTR, PTR, I64], C.c_int),
             "bb_clamp_position": ([PTR, PTR, PTR], C.c_int),
             "bb_progress": ([PTR, PTR, PTR], I64),
+            "bb_move_fielder": ([PTR,PTR,PTR],C.c_int),
+            "bb_clamp_position_v2": ([PTR,PTR,PTR],C.c_int),
         }
         for name, (args, result) in signatures.items():
             fn = getattr(self.lib, name); fn.argtypes = args; fn.restype = result
@@ -115,10 +117,11 @@ class Native:
                 return segments
         raise ValueError("physics_contact_limit")
 
-    def move(self, position, velocity, target, physics, radius="0", moving=True, stop_on_touch=True):
+    def move(self, position, velocity, target, physics, radius="0", moving=True, stop_on_touch=True,field=None):
         values = position + velocity + target + [int(moving), int(stop_on_touch), physics["player_speed_q"], physics["player_acceleration_q"], radius]
         out = (I64 * 6)()
-        if self.lib.bb_move(array(values), out):
+        status=self.lib.bb_move_fielder(array(values),self.field_bounds(field),out) if field is not None else self.lib.bb_move(array(values),out)
+        if status:
             raise ValueError("native_movement_error")
         return {"position_q": [str(v) for v in out[:2]], "velocity_q": [str(v) for v in out[2:4]],
                 "touch_q": out[4], "stopped": bool(out[5])}
@@ -142,8 +145,12 @@ class Native:
     def clamp_position(self, position, field):
         out = (I64 * 2)()
         bounds = [field[k+"_q"] for k in ("xmin", "xmax", "ymin", "ymax")]
-        self.lib.bb_clamp_position(array(position),array(bounds),out)
+        status=self.lib.bb_clamp_position_v2(array(position),self.field_bounds(field),out) if field["version"]=="1.0.0-dev.P7" else self.lib.bb_clamp_position(array(position),array(bounds),out)
+        if status:raise ValueError("native_geometry_error")
         return [str(v) for v in out]
+
+    def field_bounds(self,field):
+        return array([field[k+"_q"] for k in ("xmin","xmax","ymin","ymax","wall_radius")])
 
     def progress(self, position, start, end):
         result=self.lib.bb_progress(array(position+["0"]),array(start+["0"]),array(end+["0"]))

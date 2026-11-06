@@ -1,0 +1,203 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "visual_profile_id": {
+      "type": "string",
+      "pattern": "[A-Za-z0-9_.:-]+",
+      "maxLength": 128
+    },
+    "model_asset_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "[A-Za-z0-9_.:-]+",
+          "maxLength": 128
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "model_scale": {
+      "type": "number",
+      "minimum": 0.1,
+      "maximum": 4
+    },
+    "model_origin_correction": {
+      "type": "array",
+      "items": {
+        "type": "number",
+        "minimum": -10,
+        "maximum": 10
+      },
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "visual_offset_local": {
+      "type": "array",
+      "items": {
+        "type": "number",
+        "minimum": -10,
+        "maximum": 10
+      },
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "role_offsets": {
+      "type": "object",
+      "properties": {
+        "P": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "minimum": -10,
+            "maximum": 10
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "C": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "minimum": -10,
+            "maximum": 10
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "1B": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "minimum": -10,
+            "maximum": 10
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "2B": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "minimum": -10,
+            "maximum": 10
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "3B": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "minimum": -10,
+            "maximum": 10
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "SS": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "minimum": -10,
+            "maximum": 10
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "LF": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "minimum": -10,
+            "maximum": 10
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "CF": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "minimum": -10,
+            "maximum": 10
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "RF": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "minimum": -10,
+            "maximum": 10
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "batter": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "minimum": -10,
+            "maximum": 10
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "runner": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "minimum": -10,
+            "maximum": 10
+          },
+          "minItems": 2,
+          "maxItems": 2
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "anchors": {
+      "type": "object",
+      "properties": {
+        "origin": {
+          "const": "feet_center"
+        },
+        "glove": {
+          "type": "string",
+          "pattern": "[A-Za-z0-9_.:-]+",
+          "maxLength": 128
+        },
+        "bat": {
+          "type": "string",
+          "pattern": "[A-Za-z0-9_.:-]+",
+          "maxLength": 128
+        }
+      },
+      "required": [
+        "origin",
+        "glove",
+        "bat"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schema_version",
+    "visual_profile_id",
+    "model_asset_id",
+    "model_scale",
+    "model_origin_correction",
+    "visual_offset_local",
+    "role_offsets",
+    "anchors"
+  ],
+  "additionalProperties": false
+}

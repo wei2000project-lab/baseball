@@ -40,7 +40,7 @@ def bot_command(path):
 
 
 class BotHost:
-    def __init__(self,path,team,seed,diagnostics,timeout=2.0):
+    def __init__(self,path,team,seed,diagnostics,timeout=2.0,capabilities=None):
         command,directory,self.program_hash=bot_command(path)
         self.team=team;self.timeout=timeout;self.queue=queue.Queue(maxsize=2);self.error=None;self.closed=False
         diagnostics=Path(diagnostics);diagnostics.mkdir(parents=True,exist_ok=True)
@@ -59,7 +59,7 @@ class BotHost:
             capability=strict_loads(ready.decode("utf-8"))
             if capability!={"type":"host_ready","memory_limit_bytes":256*1024*1024,"active_process_limit":2}:raise BotFault("resource_limits_unavailable")
             self.capability=capability
-            self.send({"type":"init","protocol_version":PROTOCOL,"team_id":team,"seed":str(seed)})
+            self.send({"type":"init","protocol_version":PROTOCOL,"team_id":team,"seed":str(seed),"capabilities":capabilities or {}})
             reply=strict_loads(self._read().decode("utf-8"))
             if reply!={"type":"ready","protocol_version":PROTOCOL}:raise BotFault("invalid_ready")
         except Exception:

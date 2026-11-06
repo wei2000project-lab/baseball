@@ -383,7 +383,8 @@ class BaseballEngine:
             target = p["active_intents"].get("move")
             if target is None and p["velocity_q"] == ["0","0"]: continue
             result = self.native.move(p["position_q"],p["velocity_q"],target or p["position_q"],self.config["physics"],
-                                      radius=q(".001"),moving=target is not None)
+                                      radius=q(".001"),moving=target is not None,
+                                      field=self.config["field"] if self.config["field"]["version"]=="1.0.0-dev.P7" else None)
             p.update(position_q=result["position_q"],velocity_q=result["velocity_q"])
             self._motions[p["id"]].update(end=p["position_q"][:],stop=result["touch_q"] if result["stopped"] else None)
             if result["stopped"]: p["active_intents"].pop("move",None)

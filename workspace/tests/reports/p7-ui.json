@@ -1,0 +1,83 @@
+{
+  "passed": true,
+  "mode": "invisible offscreen Electron; no desktop input or focus",
+  "checks": [
+    {
+      "name": "full replay verified and rendered"
+    },
+    {
+      "name": "renderer has no Node; IPC rejects path-shaped chunk indexes"
+    },
+    {
+      "name": "single tick forward and backward"
+    },
+    {
+      "name": "previous and next pitch navigation"
+    },
+    {
+      "name": "half-inning jump and scoreboard"
+    },
+    {
+      "name": "speed .25 pauses and returns to identical state",
+      "paused_tick": 1012,
+      "fps": "—"
+    },
+    {
+      "name": "speed 8 pauses and returns to identical state",
+      "paused_tick": 2375,
+      "fps": "59 FPS"
+    },
+    {
+      "name": "offset, debug and scale leave authoritative hash unchanged"
+    },
+    {
+      "name": "state synchronization: BatContact",
+      "tick": 431
+    },
+    {
+      "name": "state synchronization: GroundContact",
+      "tick": 3184
+    },
+    {
+      "name": "state synchronization: BallCaught",
+      "tick": 1516
+    },
+    {
+      "name": "state synchronization: HomeRun",
+      "tick": 800
+    },
+    {
+      "name": "state synchronization: RunPending",
+      "tick": 800
+    },
+    {
+      "name": "state synchronization: RunScored",
+      "tick": 800
+    },
+    {
+      "name": "state synchronization: RunnerOut",
+      "tick": 1516
+    },
+    {
+      "name": "event click and exact logical payload"
+    },
+    {
+      "name": "1920 x 1080 offscreen visual artifact",
+      "size": {
+        "width": 1920,
+        "height": 1080
+      }
+    },
+    {
+      "name": "terminal state matches verified summary"
+    },
+    {
+      "name": "record HTML remains inert text"
+    },
+    {
+      "name": "cancellation stops worker and clears verification claim"
+    }
+  ],
+  "screenshot": "C:\\Users\\weiwei\\Desktop\\ai_project\\baseball\\workspace\\build\\ui-acceptance\\1793989951786258100\\overview.png",
+  "source_hash": "0694b51a3d82f2bec6b085cbe1d4af59da19ae25cfb3c1d8d63faca3ed7652fc"
+}

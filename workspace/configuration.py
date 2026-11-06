@@ -3,8 +3,9 @@ from pathlib import Path
 from numeric import strict_loads
 
 ROOT = Path(__file__).resolve().parent
-VERSION = "1.0.0-dev.P5"
-SUPPORTED_RULES = ("1.0.0-dev.P4", VERSION)
+VERSION = "1.0.0-dev.P7"
+SUPPORTED_RULES = ("1.0.0-dev.P4","1.0.0-dev.P5", VERSION)
+SUPPORTED_MAPS = ("1.0.0-dev.P4",VERSION)
 
 
 def default_config():
@@ -33,7 +34,7 @@ def validate_config(config):
             if expected.lstrip("-").isdigit():
                 if str(int(value)) != value or abs(int(value)) > 1000 * (1 << 32):
                     raise ValueError(f"{path}: invalid_fixed_point")
-            elif value != expected and not (path=="config.version" and value in SUPPORTED_RULES):
+            elif value != expected and not (path=="config.version" and value in SUPPORTED_RULES) and not (path=="config.field.version" and value in SUPPORTED_MAPS):
                 raise ValueError(f"{path}: unsupported_version")
     check(config, template, "config")
     r, p, f = (config[k] for k in ("rules", "physics", "field"))
@@ -66,6 +67,8 @@ def validate_config(config):
     for x, y in positions + [tuple(pos) for pos in f["bases_q"]]:
         if not int(f["xmin_q"]) <= int(x) <= int(f["xmax_q"]) or not int(f["ymin_q"]) <= int(y) <= int(f["ymax_q"]):
             raise ValueError("field: position_out_of_bounds")
+        if f["version"]=="1.0.0-dev.P7" and int(y)>=abs(int(x)) and int(x)**2+int(y)**2>int(f["wall_radius_q"])**2:
+            raise ValueError("field: position_beyond_fair_wall")
     if int(f["wall_radius_q"]) < 50 * (1 << 32):
         raise ValueError("field.wall_radius_q: too_small")
     return config

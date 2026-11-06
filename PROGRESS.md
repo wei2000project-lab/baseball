@@ -1,6 +1,6 @@
 # 開發進度
 
-目前階段：**P6 已通過，準備進入 P7**。已封存 `p0`–`p5`（P5 `682257a`）。
+目前階段：**P0–P7 全部完成，首版 0.1.0 通過驗收**。P6 `b8744ab`，P7 以本提交與 `p7` tag 封存。
 
 目前操作限制：使用者正在使用電腦；不得要求電腦控制權限或操作／切換使用者視窗。後續改用 CLI、隱藏離屏 renderer、記錄副本與背景測試驗收。
 
@@ -15,7 +15,7 @@
 | P4 Bot 與端到端對戰 | 通過（tag: `p4`） | 78 tests；20 seeds × 2 輪全 completed、動作／事件／checkpoint／終局逐檔 byte 一致；預設 15 分鐘對戰完成 |
 | P5 重算與驗證器 | 通過（tag: `p5`） | 全套 96 tests；D1/D2 各 10 次、20 舊版完整驗證、100 隨機 seek、全部 checkpoint 恢復、篡改與 incomplete |
 | P6 Electron 回放 | 通過（tag: `p6`） | 98 Python tests、5 JS tests、20 項真實 Electron 離屏整合檢查、1080p artifact |
-| P7 整合封存 | 未開始 | — |
+| P7 整合封存 | 通過（tag: `p7`） | 107 Python、7 JS、20 新版背景 UI 檢查；新版 20 seeds／10 次 D2、舊版回歸、隔離建置與離線範例 |
 
 ## 已知問題與接續
 
@@ -70,3 +70,24 @@
 - 影格 LRU 上限 3 chunks；精確 seek 由持續存活的 Python worker 重算。修正取消重算後的過期驗證標示與舊請求競態。
 - 已知限制：目前為基本幾何與視覺 profile；GLB／Blender 美術製作仍依規格保留到後續。作業系統與瀏覽器前景 FPS 尚無額外桌面控制驗收，尊重使用者正在使用電腦的限制。
 - 下一期 P7：安裝與故障排查文件、完整需求追蹤、範例記錄、visual profile Schema、隔離來源建置與端到端封存檢查。
+
+## P7 最終封存
+
+- 最終 `python -m pytest workspace/tests -q` → **107 passed in 27.93s**；Node viewer suite → **7 passed**；compileall／git diff --check 通過。
+- 整合補測修正普通守備員的目標急停、牆外目標與初始牆外站位。新規則／地圖 `1.0.0-dev.P7`，球物理仍 P4；保留原 P4/P5 規則與地圖函式及明確建置相容表。
+- 新版 seeds 0–19 **20/20 completed、0 aborted**，20 份全部逐事件／checkpoint／summary **verified_full**。相同 seed 42 **10 次**外部 Bot 重賽的 accepted intents／事件／終局 hash 完全相同。
+- 20 份 P4 基準記錄再次完整驗證；版本化 P5 範例亦重算一致。未知未來版在套用現行 payload Schema 前回報 unsupported_version。
+- 新版預設賽為 36:36、雙方各 6 半局、121419 ticks，正常平手；實際 61.031 秒，含 Bot／記錄約 **16.58×** 模擬實時。
+- 新版 100 次 hot seek：中位 **44 ms**、P95 **187 ms**、最長 **228 ms**；首次索引 734 ms。新版隱藏 renderer **20 checks passed**、1920×1080、8× 播放 **59 FPS**（目標 60），原始記錄雜湊未變更。
+- 隔離來源／輸出成功執行原生建置、離線 npm ci、Python/JS 測試、完整對戰、從頭驗證、影格產生、範例解壓與重算等 **9 個命令**；只重用明確記錄的工具鏈與套件快取，未依賴舊專案 DLL。
+- 已提供根 README、ACCEPTANCE.md、VERSIONS.md、故障排查、完整 Bot message Schema、visual profile Schema 與載入驗證、壓縮離線參考記錄（約 807 KiB）與安全解壓工具。範例不包含 Bot、模型或影格 cache。
+- Bot init 現在傳遞公開 field/physics/rules capabilities，另一語言可遵循同一合約。核心與舊版物理未複製為另一套 Python 實作。
+- 原生輸出採來源雜湊目錄；未關閉或操作任何使用者視窗。此次續作完全以 CLI 與獨立隱藏離屏程式驗收，沒有要求桌面控制權限。
+- 證據彙整：`workspace/tests/reports/p7-release.json`；詳細報告見 `workspace/ACCEPTANCE.md`。
+
+## 後續範圍／已知限制
+
+- 已驗收 Windows x64；其他平台的 D3 尚未宣告。Job Object 是資源隔離，並非檔案／網路安全沙箱。
+- 首版是幾何球員、球高陰影與 visual profile；Blender/GLB 動畫、美術、真人控制、網路多人、進階訓練依計畫留待後續。
+- FPS 是本機 1080p 離屏實測，不代表所有前景硬體。舊版已開啟的 viewer 在程式更新後應由使用者自行重新啟動。
+- results、build、node_modules、工具鏈與 cache 均維持忽略。所有階段已完成，可從根 README 的離線範例或新對戰命令開始使用。

@@ -112,8 +112,9 @@ handle('record:seek', tick => {
 });
 handle('viewer:profile', async () => {
   const file = path.join(ROOT, '..', 'model', 'visual_profiles', 'default.json');
-  try { return JSON.parse(await fs.readFile(file, 'utf8')); }
-  catch { return { schema_version: '1.0.0', model_scale: 1, visual_offset_local: [0, 0, 0], role_offsets: {} }; }
+  const {validateProfile,DEFAULT_PROFILE}=require('../viewer/profile.cjs');
+  try { return validateProfile(JSON.parse(await fs.readFile(file, 'utf8'))); }
+  catch { return {...structuredClone(DEFAULT_PROFILE),load_warning:'視覺設定無效或缺少，使用基本幾何'}; }
 });
 app.whenReady().then(() => {
   window = new BrowserWindow({ width: acceptance?1920:1450, height: acceptance?1080:960, show:!acceptance, frame:!acceptance, minWidth: 1100, minHeight: 760, backgroundColor: '#08151b', title: 'Diamond · 棒球 Bot 回放',

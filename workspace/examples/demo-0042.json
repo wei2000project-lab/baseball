@@ -1,0 +1,25 @@
+{
+  "archive": "demo-0042.bbrec.zip",
+  "sha256": "0fdf98facbe3f59243a0b4081e170d2e91e4425b2953a14858cf2de854f6b162",
+  "size_bytes": 825972,
+  "seed": "42",
+  "ruleset_version": "1.0.0-dev.P5",
+  "map_version": "1.0.0-dev.P4",
+  "summary": {
+    "completed_halves": {
+      "away": 1,
+      "home": 1
+    },
+    "final_state_hash": "ab24eab5200f4275eb3d0f79354150b2fc1127dfe32adc2f717335455ca4cf55",
+    "finish_after_inning": 1,
+    "reason": "fair_inning_completed",
+    "score": {
+      "away": 10,
+      "home": 9
+    },
+    "sim_tick": 25618,
+    "status": "completed",
+    "winner": "away"
+  },
+  "description": "P5 baseline reference, high flies, ground balls, catches, running and scoring; no Bot or cache required."
+}

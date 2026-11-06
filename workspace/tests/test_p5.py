@@ -135,8 +135,14 @@ def test_bounded_legal_intent_fuzz_does_not_mutate_observation():
     e=BaseballEngine(quick_config());e.step();rng=RNG(1234);expected=e.canonical_state_hash()
     for i in range(100):
         action={"action_id":f"f{i}","player_id":"home.P01","kind":"pitch","direction_i32":[int(rng.next()%2000001)-1000000 for _ in range(3)],"power_u16":int(rng.next()%100000)-10000}
-        result=e.validate_intents("home",[action]);assert result["accepted_intents"]
-        assert 0<=result["accepted_intents"][0]["power_u16"]<=65535 and e.canonical_state_hash()==expected
+        try:
+            result=e.validate_intents("home",[action]);assert result["accepted_intents"]
+            assert 0<=result["accepted_intents"][0]["power_u16"]<=65535 and e.canonical_state_hash()==expected
+        except Exception as error:
+            path=Path(__file__).resolve().parents[2]/'results'/f'fuzz-seed-1234-case-{i}.json'
+            path.parent.mkdir(exist_ok=True)
+            atomic_json(path,{'seed':'1234','iteration':i,'config':e.config,'initial_state':e.snapshot(),'intent_batch':[action],'error':str(error)})
+            raise
 
 
 def test_early_swing_whiff_is_strike_and_P4_behavior_is_versioned():

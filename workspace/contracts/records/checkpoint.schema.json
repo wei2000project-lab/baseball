@@ -17,7 +17,8 @@
         "schema_version": {
           "enum": [
             "1.0.0-dev.P4",
-            "1.0.0-dev.P5"
+            "1.0.0-dev.P5",
+            "1.0.0-dev.P7"
           ]
         },
         "sim_tick": {
@@ -681,14 +682,18 @@
         "ruleset_version": {
           "enum": [
             "1.0.0-dev.P4",
-            "1.0.0-dev.P5"
+            "1.0.0-dev.P5",
+            "1.0.0-dev.P7"
           ]
         },
         "physics_version": {
           "const": "1.0.0-dev.P4"
         },
         "map_version": {
-          "const": "1.0.0-dev.P4"
+          "enum": [
+            "1.0.0-dev.P4",
+            "1.0.0-dev.P7"
+          ]
         },
         "config_hash": {
           "type": "string",

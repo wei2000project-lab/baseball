@@ -1,5 +1,6 @@
 {
   "schema_version": "1.0.0",
+  "visual_profile_id": "primitive-v1",
   "model_asset_id": null,
   "model_scale": 1,
   "model_origin_correction": [0, 0, 0],

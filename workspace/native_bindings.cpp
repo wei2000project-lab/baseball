@@ -60,3 +60,12 @@ API int bb_clamp_position(const int64_t* at,const int64_t* bounds,int64_t* out) 
 API int64_t bb_progress(const int64_t* at,const int64_t* a,const int64_t* b) {
     try {return bb::path_progress(vec(at),vec(a),vec(b));}catch(...) {return -1;}
 }
+API int bb_clamp_position_v2(const int64_t* at,const int64_t* bounds,int64_t* out) {
+    try {auto p=bb::legal_position({at[0],at[1],0},bounds);out[0]=p.x;out[1]=p.y;return 0;}catch(...) {return -1;}
+}
+API int bb_move_fielder(const int64_t* input,const int64_t* bounds,int64_t* out) {
+    try {
+        auto m=bb::move_fielder({input[0],input[1],0},{input[2],input[3],0},{input[4],input[5],0},input[6],input[8],input[9],input[10],bounds);
+        out[0]=m.end.x;out[1]=m.end.y;out[2]=m.velocity.x;out[3]=m.velocity.y;out[4]=m.touch;out[5]=m.stopped;return 0;
+    }catch(...) {return -1;}
+}

@@ -7,7 +7,7 @@ from pathlib import Path
 import sys
 import time
 from baseball_engine import BaseballEngine
-from configuration import VERSION,validate_config,SUPPORTED_RULES,default_config
+from configuration import VERSION,validate_config,SUPPORTED_RULES,SUPPORTED_MAPS,default_config
 from contracts import validate_named,validate
 from functools import lru_cache
 from numeric import canonical,strict_loads,digest
@@ -15,10 +15,13 @@ from recording import Recorder,advance_recorded,batch_from_record,source_hash,at
 
 LINE_LIMIT=1024*1024
 FILE_LIMIT=1024*1024*1024
-# P4's sealed traces use identical rules/physics. P5 only fixes recording of
-# already-rejected fractional JSON audit values; all P4 sealed traces are replayed
-# in the P5 acceptance suite before retaining this explicit compatibility entry.
-COMPATIBLE_ENGINE_BUILDS={"7ce74ed271428d5d277567f08a1c4070f44638c33db89751be3f19eb534c80b7"}
+# These source builds have explicit legacy rule/map dispatch below the current
+# coordinator. Keep an entry only after replaying its sealed golden traces.
+COMPATIBLE_ENGINE_BUILDS={
+    "7ce74ed271428d5d277567f08a1c4070f44638c33db89751be3f19eb534c80b7":"1.0.0-dev.P4",
+    "5428491168fc6c818667be68eb77c71e98b39ec68c2ca5bf1795dfb51faee0c6":"1.0.0-dev.P5",
+}
+COMPATIBLE_NATIVE_BUILDS={"683346befbd3a4f63c0974a7c266648a07686a7e1c0bfafc58b9a79036a850bd"}
 
 
 @lru_cache
@@ -81,13 +84,20 @@ class ReplayRecord:
         self.root=Path(path).resolve()
         if not self.root.is_dir():raise ReplayError("mismatch","record_directory_missing")
         self.manifest=self.read_json("manifest.json")
+        defaults=default_config()
+        # Inspect version identifiers before applying today's payload schema.
+        # A well-formed future version is unsupported, not corrupted data.
+        for key,known in (("schema_version",SUPPORTED_RULES),("ruleset_version",SUPPORTED_RULES),
+                          ("physics_version",(defaults["physics"]["version"],)),("map_version",SUPPORTED_MAPS)):
+            value=self.manifest.get(key)
+            if isinstance(value,str) and value not in known:raise ReplayError("unsupported_version",key,actual=value)
         validate_record("manifest",self.manifest)
         m=self.manifest
         if m["schema_version"] not in SUPPORTED_RULES:raise ReplayError("unsupported_version","schema_version",actual=m["schema_version"])
-        defaults=default_config()
-        for field,expected in (("ruleset_version",m["schema_version"]),("physics_version",defaults["physics"]["version"]),("map_version",defaults["field"]["version"]),
+        for field,expected in (("ruleset_version",m["schema_version"]),("physics_version",defaults["physics"]["version"]),("map_version",m["config"]["field"]["version"]),
                                ("engine_build_id",source_hash()),("native_build_id",source_hash(native=True))):
-            if m.get(field)!=expected and not (field=="engine_build_id" and m.get(field) in COMPATIBLE_ENGINE_BUILDS and m["schema_version"]=="1.0.0-dev.P4"):raise ReplayError("unsupported_version",field,expected=expected,actual=m.get(field))
+            compatible=(field=="engine_build_id" and COMPATIBLE_ENGINE_BUILDS.get(m.get(field))==m["schema_version"]) or (field=="native_build_id" and m.get(field) in COMPATIBLE_NATIVE_BUILDS and m["map_version"]=="1.0.0-dev.P4")
+            if m.get(field)!=expected and not compatible:raise ReplayError("unsupported_version",field,expected=expected,actual=m.get(field))
         try:validate_config(m["config"])
         except (ValueError,KeyError) as e:raise ReplayError("mismatch","invalid_config",detail=str(e))
         if any(m[k]!=m["config"][sub] for k,sub in (("rules_config","rules"),("physics_config","physics"),("field_config","field"))):raise ReplayError("mismatch","config_snapshot_disagreement")
