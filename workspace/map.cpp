@@ -12,8 +12,25 @@ Movement move_player(Vec p,Vec v,Vec target,bool moving,bool stop_on_touch,Q spe
     v=add(v,change);Vec end=add(p,{v.x/120,v.y/120,0});
     Q touch=moving?sweep_cylinder(p,end,target,target,radius,ONE):-1;
     bool stopped=false;
-    if(moving&&touch>=0&&stop_on_touch) { end=lerp(p,end,touch);v={0,0,0};stopped=true; }
+    if(moving&&touch>=0&&stop_on_touch) {
+        end=lerp(p,end,touch);
+        // The contact time is rounded down; keep the committed stop inside the
+        // closed touch region instead of stranding it one coordinate quantum out.
+        Vec offset=sub(end,target);
+        end=radius>16&&magnitude(offset)>radius-16?add(target,normalize(offset,radius-16)):end;
+        if(radius==0)end=target;
+        v={0,0,0};stopped=true;
+    }
     // General movement targets stop at their center, runners use base touch radius.
     return {end,v,touch,stopped};
+}
+Q path_progress(Vec p,Vec a,Vec b) {
+    Vec d=sub(b,a),s=sub(p,a);
+    Wide norm=Wide(d.x)*d.x+Wide(d.y)*d.y;
+    if(!norm)throw std::runtime_error("invalid_path_segment");
+    Wide dot=Wide(s.x)*d.x+Wide(s.y)*d.y;
+    if(dot<=0)return 0;
+    if(dot>=norm)return ONE;
+    return checked(dot*ONE/norm);
 }
 }

@@ -3,7 +3,7 @@
   "type": "object",
   "properties": {
     "schema_version": {
-      "const": "1.0.0-dev.P2"
+      "const": "1.0.0-dev.P3"
     },
     "sim_tick": {
       "type": "integer",
@@ -20,7 +20,8 @@
         "BALL_IN_PLAY",
         "HALF_TRANSITION",
         "GAME_OVER",
-        "ABORTED"
+        "ABORTED",
+        "BALL_RECOVERY"
       ]
     },
     "phase_start_tick": {
@@ -300,6 +301,14 @@
               },
               "catch": {
                 "type": "boolean"
+              },
+              "tag": {
+                "type": "string",
+                "maxLength": 256
+              },
+              "appeal_return": {
+                "type": "string",
+                "maxLength": 256
               }
             },
             "additionalProperties": false
@@ -384,6 +393,25 @@
               "maximum": 10000000
             },
             "maxItems": 100
+          },
+          "leg_base": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000000
+          },
+          "running_direction": {
+            "enum": [
+              -1,
+              1
+            ]
+          },
+          "initial_order": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000000
+          },
+          "has_first": {
+            "type": "boolean"
           }
         },
         "required": [
@@ -394,7 +422,11 @@
           "force_obligation",
           "retouch_obligation",
           "alive",
-          "touched_bases"
+          "touched_bases",
+          "leg_base",
+          "running_direction",
+          "initial_order",
+          "has_first"
         ],
         "additionalProperties": false
       },
@@ -466,6 +498,25 @@
               "maximum": 10000000
             },
             "maxItems": 100
+          },
+          "leg_base": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000000
+          },
+          "running_direction": {
+            "enum": [
+              -1,
+              1
+            ]
+          },
+          "initial_order": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000000
+          },
+          "has_first": {
+            "type": "boolean"
           }
         },
         "required": [
@@ -476,7 +527,11 @@
           "force_obligation",
           "retouch_obligation",
           "alive",
-          "touched_bases"
+          "touched_bases",
+          "leg_base",
+          "running_direction",
+          "initial_order",
+          "has_first"
         ],
         "additionalProperties": false
       },
@@ -609,13 +664,13 @@
       ]
     },
     "ruleset_version": {
-      "const": "1.0.0-dev.P2"
+      "const": "1.0.0-dev.P3"
     },
     "physics_version": {
-      "const": "1.0.0-dev.P2"
+      "const": "1.0.0-dev.P3"
     },
     "map_version": {
-      "const": "1.0.0-dev.P2"
+      "const": "1.0.0-dev.P3"
     },
     "config_hash": {
       "type": "string",
@@ -644,6 +699,31 @@
     },
     "swing_used": {
       "type": "boolean"
+    },
+    "third_out": {
+      "anyOf": [
+        {
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "throw_start_bases": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "maxItems": 9
+    },
+    "original_runner_order": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "maxLength": 256
+      },
+      "maxItems": 9
     }
   },
   "required": [
@@ -692,7 +772,10 @@
     "batter_id",
     "half_runs",
     "half_pa",
-    "swing_used"
+    "swing_used",
+    "third_out",
+    "throw_start_bases",
+    "original_runner_order"
   ],
   "additionalProperties": false
 }

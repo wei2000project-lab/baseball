@@ -3,7 +3,7 @@ from pathlib import Path
 from numeric import strict_loads
 
 ROOT = Path(__file__).resolve().parent
-VERSION = "1.0.0-dev.P2"
+VERSION = "1.0.0-dev.P3"
 
 
 def default_config():

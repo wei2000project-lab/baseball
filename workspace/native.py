@@ -33,6 +33,7 @@ class Native:
             "bb_lerp": ([PTR, PTR, I64, PTR], C.c_int),
             "bb_strike": ([PTR, PTR, I64], C.c_int),
             "bb_clamp_position": ([PTR, PTR, PTR], C.c_int),
+            "bb_progress": ([PTR, PTR, PTR], I64),
         }
         for name, (args, result) in signatures.items():
             fn = getattr(self.lib, name); fn.argtypes = args; fn.restype = result
@@ -136,3 +137,8 @@ class Native:
         bounds = [field[k+"_q"] for k in ("xmin", "xmax", "ymin", "ymax")]
         self.lib.bb_clamp_position(array(position),array(bounds),out)
         return [str(v) for v in out]
+
+    def progress(self, position, start, end):
+        result=self.lib.bb_progress(array(position+["0"]),array(start+["0"]),array(end+["0"]))
+        if result < 0:raise ValueError("native_path_error")
+        return result

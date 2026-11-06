@@ -57,3 +57,6 @@ API int bb_strike(const int64_t* at,const int64_t* zone,int64_t radius) {
 API int bb_clamp_position(const int64_t* at,const int64_t* bounds,int64_t* out) {
     out[0]=bb::clamp(at[0],bounds[0],bounds[1]);out[1]=bb::clamp(at[1],bounds[2],bounds[3]);return 0;
 }
+API int64_t bb_progress(const int64_t* at,const int64_t* a,const int64_t* b) {
+    try {return bb::path_progress(vec(at),vec(a),vec(b));}catch(...) {return -1;}
+}

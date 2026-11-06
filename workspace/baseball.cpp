@@ -23,7 +23,11 @@ void sincos(int64_t angle, Q& sine, Q& cosine) {
 Vec normalize(Vec d, Q speed) {
     Q length=magnitude(d);
     if(!length) throw std::runtime_error("zero_direction");
-    return {checked(Wide(d.x)*speed/length),checked(Wide(d.y)*speed/length),checked(Wide(d.z)*speed/length)};
+    Vec out={checked(Wide(d.x)*speed/length),checked(Wide(d.y)*speed/length),checked(Wide(d.z)*speed/length)};
+    if(Wide(out.x)*out.x+Wide(out.y)*out.y+Wide(out.z)*out.z>Wide(speed)*speed) {
+        ++length;out={checked(Wide(d.x)*speed/length),checked(Wide(d.y)*speed/length),checked(Wide(d.z)*speed/length)};
+    }
+    return out;
 }
 Vec action_velocity(int kind, Vec d, int64_t power, int64_t azimuth, int64_t elevation,
                     Q min_speed, Q max_speed, int64_t* n) {
