@@ -92,7 +92,9 @@ class BaseballEngine:
     def observe(self, team_id):
         if team_id not in ("away", "home"):
             raise ValueError("unknown_team")
-        return self.snapshot()
+        observation=self.snapshot()
+        observation.pop("rng_stream_states")
+        return observation
 
     def terminal_result(self):
         s = self.state
@@ -359,6 +361,7 @@ class BaseballEngine:
             s["ball"].update(mode="thrown",holder_id=None,origin="throw",velocity_q=velocity,
                              position_q=p["position_q"]+[self.config["physics"]["throw_height_q"]])
             p["active_intents"].pop("tag",None);p["active_intents"].pop("appeal_return",None)
+            p["active_intents"]["catch"]=False
             s["settle_counter"]=s["recovery_counter"]=0
             self._emit("ThrowReleased",fielder_id=p["id"],velocity_q=velocity)
         elif kind in ("tag","appeal_return"):p["active_intents"][kind]=action["runner_id"]

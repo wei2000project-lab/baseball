@@ -19,3 +19,20 @@ python workspace/scripted_match.py --regulation-ticks 1200 --output results/p2-s
 ```
 
 輸出目錄必須為空或不存在。內含完整設定、初始狀態、動作、事件、檢查點與摘要。
+
+P4 正式對戰（Windows）與批次出口：
+
+```powershell
+python -m pip install -r workspace/requirements.txt
+python workspace/match.py --away bots/base_bot --home bots/base_bot --seed 42 --config workspace/config/default.json --output results/demo-0042
+python workspace/acceptance.py --seeds 20 --regulation-ticks 1200 --output results/p4-batch
+python workspace/match.py --away bots/examples/minimal.py --home bots/examples/node_passive --seed 9 --output results/replacement
+```
+
+預設限時 900 模擬秒；`--regulation-ticks` 可縮短驗收場次。輸出 `completed` 才是正式終局，`aborted` 的 winner 為 null。退出碼 0=完成、2=中止、1=啟動或輸出錯誤。程序被外部終止時未封存記錄仍為 recording，讀取時應識別 incomplete。
+
+一隊一 Bot 程序，以 UTF-8 JSONL 互通。資料夾可放 `bot.py`，或 `bot.json` 的 command 字串陣列（無 shell）；亦可直接傳 `.py`／可執行檔。JavaScript 範例需要 Node。兩隊先收到同一時間快照，收齊回覆才套用；觀察不提供引擎 RNG。
+
+正式模式使用 Windows Job Object：worker 與 Bot 合計 256 MiB committed memory、最多兩個程序（可信任 worker + 一個 Bot）、關閉即終止程序樹；每次回覆 watchdog 2 秒、stdout 每行上限 64 KiB、stderr 上限 1 MiB。未能安裝限制時直接中止。這是程序與資源隔離，不是檔案／網路權限沙箱，只執行可信任的 Bot。[Windows Job Objects](https://learn.microsoft.com/en-us/windows/win32/procthread/job-objects)。
+
+每份記錄包含設定、名單／打序／站位、來源與原生建置指紋、Bot 程式雜湊、原始回覆／拒絕原因與接受意圖。DLL 與建置來源不符時要求重新建置，沒有 Python 物理備援。

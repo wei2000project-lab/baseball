@@ -19,6 +19,19 @@ def decision_record(engine, team, requested, seq, raw_response=None):
             **engine.validate_intents(team,requested)}
 
 
+def advance_recorded(engine,records):
+    faults=[r for r in records if r.get("fault")]
+    if faults:
+        engine.events=[];engine._sub=0
+        engine.state["action_cursor"]+=len(records)
+        r=sorted(faults,key=lambda r:r["team_id"])[0]
+        fault=r["fault"]
+        reason=f"{fault['source']}:{fault['reason']}" if isinstance(fault,dict) else f"bot:{r['team_id']}:{fault}"
+        engine.abort(reason)
+        return {"sim_tick":engine.state["sim_tick"],"events":engine.events,"terminal":True,"checkpoint":True,"phase":engine.state["phase"]}
+    return engine.step([batch_from_record(r) for r in records])
+
+
 def atomic_json(path, value):
     temp = path.with_suffix(path.suffix+".tmp")
     temp.write_bytes(canonical(value)+b"\n")
@@ -41,10 +54,17 @@ class Recorder:
                          "config":engine.config,"bots":bots or {},"numeric_format":"Q32.32",
                          "canonicalization_version":"bb-canon-v1","hash_algorithm":"SHA-256","file_index":{},"record_status":"recording",
                          "engine_build_id":source_hash(),"native_build_id":source_hash(native=True)}
+        initial=engine.snapshot()
+        self.manifest["rosters"]={team:[{"id":p["id"],"role":p["role"]} for p in initial["players"] if p["team_id"]==team] for team in ("away","home")}
+        self.manifest["batting_orders"]={team:[p["id"] for p in initial["players"] if p["team_id"]==team] for team in ("away","home")}
+        self.manifest["initial_defense"]={p["id"]:p["position_q"] for p in initial["players"]}
+        from build_native import LIB
+        self.manifest["native_build"]=__import__("json").loads((LIB.parent/"native-build.json").read_text())
         atomic_json(self.path/"manifest.json",self.manifest)
         atomic_json(self.path/"initial_state.json",engine.snapshot())
         self.streams = {name:open(self.path/(name+".jsonl"),"wb") for name in ("actions","events","checkpoints")}
         self.last_checkpoint = -1
+        self.last_checkpoint_hash = None
         self.checkpoint(engine)
 
     def append(self, name, value):
@@ -52,10 +72,12 @@ class Recorder:
 
     def checkpoint(self, engine):
         state = engine.snapshot()
-        if state["sim_tick"] == self.last_checkpoint: return
+        h=digest(state)
+        if state["sim_tick"]==self.last_checkpoint and h==self.last_checkpoint_hash:return
         self.append("checkpoints",{"stage":"POST_BOUNDARY","resume_tick":state["sim_tick"],"state":state,
                                    "state_hash":digest(state),"action_cursor":state["action_cursor"],"last_event_seq":state["last_event_seq"]})
         self.last_checkpoint = state["sim_tick"]
+        self.last_checkpoint_hash=h
 
     def write_step(self, engine, result, decisions=()):
         for record in decisions: self.append("actions",record)
@@ -83,7 +105,8 @@ class Recorder:
 
 def source_hash(native=False):
     root = Path(__file__).resolve().parent
-    names = ["baseball.hpp","baseball.cpp","map.hpp","map.cpp","native_bindings.cpp"] if native else ["baseball_engine.py","numeric.py","configuration.py","contracts.py","native.py"]
+    names = ["baseball.hpp","baseball.cpp","map.hpp","map.cpp","native_bindings.cpp"] if native else ["baseball_engine.py","numeric.py","configuration.py","contracts.py","native.py","recording.py"]
+    if not native:names+=sorted("contracts/"+p.name for p in (root/"contracts").glob("*.json"))
     sha = hashlib.sha256()
     for name in names: sha.update(name.encode());sha.update((root/name).read_bytes().replace(b"\r\n",b"\n"))
     return sha.hexdigest()

@@ -1,6 +1,6 @@
 # 開發進度
 
-目前階段：**P3 已通過，準備進入 P4**。P0 `ef3b943` / `p0`，P1 `ca37e53` / `p1`，P2 `0a82857` / `p2`。
+目前階段：**P4 已通過，準備進入 P5**。已封存 `p0`、`p1`、`p2`、`p3`（`3cdf6bd`）。
 
 依序 P0 → P7；每期先通過該期全部出口測試，再提交 `P<n>: 說明` 並建立 `p<n>` tag。未通過不可進下一期。
 
@@ -10,7 +10,7 @@
 | P1 物理與場地核心 | 通過（tag: `p1`） | 原生重建；P0/P1 共 24 項測試通過；100 ticks golden 軌跡重算 10 次一致 |
 | P2 打席與半局 | 通過（tag: `p2`） | T01–T07、T18；全套 39 tests；診斷控制器完成上下半局並封存記錄 |
 | P3 活球與限時規則 | 通過（tag: `p3`） | T08–T22、限時／交換邊界、回壘 checkpoint；全套 68 tests |
-| P4 Bot 與端到端對戰 | 未開始 | — |
+| P4 Bot 與端到端對戰 | 通過（tag: `p4`） | 78 tests；20 seeds × 2 輪全 completed、動作／事件／checkpoint／終局逐檔 byte 一致；預設 15 分鐘對戰完成 |
 | P5 重算與驗證器 | 未開始 | — |
 | P6 Electron 回放 | 未開始 | — |
 | P7 整合封存 | 未開始 | — |
@@ -35,6 +35,12 @@
 - 限時測試涵蓋上下半局打席、上下交換與下半轉下一局、交換結束前／同／後 tick、目標局不漂移、雙方完成相同半局數、正常完成優先於 max_ticks。無法收斂時明確 aborted／winner=null。
 - 修正觸壘時間向下量化後的停止位置，確保位於觸碰區內；方向正規化保守限制速度；在 tick 中途進入準備階段時，以接下來的 tick 邊界作為完整準備計時起點。規則／物理／場地版本提升 `1.0.0-dev.P3`，P2 舊結果用 p2 checkout。
 - 接殺後欠回壘場景 checkpoint 恢復並繼續 200 ticks，逐事件／狀態雜湊一致。
-- 已知未完成：外部程序 BotHost、基本 Bot、正式 match CLI 尚屬 P4；`scripted_match.py` 僅為 diagnostic。驗證／seek CLI、Electron、整合文件亦未完成，不宣稱首版已交付。
-- 下一期 P4：受限外部 Bot、JSONL 協定與 20 seeds 對戰出口。
+- P4 驗收：`python -m pytest workspace/tests -q` → **78 passed**；compileall／Node syntax check 通過。20 seeds（0–19、regulation_ticks=1200）重跑兩輪，共 40 場全 completed；各 seed 的 initial/actions/events/checkpoints/summary 逐 byte 一致。
+- 批次記錄：`results/p4-batch`（首次）、`results/p4-final-batch`（完整封存 metadata）。完整報告版本化於 `workspace/tests/reports/p4-acceptance.json`；結果本體維持 Git 忽略。
+- 預設賽制：`python workspace/match.py --away bots/base_bot --home bots/base_bot --seed 42 --output results/p4-default-42` → 50:45、雙方各 5 半局、132898 ticks、finish_after_inning=5。實際 68.549 秒，含 Bot／記錄約 16.16 倍模擬實時。
+- 參考機：Intel Core Ultra 5 225、33787138048 bytes RAM、Windows、Python 3.13.9、Zig 0.13.0。
+- 已實測 Job Object 256 MiB committed-memory 限制（300 MiB 配置引發 MemoryError），含 worker 的程序數限制 2、2 秒 watchdog、超長 stdout／stale ID／非法 JSON／Bot crash 與中止封存；Python 被動 Bot vs JavaScript 被動 Bot 可完整對戰，不改規則。
+- 已修正出手者殘留 catch 意圖導致原地接回傳球；納入回歸測試。規則／合約版本提升為 `1.0.0-dev.P4`。DLL 建置指紋會檢查來源及二進位是否過期。
+- 已知限制：Job Object 是程序／資源隔離，不是檔案或網路安全沙箱；只執行信任的 Bot。非 Windows 尚不支援正式 BotHost。第一份探索記錄 `results/p4-smoke-42` 因上述已修正問題而手動中斷，維持 incomplete，不納入驗收。
+- 下一期 P5：無 Bot 重算、完整性與版本拒絕、第一差異、checkpoint seek 與 16.4 測試。Electron 與最終整合尚未開始，不宣稱首版已完成。
 - `results/`、工具鏈、建置產物、node_modules 與快取不納入 Git。

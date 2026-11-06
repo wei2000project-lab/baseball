@@ -2,7 +2,7 @@
 name = "baseball-bot"
 version = "0.1.0"
 requires-python = ">=3.13,<3.14"
-dependencies = []
+dependencies = ["pywin32==312; platform_system == 'Windows'"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0-dev.P3",
+  "version": "1.0.0-dev.P4",
   "rules": {
     "tick_rate_hz": 120,
     "decision_interval_ticks": 6,
@@ -18,7 +18,7 @@
     "half_pa_cap": 15
   },
   "physics": {
-    "version": "1.0.0-dev.P3",
+    "version": "1.0.0-dev.P4",
     "gravity_q": "42119241033",
     "ball_radius_q": "158913790",
     "ground_restitution_q": "1503238554",
@@ -42,7 +42,7 @@
     "bat_max_speed_q": "236223201280"
   },
   "field": {
-    "version": "1.0.0-dev.P3",
+    "version": "1.0.0-dev.P4",
     "base_radius_q": "1288490189",
     "wall_radius_q": "429496729600",
     "wall_height_q": "10737418240",

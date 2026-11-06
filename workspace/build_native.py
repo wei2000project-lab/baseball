@@ -5,9 +5,18 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
+import hashlib
+import json
 
 ROOT = Path(__file__).resolve().parent
 LIB = ROOT / "build" / ("baseball.dll" if os.name == "nt" else "libbaseball.so")
+
+
+def source_digest():
+    sha=hashlib.sha256()
+    for name in ("baseball.hpp","baseball.cpp","map.hpp","map.cpp","native_bindings.cpp"):
+        sha.update(name.encode());sha.update((ROOT/name).read_bytes().replace(b"\r\n",b"\n"))
+    return sha.hexdigest()
 
 
 def main():
@@ -33,6 +42,10 @@ def main():
     temp.mkdir(exist_ok=True)
     env["TEMP"] = env["TMP"] = str(temp)
     subprocess.run(command, env=env, check=True)
+    (LIB.parent/"native-build.json").write_text(json.dumps({"source_sha256":source_digest(),
+        "binary_sha256":hashlib.sha256(LIB.read_bytes()).hexdigest(),
+        "compiler_version":subprocess.check_output([compiler,"version"] if Path(compiler).stem=="zig" else [compiler,"--version"],text=True).strip(),
+        "flags":["-std=c++17","-O2","-shared"]},indent=2),encoding="utf-8")
     print(LIB)
 
 

@@ -1,6 +1,8 @@
 """Stateless ctypes ABI. No Python fallback for native physics."""
 import ctypes as C
-from build_native import LIB
+import hashlib
+import json
+from build_native import LIB,source_digest
 from numeric import ONE
 
 I64 = C.c_int64
@@ -18,6 +20,11 @@ class Native:
     def __init__(self):
         if not LIB.exists():
             raise RuntimeError("native_missing: run python workspace/build_native.py")
+        stamp=LIB.parent/"native-build.json"
+        if not stamp.exists():raise RuntimeError("native_build_metadata_missing: rebuild native")
+        metadata=json.loads(stamp.read_text())
+        if metadata["source_sha256"]!=source_digest() or metadata["binary_sha256"]!=hashlib.sha256(LIB.read_bytes()).hexdigest():
+            raise RuntimeError("native_stale_or_modified: rebuild native")
         self.lib = C.CDLL(str(LIB))
         self.lib.bb_numeric.argtypes = [C.c_int, C.c_int64, C.c_int64, C.POINTER(C.c_int64)]
         self.lib.bb_numeric.restype = C.c_int

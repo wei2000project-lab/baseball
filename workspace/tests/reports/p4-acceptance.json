@@ -1,0 +1,384 @@
+{
+  "phase": "P4",
+  "seeds": [
+    {
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "final_state_hash": "a7607d382b9b4f7c4aa51cb3bb4a1cd8af52f84e86e8a249a422718b03cb0362",
+      "finish_after_inning": 1,
+      "reason": "fair_inning_completed",
+      "score": {
+        "away": 10,
+        "home": 4
+      },
+      "seed": "0",
+      "sim_tick": 19662,
+      "status": "completed",
+      "winner": "away"
+    },
+    {
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "final_state_hash": "c7f49eb103fb6996ca2c2ea7f7f85fb1da7975d4925d5f38c217a37b1d0cde11",
+      "finish_after_inning": 1,
+      "reason": "fair_inning_completed",
+      "score": {
+        "away": 8,
+        "home": 10
+      },
+      "seed": "1",
+      "sim_tick": 24819,
+      "status": "completed",
+      "winner": "home"
+    },
+    {
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "final_state_hash": "75a09449603ffcdbcb188228e683060b139b549966f75263ddb71e2293a475ba",
+      "finish_after_inning": 1,
+      "reason": "fair_inning_completed",
+      "score": {
+        "away": 8,
+        "home": 9
+      },
+      "seed": "2",
+      "sim_tick": 24436,
+      "status": "completed",
+      "winner": "home"
+    },
+    {
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "final_state_hash": "3146dde273184c356e24316dafb4ed663150220e55f838b9c30b1cb9be9736fd",
+      "finish_after_inning": 1,
+      "reason": "fair_inning_completed",
+      "score": {
+        "away": 10,
+        "home": 10
+      },
+      "seed": "3",
+      "sim_tick": 28309,
+      "status": "completed",
+      "winner": null
+    },
+    {
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "final_state_hash": "62b1c7d4494b826a98f2370214d334afe0529a39a2957cc5276f915d2db30d69",
+      "finish_after_inning": 1,
+      "reason": "fair_inning_completed",
+      "score": {
+        "away": 10,
+        "home": 10
+      },
+      "seed": "4",
+      "sim_tick": 26401,
+      "status": "completed",
+      "winner": null
+    },
+    {
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "final_state_hash": "a5f765789a271d7fefb76de5cb550e4ca2459ffa77b39f164dae7aba2fa9c5bf",
+      "finish_after_inning": 1,
+      "reason": "fair_inning_completed",
+      "score": {
+        "away": 10,
+        "home": 4
+      },
+      "seed": "5",
+      "sim_tick": 19662,
+      "status": "completed",
+      "winner": "away"
+    },
+    {
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "final_state_hash": "19ef2cdc14729ff919df3f99e31a4fb6e5d42cf75c57dcd8ea813a5745a020b6",
+      "finish_after_inning": 1,
+      "reason": "fair_inning_completed",
+      "score": {
+        "away": 8,
+        "home": 10
+      },
+      "seed": "6",
+      "sim_tick": 25750,
+      "status": "completed",
+      "winner": "home"
+    },
+    {
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "final_state_hash": "d2c8954253e9d787bcbb52a809c2e0a9f82b0d056d4820862bd25983ada6b75e",
+      "finish_after_inning": 1,
+      "reason": "fair_inning_completed",
+      "score": {
+        "away": 10,
+        "home": 6
+      },
+      "seed": "7",
+      "sim_tick": 22979,
+      "status": "completed",
+      "winner": "away"
+    },
+    {
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "final_state_hash": "6bcb77f77b784bedd1ab5389a2131ae42ea7893f4a1878694b0458e030fa0240",
+      "finish_after_inning": 1,
+      "reason": "fair_inning_completed",
+      "score": {
+        "away": 10,
+        "home": 10
+      },
+      "seed": "8",
+      "sim_tick": 28282,
+      "status": "completed",
+      "winner": null
+    },
+    {
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "final_state_hash": "f09be2c7439f8e13a5114e08f15645ef5bfb54794f99064b1336d6fcd483678d",
+      "finish_after_inning": 1,
+      "reason": "fair_inning_completed",
+      "score": {
+        "away": 8,
+        "home": 9
+      },
+      "seed": "9",
+      "sim_tick": 24436,
+      "status": "completed",
+      "winner": "home"
+    },
+    {
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "final_state_hash": "b8c49a7a5ff2f6882632c3f639c27e633193328b22995c9aa188946f1e9c635a",
+      "finish_after_inning": 1,
+      "reason": "fair_inning_completed",
+      "score": {
+        "away": 10,
+        "home": 5
+      },
+      "seed": "10",
+      "sim_tick": 20934,
+      "status": "completed",
+      "winner": "away"
+    },
+    {
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "final_state_hash": "f3bc99f30bd23bc3b28ffcd5c804acd4f2e22774ca6d1cc8e9d4af8ec3fcba30",
+      "finish_after_inning": 1,
+      "reason": "fair_inning_completed",
+      "score": {
+        "away": 10,
+        "home": 10
+      },
+      "seed": "11",
+      "sim_tick": 27868,
+      "status": "completed",
+      "winner": null
+    },
+    {
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "final_state_hash": "135d00ecd601b0fc5361bedcbe208d04f6f0de0328c97e28b62b4a9d24445307",
+      "finish_after_inning": 1,
+      "reason": "fair_inning_completed",
+      "score": {
+        "away": 10,
+        "home": 10
+      },
+      "seed": "12",
+      "sim_tick": 25393,
+      "status": "completed",
+      "winner": null
+    },
+    {
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "final_state_hash": "f807fc579a8de62e274eb020e16f23b459d3db4db133f8ebe43d4f8a6bda05c6",
+      "finish_after_inning": 1,
+      "reason": "fair_inning_completed",
+      "score": {
+        "away": 10,
+        "home": 8
+      },
+      "seed": "13",
+      "sim_tick": 25750,
+      "status": "completed",
+      "winner": "away"
+    },
+    {
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "final_state_hash": "32c4ae736a8a54923506b08156b2a74f4cfe3afa2293328cfedf9929868e55b8",
+      "finish_after_inning": 1,
+      "reason": "fair_inning_completed",
+      "score": {
+        "away": 10,
+        "home": 10
+      },
+      "seed": "14",
+      "sim_tick": 27775,
+      "status": "completed",
+      "winner": null
+    },
+    {
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "final_state_hash": "d41b02521b36de48804f2d7c01aa36246fcb9edb857d682154de66eadffd32eb",
+      "finish_after_inning": 1,
+      "reason": "fair_inning_completed",
+      "score": {
+        "away": 10,
+        "home": 10
+      },
+      "seed": "15",
+      "sim_tick": 27784,
+      "status": "completed",
+      "winner": null
+    },
+    {
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "final_state_hash": "eb39ceb8658d65a3f7b6580d5e50dc3fa25da42f95e74d19d683b83d2b3373e1",
+      "finish_after_inning": 1,
+      "reason": "fair_inning_completed",
+      "score": {
+        "away": 10,
+        "home": 10
+      },
+      "seed": "16",
+      "sim_tick": 26110,
+      "status": "completed",
+      "winner": null
+    },
+    {
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "final_state_hash": "6684ba1448b04409811789d4ec5e49b8cd1572be079338065ea5a85249477d0c",
+      "finish_after_inning": 1,
+      "reason": "fair_inning_completed",
+      "score": {
+        "away": 8,
+        "home": 8
+      },
+      "seed": "17",
+      "sim_tick": 23632,
+      "status": "completed",
+      "winner": null
+    },
+    {
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "final_state_hash": "100656ad2241ba0697a594abad0e2e67fc07bbd926a528e5ec5010e1f3abce5a",
+      "finish_after_inning": 1,
+      "reason": "fair_inning_completed",
+      "score": {
+        "away": 10,
+        "home": 5
+      },
+      "seed": "18",
+      "sim_tick": 20934,
+      "status": "completed",
+      "winner": "away"
+    },
+    {
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "final_state_hash": "4b6e203183f097769ec3c75c25991bcabdcc5449fb83d8eb386f072f4d52e991",
+      "finish_after_inning": 1,
+      "reason": "fair_inning_completed",
+      "score": {
+        "away": 10,
+        "home": 10
+      },
+      "seed": "19",
+      "sim_tick": 27337,
+      "status": "completed",
+      "winner": null
+    }
+  ],
+  "seed_count": 20,
+  "completed": 20,
+  "aborted": 0,
+  "repeat_runs_byte_identical": [
+    "initial_state",
+    "actions",
+    "events",
+    "checkpoints",
+    "summary"
+  ],
+  "cpu": "Intel(R) Core(TM) Ultra 5 225",
+  "ram_bytes": 33787138048,
+  "os": "Windows-11-10.0.26200-SP0",
+  "python": "3.13.9",
+  "native_toolchain": "Zig 0.13.0 -std=c++17 -O2",
+  "regulation_ticks": 1200,
+  "default_match": {
+    "completed_halves": {
+      "away": 5,
+      "home": 5
+    },
+    "final_state_hash": "14b24f98023eae1ce98f9a50d61b6020428b177e0bcf126a8508d13fb23b956e",
+    "finish_after_inning": 5,
+    "reason": "fair_inning_completed",
+    "score": {
+      "away": 50,
+      "home": 45
+    },
+    "sim_tick": 132898,
+    "status": "completed",
+    "winner": "away"
+  },
+  "default_performance": {
+    "bot_watchdog_ms": 2000,
+    "python": "3.13.9 (tags/v3.13.9:8183fa5, Oct 14 2025, 14:09:13) [MSC v.1944 64 bit (AMD64)]",
+    "sim_ticks": 132898,
+    "wall_seconds_ms": 68549
+  },
+  "tests": "78 passed; Python/JavaScript replacement, memory, line size, watchdog, fault archiving"
+}
