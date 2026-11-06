@@ -23,7 +23,7 @@ def main():
         command += ["c++"]
     LIB.parent.mkdir(exist_ok=True)
     command += ["-std=c++17", "-O2", "-shared", str(ROOT / "native_bindings.cpp"),
-                str(ROOT / "map.cpp"), "-o", str(LIB)]
+                str(ROOT / "baseball.cpp"), str(ROOT / "map.cpp"), "-o", str(LIB)]
     if os.name != "nt":
         command += ["-fPIC"]
     env = os.environ.copy()

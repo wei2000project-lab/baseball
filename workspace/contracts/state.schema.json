@@ -345,6 +345,19 @@
     },
     "termination_reason": {
       "type": "null"
+    },
+    "ruleset_version": {
+      "const": "1.0.0-dev.P1"
+    },
+    "physics_version": {
+      "const": "1.0.0-dev.P1"
+    },
+    "map_version": {
+      "const": "1.0.0-dev.P1"
+    },
+    "config_hash": {
+      "type": "string",
+      "pattern": "[0-9a-f]{64}"
     }
   },
   "required": [
@@ -385,7 +398,11 @@
     "action_cursor",
     "last_event_seq",
     "terminal_status",
-    "termination_reason"
+    "termination_reason",
+    "ruleset_version",
+    "physics_version",
+    "map_version",
+    "config_hash"
   ],
   "additionalProperties": false
 }

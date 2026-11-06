@@ -27,7 +27,9 @@ class BaseballEngine:
             for i, (role, position) in enumerate(zip(ROLES, config["field"]["defense_q"])):
                 players.append({"id": f"{team}.P{i+1:02}", "team_id": team, "role": role,
                                 "position_q": position[:], "velocity_q": ["0", "0"], "active_intents": {}})
-        return {"schema_version": VERSION, "sim_tick": 0, "phase": "INIT", "phase_start_tick": 0,
+        return {"schema_version": VERSION, "ruleset_version": config["version"],
+                "physics_version": config["physics"]["version"], "map_version": config["field"]["version"],
+                "config_hash": digest(config), "sim_tick": 0, "phase": "INIT", "phase_start_tick": 0,
                 "phase_deadline_tick": 0, "inning": 1, "half": "top", "transition_from_half": None,
                 "pending_transition": None, "regulation_expired": False, "finish_after_inning": None,
                 "score": {"away": 0, "home": 0}, "outs": 0, "balls": 0, "strikes": 0,
@@ -55,6 +57,8 @@ class BaseballEngine:
         validate_named(snapshot, "state")
         if snapshot["schema_version"] != VERSION:
             raise ValueError("unsupported_version")
+        if self.config is not None and snapshot["config_hash"] != digest(self.config):
+            raise ValueError("configuration_mismatch")
         self.state = copy.deepcopy(snapshot)
         self.check_invariants()
         self.events = []
