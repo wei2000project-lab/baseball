@@ -1,0 +1,39 @@
+{
+  "tag": "launcher-v1",
+  "entry": "C:\\Users\\weiwei\\Desktop\\ai_project\\baseball\\launcher\\\u555f\u52d5\u904a\u6232.bat",
+  "executable": "C:\\Users\\weiwei\\Desktop\\ai_project\\baseball\\launcher\\build\\BaseballLauncher-5eab2cadd06e3ec7.exe",
+  "build": {
+    "sha256": "07a5e548a4b26c6a5a424ccf77b26c849115b8a406622153940843f525508390",
+    "source_sha256": "5eab2cadd06e3ec724ecd846db2884062385f9c289b1a7814df2f67fe7634096",
+    "compiler": [
+      "C:\\Users\\weiwei\\Desktop\\ai_project\\baseball\\.tools\\ziglang\\zig.exe",
+      "c++"
+    ],
+    "compiler_version": "0.13.0",
+    "flags": [
+      "-std=c++17",
+      "-O2",
+      "-municode",
+      "-Wl,--subsystem,windows",
+      "-I",
+      "C:\\Users\\weiwei\\Desktop\\ai_project\\baseball\\bots\\vendor",
+      "-lcomdlg32",
+      "-lshell32",
+      "-lole32",
+      "-lcomctl32",
+      "-lgdi32"
+    ]
+  },
+  "pe_subsystem": 2,
+  "validation": {
+    "python_tests": 121,
+    "javascript_tests_in_cleanroom": 7,
+    "cleanroom_commands": 10,
+    "hidden_gui_checks": 32,
+    "batch_from_other_cwd": "passed; --check does not display a window",
+    "progress_does_not_change_records": true
+  },
+  "runtime_python": "D:\\ai_models\\Python\\Python313\\python.exe",
+  "user_bot_unchanged": "bots/GPT_tactical_cpp",
+  "visible_desktop_control": false
+}

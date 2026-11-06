@@ -4,6 +4,8 @@
 
 ## 啟動對戰與回放
 
+也可直接雙擊 **[launcher/啟動遊戲.bat](launcher/啟動遊戲.bat)**，在已編譯的原生視窗選主客隊、輸出位置後開始，完成可直接看回放。詳見 [啟動器說明](launcher/README.md)。
+
 以下 PowerShell 命令不需要桌面控制權限。viewer 由你執行後才會開啟視窗。
 
 ```powershell

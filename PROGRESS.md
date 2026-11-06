@@ -4,6 +4,15 @@
 
 目前操作限制：使用者正在使用電腦；不得要求電腦控制權限或操作／切換使用者視窗。後續改用 CLI、隱藏離屏 renderer、記錄副本與背景測試驗收。
 
+## 原生對戰啟動器（完成；tag: launcher-v1）
+
+- 新增 launcher 資料夾與「啟動遊戲.bat」雙擊入口；原生 C++ Windows GUI 已編譯，可選主／客隊、交換、瀏覽檔案／Bot資料夾、輸出根目錄／自動場次名稱、Seed 與模擬時間，開始／停止／觀看回放，記住上次選擇。
+- 自動列出 bots 內有效 Bot，包含使用者新增的 GPT_tactical_cpp；未更動或提交該 Bot。選 .cpp 會自動編譯，錯誤與進度在視窗顯示；新建置不覆寫執行中的舊 .exe。
+- 32 項背景原生 GUI 驗收已通過：隱藏視窗、選隊交換、Unicode 路徑／引數、不覆寫、成功／停止自有程序樹／編譯失敗、按鈕狀態與 TXT 完整性。報告 workspace/tests/reports/launcher.json。
+- match.py 增加可選 --progress JSONL；**121 項 Python 測試通過**，有無進度回呼的對戰／TXT 完全一致。實際 BAT --check 從其他工作目錄啟動成功，未顯示視窗。
+- 隔離來源的 **10 個命令全過**，含原生 GUI 重新編譯、121 Python／7 JS、對戰／TXT／範例及 32 項隱藏 GUI 驗收。報告 launcher-cleanroom.json、launcher.json、launcher-build.json；可直接雙擊 launcher/啟動遊戲.bat。
+- 全程沒有操作桌面或啟動可見回放。使用者自己的 bots/GPT_tactical_cpp 保持原樣且不納入本次提交；規則、物理與 Bot 策略未改。
+
 ## C++ Bot 相容與 AI 參考文件（完成；tag: cpp-bot-v1）
 
 - 已加入 `bot.cpp`／直接 .cpp／自訂 bot.json C++ 入口的自動 C++17 編譯；產物與編譯 log 在忽略的 workspace/build/cpp-bots。支援 Zig／Clang／GCC、來源／本地標頭／工具鏈快取指紋，編譯不占用 Bot 回覆 watchdog。

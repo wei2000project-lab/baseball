@@ -1,0 +1,118 @@
+{
+  "passed": true,
+  "mode": "native hidden window; no desktop input, viewer, shell or file dialog",
+  "executable": "C:\\Users\\weiwei\\Desktop\\ai_project\\baseball\\launcher\\build\\BaseballLauncher-5eab2cadd06e3ec7.exe",
+  "pe_subsystem": 2,
+  "checks": 32,
+  "cases": [
+    {
+      "case": "completed",
+      "verification_status": "verified_record",
+      "cancelled": false,
+      "checks": [
+        "test window remains hidden; no desktop input is used",
+        "Bot folders are discovered",
+        "home and away swap correctly",
+        "Unicode, spaces, quotes and trailing slashes round-trip without a shell",
+        "invalid seed is rejected before launch",
+        "existing non-empty recordings are not overwritten",
+        "all native controls fit inside the client area",
+        "running state prevents duplicate starts",
+        "duplicate start is rejected without replacing the running match",
+        "hidden native GUI starts a real match and receives progress",
+        "completion resets buttons and preserves the TXT output"
+      ],
+      "error": "",
+      "log": "C:\\Users\\weiwei\\Desktop\\ai_project\\baseball\\launcher/build\\logs\\match-20261107-055430-825.log",
+      "output": "C:\\Users\\weiwei\\Desktop\\ai_project\\baseball\\workspace\\build\\launcher-acceptance\\5612a616540e\\completed\\\u4e2d\u6587 \u8f38\u51fa with spaces\\match-20261107-055430-825",
+      "owned_process_tree_stopped": false,
+      "passed": true,
+      "progress_packets": 3,
+      "summary": {
+        "completed_halves": {
+          "away": 1,
+          "home": 1
+        },
+        "final_state_hash": "851b5920391f960012b55285cbfb0a4da12f98489b6de12afb4b06e23669b913",
+        "finish_after_inning": 1,
+        "reason": "fair_inning_completed",
+        "replay_state_hash": "bce53054b01ac768065ee094b095ec9e942e703785645e267d99c73fd1f9a23e",
+        "score": {
+          "away": 10,
+          "home": 10
+        },
+        "sim_tick": 2185,
+        "status": "completed",
+        "winner": null
+      },
+      "visible": false
+    },
+    {
+      "case": "cancelled",
+      "verification_status": "incomplete",
+      "cancelled": true,
+      "checks": [
+        "test window remains hidden; no desktop input is used",
+        "Bot folders are discovered",
+        "home and away swap correctly",
+        "Unicode, spaces, quotes and trailing slashes round-trip without a shell",
+        "invalid seed is rejected before launch",
+        "existing non-empty recordings are not overwritten",
+        "all native controls fit inside the client area",
+        "running state prevents duplicate starts",
+        "duplicate start is rejected without replacing the running match",
+        "cancellation terminates only the owned match tree"
+      ],
+      "error": "",
+      "log": "C:\\Users\\weiwei\\Desktop\\ai_project\\baseball\\launcher/build\\logs\\match-20261107-055435-008.log",
+      "output": "C:\\Users\\weiwei\\Desktop\\ai_project\\baseball\\workspace\\build\\launcher-acceptance\\5612a616540e\\cancelled\\\u4e2d\u6587 \u8f38\u51fa with spaces\\match-20261107-055435-008",
+      "owned_process_tree_stopped": true,
+      "passed": true,
+      "progress_packets": 1,
+      "summary": null,
+      "visible": false
+    },
+    {
+      "case": "aborted",
+      "verification_status": "verified_record",
+      "cancelled": false,
+      "checks": [
+        "test window remains hidden; no desktop input is used",
+        "Bot folders are discovered",
+        "home and away swap correctly",
+        "Unicode, spaces, quotes and trailing slashes round-trip without a shell",
+        "invalid seed is rejected before launch",
+        "existing non-empty recordings are not overwritten",
+        "all native controls fit inside the client area",
+        "running state prevents duplicate starts",
+        "duplicate start is rejected without replacing the running match",
+        "backend failure is shown as aborted instead of successful",
+        "completion resets buttons and preserves the TXT output"
+      ],
+      "error": "",
+      "log": "C:\\Users\\weiwei\\Desktop\\ai_project\\baseball\\launcher/build\\logs\\match-20261107-055436-387.log",
+      "output": "C:\\Users\\weiwei\\Desktop\\ai_project\\baseball\\workspace\\build\\launcher-acceptance\\5612a616540e\\aborted\\\u4e2d\u6587 \u8f38\u51fa with spaces\\match-20261107-055436-387",
+      "owned_process_tree_stopped": false,
+      "passed": true,
+      "progress_packets": 0,
+      "summary": {
+        "completed_halves": {
+          "away": 0,
+          "home": 0
+        },
+        "final_state_hash": "e8584c23f4ca955ed1a8e6e69bf424237b1af4c88b54f043e1c64385b1b349bd",
+        "finish_after_inning": null,
+        "reason": "bot:away:cpp_bot_compile_failed: see C:\\Users\\weiwei\\Desktop\\ai_project\\baseball\\workspace\\build\\cpp-bots\\e2f1ab984d751f134d1d064b0a26e3802012928530e4a5464443b57a307dd5d2\\f26986b7241d\\compiler.log",
+        "replay_state_hash": "6bf597cfb4f39e51b5c47592dde5b92d4fe13762eb3140ba02672e89a76e96d5",
+        "score": {
+          "away": 0,
+          "home": 0
+        },
+        "sim_tick": 0,
+        "status": "aborted",
+        "winner": null
+      },
+      "visible": false
+    }
+  ]
+}

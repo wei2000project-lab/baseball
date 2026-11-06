@@ -1,5 +1,13 @@
 # 2.0.0 驗收與需求追蹤
 
+## 原生對戰啟動器
+
+`launcher-v1`：launcher/啟動遊戲.bat 是雙擊入口，啟動已編譯的 C++ Windows GUI，可選／交換主客隊、Bot 檔案或資料夾、輸出、場次名稱、Seed、模擬時間，直接開始／停止並觀看回放。支援新加入的 Bot；編譯錯誤在視窗呈現，設定／編譯產物／日誌在忽略的 launcher/build。
+
+整套 121 Python tests 通過，新增測試確認 --progress 不改變對戰／TXT，並從不同工作目錄實際執行 BAT --check。32 項原生隱藏 GUI 驗收通過：主客隊交換、路徑引用、中文／空格、不覆寫、成功／取消自有程序樹／編譯失敗、按鈕與輸出完整性。PE subsystem=2，是真正 GUI 執行檔。隔離來源 10 個命令全過，含 121 Python／7 JS 與 GUI 重建／隱藏驗收；報告見 tests/reports/launcher*.json。
+
+所有測試均未顯示啟動器視窗、檔案對話框或回放，不操控桌面。規則、物理與原有 Bot 策略沒有修改；進度只是可選的輸出通道。
+
 ## C++ Bot 擴充
 
 `cpp-bot-v1`：新增 bot.cpp 自動 C++17 編譯、資料夾／原始檔／執行檔／bot.json 入口、來源與本地標頭快取、離線 JSON 標頭及無策略的 bots/BOT_REFERENCE.md。規則、物理與基本 Bot 策略未變。

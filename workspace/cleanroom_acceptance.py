@@ -44,6 +44,7 @@ def main():
         run([sys.executable,'workspace/replay.py','frames','--input','results/cleanroom-match','--output','results/cleanroom-match/cache/frames'])
         run([sys.executable,'workspace/unpack_demo.py','--output','results/offline-demo'])
         run([sys.executable,'workspace/replay.py','verify','--input','results/offline-demo'])
+        run([sys.executable,'launcher/verify_launcher.py','--report','workspace/build/launcher-acceptance.json'])
         report['passed']=True
     except Exception as e:report['error']=str(e);raise
     finally:

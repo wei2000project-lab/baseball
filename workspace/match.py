@@ -11,7 +11,7 @@ from numeric import canonical,strict_loads,stream_seed
 from recording import Recorder,decision_record,advance_recorded,atomic_json
 
 
-def run_match(away,home,config,seed,output,timeout=2.0,max_record_bytes=512*1024*1024):
+def run_match(away,home,config,seed,output,timeout=2.0,max_record_bytes=512*1024*1024,progress=None):
     engine=BaseballEngine(validate_config(config),str(seed));recorder=Recorder(output,engine,str(seed),run_mode="formal")
     hosts={};seq=0;started=time.perf_counter();last_phase=None
     try:
@@ -53,6 +53,10 @@ def run_match(away,home,config,seed,output,timeout=2.0,max_record_bytes=512*1024
                 fault=decision_record(engine,"away",None,seq);fault["fault"]={"source":"engine","reason":str(error)[:256]}
                 records.append(fault);result=advance_recorded(engine,records)
             recorder.write_step(engine,result,records)
+            if progress and engine.state["sim_tick"]%600==0:
+                s=engine.state
+                progress({"type":"progress","sim_tick":s["sim_tick"],"phase":s["phase"],"inning":s["inning"],
+                          "half":s["half"],"score":dict(s["score"]),"regulation_expired":s["regulation_expired"]})
             if engine.state["sim_tick"]%600==0:
                 size=sum(p.stat().st_size for p in recorder.path.iterdir() if p.is_file())
                 if size>max_record_bytes and not engine.terminal_result():
@@ -79,11 +83,13 @@ def main():
     p.add_argument("--away",required=True);p.add_argument("--home",required=True)
     p.add_argument("--seed",default="42");p.add_argument("--config",default="workspace/config/default.json")
     p.add_argument("--output",required=True);p.add_argument("--regulation-ticks",type=int)
+    p.add_argument("--progress",action="store_true",help="Emit progress JSONL for the launcher; does not change decisions or recordings")
     args=p.parse_args()
     try:
         config=strict_loads(Path(args.config).read_text(encoding="utf-8"))
         if args.regulation_ticks is not None:config["rules"]["regulation_ticks"]=args.regulation_ticks
-        result=run_match(args.away,args.home,config,args.seed,args.output)
+        progress=(lambda packet:print(canonical(packet).decode(),flush=True)) if args.progress else None
+        result=run_match(args.away,args.home,config,args.seed,args.output,progress=progress)
         print(canonical(result).decode());return 0 if result["status"]=="completed" else 2
     except (ValueError,OSError,RuntimeError) as error:
         print(str(error),file=sys.stderr);return 1

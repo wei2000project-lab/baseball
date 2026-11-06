@@ -92,11 +92,13 @@ def build_cpp_bot(source, compiler=None, force=False):
     output.mkdir()
     binary = output / ("bot.exe" if os.name == "nt" else "bot")
     log = output / "compiler.log"
+    print("Compiling C++ Bot: " + str(source), file=sys.stderr, flush=True)
     try:
         result = subprocess.run(command + flags + [str(source), "-o", str(binary)],
                                 cwd=source.parent, timeout=120, **options)
         log.write_text(result.stdout + result.stderr, encoding="utf-8")
         if result.returncode:
+            print((result.stdout + result.stderr)[-6000:], file=sys.stderr, flush=True)
             raise RuntimeError("cpp_bot_compile_failed: see " + str(log))
     except (OSError, subprocess.TimeoutExpired) as error:
         log.write_text(str(error), encoding="utf-8")
