@@ -1,0 +1,10 @@
+{
+  "name": "baseball-bot-viewer",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Offline authoritative baseball replay viewer",
+  "main": "electron/main.cjs",
+  "scripts": {"postinstall": "node electron/install-runtime.cjs", "viewer": "electron .", "test": "node --test tests/viewer.test.mjs"},
+  "devDependencies": {"electron": "45.2.3"},
+  "engines": {"node": "24.x"}
+}

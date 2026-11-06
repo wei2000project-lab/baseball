@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'">
+  <title>Diamond · 棒球 Bot 回放</title>
+  <link rel="stylesheet" href="viewer/style.css">
+  <script type="module" src="viewer/app.mjs"></script>
+</head>
+<body>
+  <header class="appbar">
+    <div class="brand"><span class="diamond-logo">◇</span><div>DIAMOND<small>棒球 Bot 自動對戰 · 回放室</small></div></div>
+    <div class="header-actions"><span id="verification" class="badge">尚未載入記錄</span><button id="reload">重新載入</button><button id="open" class="primary">開啟比賽記錄</button></div>
+  </header>
+  <section class="scoreboard">
+    <div class="team away"><span class="team-dot"></span><div><small>AWAY</small><b>客隊</b></div><strong id="away-score">0</strong></div>
+    <div class="match-state"><div id="inning">準備開賽</div><small id="phase">選取一場記錄，查看每一次判決</small><div class="count-line"><span>OUT <b id="outs">0</b></span><span>B <b id="balls">0</b></span><span>S <b id="strikes">0</b></span></div></div>
+    <div class="team home"><strong id="home-score">0</strong><div><small>HOME</small><b>主隊</b></div><span class="team-dot"></span></div>
+    <div class="clock"><small>模擬時間</small><strong id="clock">00:00.000</strong><span id="expired">120 ticks / 秒</span></div>
+  </section>
+  <main>
+    <section class="field-panel">
+      <div class="panel-bar"><span id="record-name">邏輯球場</span><div class="legend"><span class="away-text">● 客隊</span><span class="home-text">● 主隊</span><span>◦ 球的地面投影</span></div></div>
+      <div class="canvas-area"><canvas id="field" aria-label="棒球場、球與球員邏輯位置"></canvas><div class="field-label">WORLD / METERS <span id="fps">—</span></div><div class="height-card"><small>BALL HEIGHT</small><strong id="ball-height">0.00 <em>m</em></strong><span id="ball-mode">死球</span></div><div id="empty" class="empty"><div class="diamond-large">◇</div><h1>每一球，都能重新驗證</h1><p>開啟 results 中的一場比賽，從原始動作還原整場對戰。</p></div><div id="loading" class="loading hidden"><b id="loading-text">正在驗證記錄…</b><progress id="progress" max="100" value="0"></progress><button id="cancel">取消重算</button></div></div>
+      <div class="field-status"><span id="holder">持球者：—</span><span id="pending">待確認得分：0</span><span id="fair">界內／界外：—</span></div>
+    </section>
+    <aside>
+      <section class="side-card situation"><div class="card-title">場上狀態 <small id="runner-count">0 位跑者</small></div><div class="situation-content"><canvas id="bases" width="142" height="120" aria-label="壘位狀態"></canvas><div id="runner-list">目前無跑者</div></div></section>
+      <section class="side-card events"><div class="card-title">比賽事件 <small>點選可定位</small></div><div id="events" class="event-list"><p class="muted">載入記錄後顯示重要事件。</p></div></section>
+      <section class="side-card inspect"><div class="card-title">判定檢視 <small>點選球員／事件</small></div><pre id="inspector">球場使用權威邏輯位置。
+視覺偏移不參與比賽判定。</pre></section>
+    </aside>
+  </main>
+  <footer>
+    <div class="timeline-top"><span id="tick-label">tick 0</span><span id="seek-state">未驗證</span><span id="duration">00:00</span></div>
+    <input id="timeline" type="range" min="0" max="1" value="0" step="1" aria-label="時間軸 tick">
+    <div class="controls"><div class="play-controls"><button id="previous" title="上一球">◀ 上一球</button><button id="step-back" title="後退一 tick">−1</button><button id="play" class="play" title="空白鍵播放或暫停">▶ 播放</button><button id="step" title="前進一 tick">+1</button><button id="next" title="下一球">下一球 ▶</button><select id="speed" aria-label="播放速度"><option value=".25">0.25×</option><option value=".5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option><option value="8">8×</option></select></div><div class="jump-controls"><select id="inning-jump" aria-label="跳局"><option>跳至半局</option></select><label>tick <input id="tick-input" type="number" min="0" value="0" aria-label="精確 tick"></label><button id="go">定位</button></div><div class="visual-controls"><label><input id="debug" type="checkbox">邏輯區域</label><label><input id="offsets" type="checkbox" checked>視覺偏移</label><label>比例 <input id="scale" type="range" min=".5" max="2" step=".1" value="1" aria-label="視覺比例"></label></div></div>
+    <div id="message" class="message" role="status">離線回放 · 無需原 Bot 或模型資產</div>
+  </footer>
+</body>
+</html>

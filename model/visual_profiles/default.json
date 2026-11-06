@@ -1,0 +1,9 @@
+{
+  "schema_version": "1.0.0",
+  "model_asset_id": null,
+  "model_scale": 1,
+  "model_origin_correction": [0, 0, 0],
+  "visual_offset_local": [0, 0, 0],
+  "role_offsets": {"P": [0.5, 0], "C": [1.2, -0.5], "batter": [-0.6, 0], "runner": [0, 0]},
+  "anchors": {"origin": "feet_center", "glove": "visual_only", "bat": "visual_only"}
+}

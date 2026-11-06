@@ -1,6 +1,8 @@
 # 開發進度
 
-目前階段：**P5 已通過，準備進入 P6**。已封存 `p0`–`p4`（P4 `537aa8b`）。
+目前階段：**P6 已通過，準備進入 P7**。已封存 `p0`–`p5`（P5 `682257a`）。
+
+目前操作限制：使用者正在使用電腦；不得要求電腦控制權限或操作／切換使用者視窗。後續改用 CLI、隱藏離屏 renderer、記錄副本與背景測試驗收。
 
 依序 P0 → P7；每期先通過該期全部出口測試，再提交 `P<n>: 說明` 並建立 `p<n>` tag。未通過不可進下一期。
 
@@ -12,7 +14,7 @@
 | P3 活球與限時規則 | 通過（tag: `p3`） | T08–T22、限時／交換邊界、回壘 checkpoint；全套 68 tests |
 | P4 Bot 與端到端對戰 | 通過（tag: `p4`） | 78 tests；20 seeds × 2 輪全 completed、動作／事件／checkpoint／終局逐檔 byte 一致；預設 15 分鐘對戰完成 |
 | P5 重算與驗證器 | 通過（tag: `p5`） | 全套 96 tests；D1/D2 各 10 次、20 舊版完整驗證、100 隨機 seek、全部 checkpoint 恢復、篡改與 incomplete |
-| P6 Electron 回放 | 未開始 | — |
+| P6 Electron 回放 | 通過（tag: `p6`） | 98 Python tests、5 JS tests、20 項真實 Electron 離屏整合檢查、1080p artifact |
 | P7 整合封存 | 未開始 | — |
 
 ## 已知問題與接續
@@ -55,5 +57,16 @@
 - 100+ 個隨機 tick 定位與順序推進一致。實際基準賽 100 次 hot seek：中位 48 ms、P95 175 ms、最長 241 ms；索引首次載入 572 ms。見 `workspace/tests/reports/p5-seek-performance.json`。
 - 篡改 accepted intent、事件、checkpoint（含重算封存雜湊）、截斷、未知版本、非法 Unicode、有限小數拒絕稽核、程序故障同 tick 終局、incomplete 前綴、映射／回覆順序測試通過。分塊影格每塊最多 600 格，損壞或刪除 chunk 可重建。
 - 發現並版本化修正過早揮棒的窗口結束後仍應計揮空好球；新 rules/schema 為 `1.0.0-dev.P5`，物理／場地維持 P4，明確保留 P4 舊規則與指定建置相容指紋，未悄改舊回放。
-- 已知限制：尚無 Electron 介面；跨平台 D3 尚未宣告。P0–P3 開發記錄須使用對應 Git tag；目前驗證器支援已驗收的 P4 與 P5。
+- 跨平台 D3 尚未宣告。P0–P3 開發記錄須使用對應 Git tag；目前驗證器支援已驗收的 P4 與 P5。
 - `results/`、工具鏈、建置產物、node_modules 與快取不納入 Git。
+
+## P6 驗收紀錄
+
+- `python -m pytest workspace/tests -q` → **98 passed in 17.39s**；`node --test workspace/tests/viewer.test.mjs` → **5 passed**；main/preload/renderer JS 語法檢查通過。
+- `python workspace/ui_acceptance.py --input results/p4-final-batch/seed-00` → **20 checks passed**。使用獨立隱藏離屏 Electron，不顯示視窗、不取得桌面控制，原始記錄逐檔雜湊未變更。
+- 真實 renderer 覆蓋完整驗證、逐 tick 前後、上一／下一球、跳半局、0.25×／8× 播放後回到相同狀態雜湊、視覺偏移／比例不影響權威狀態、球高／比分／持球／事件同步、終局一致、HTML 稽核文字不執行、取消重算並清除驗證宣告。
+- 測試輸出 1920×1080 離屏影像並檢查佈局；8× 播放時量得 **60 FPS**（背景測試，不宣稱所有前景硬體皆達此值）。報告 `workspace/tests/reports/p6-ui.json`。
+- Electron 45.2.3、npm 12.2.2 與 Node 24 工具鏈已記錄；package-lock 鎖定依賴。renderer context isolation／sandbox 開啟、Node integration 關閉，IPC 僅允許固定操作，Python 以參數陣列啟動。
+- 影格 LRU 上限 3 chunks；精確 seek 由持續存活的 Python worker 重算。修正取消重算後的過期驗證標示與舊請求競態。
+- 已知限制：目前為基本幾何與視覺 profile；GLB／Blender 美術製作仍依規格保留到後續。作業系統與瀏覽器前景 FPS 尚無額外桌面控制驗收，尊重使用者正在使用電腦的限制。
+- 下一期 P7：安裝與故障排查文件、完整需求追蹤、範例記錄、visual profile Schema、隔離來源建置與端到端封存檢查。

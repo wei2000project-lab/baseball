@@ -52,3 +52,24 @@ verify 預設從頭重算；`--checkpoint <索引>` 只會回報 verified_prefix
 影格以每 4 ticks 與重要事件邊界輸出，每塊最多 600 影格；快取包含來源雜湊與驗證報告，過期／損壞的 chunk 自動重建。刪除整個 cache 也能從原記錄重算。`--progress` 可輸出 JSONL 進度。
 
 P5 規則版本 `1.0.0-dev.P5` 修正已啟動但窗口結束的揮空仍須計好球；原 `1.0.0-dev.P4` 保留舊判定分支，指定的 P4 建置指紋經完整回放驗收後列入相容表，無近似套用新判決。原生物理／場地版本仍為 P4。被拒絕的有限小數輸入只保留在稽核欄位，不進入權威數值；NaN、Infinity、非法 Unicode 在 JSON 邊界拒絕。
+
+P6 Electron 回放（Node 24、Electron 45.2.3）：
+
+```powershell
+npm ci --prefix workspace
+python workspace/viewer.py --record results/demo-0042
+# 或在 workspace 執行 npm run viewer，從畫面選取比賽目錄。
+```
+
+若 Node 沒有附 npm，可在專案根目錄執行 `python workspace/bootstrap_node.py`，再以 `node .tools/npm-runtime/package/bin/npm-cli.js ci --prefix workspace` 安裝鎖定依賴。postinstall 會執行固定版本 Electron 的官方 runtime 安裝器，快取留在 workspace/build。
+
+介面支援播放／暫停、0.25×–8×、逐 tick、上一／下一球、跳局、時間軸、精確 tick 定位、事件與球員檢視。球高、陰影、持球權、壘位與待確認得分來自重算資料；暫停或定位後由背景程序回傳精確狀態雜湊。視覺偏移、比例與邏輯區域開關均不回寫引擎。未提供 Blender 模型時使用基本幾何。
+
+無桌面控制的背景驗收：
+
+```powershell
+node --test workspace/tests/viewer.test.mjs
+python workspace/ui_acceptance.py --input results/demo-0042
+```
+
+驗收只建立不可見的離屏視窗，使用獨立 userData 與記錄副本，不注入鍵盤滑鼠、不切換現有視窗。報告在 workspace/tests/reports/p6-ui.json，1080p 圖片在 workspace/build/ui-acceptance。原記錄檔案會比對確認未變更。
