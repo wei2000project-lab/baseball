@@ -3,7 +3,7 @@
   "type": "object",
   "properties": {
     "schema_version": {
-      "const": "1.0.0-dev.P0"
+      "const": "1.0.0-dev.P2"
     },
     "sim_tick": {
       "type": "integer",
@@ -11,7 +11,17 @@
       "maximum": 10000000
     },
     "phase": {
-      "const": "INIT"
+      "enum": [
+        "INIT",
+        "PLATE_APPEARANCE_SETUP",
+        "PITCH_READY",
+        "PITCH_IN_FLIGHT",
+        "PITCH_RESET",
+        "BALL_IN_PLAY",
+        "HALF_TRANSITION",
+        "GAME_OVER",
+        "ABORTED"
+      ]
     },
     "phase_start_tick": {
       "type": "integer",
@@ -34,16 +44,41 @@
       "maxLength": 256
     },
     "transition_from_half": {
-      "type": "null"
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 256
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "pending_transition": {
-      "type": "null"
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 256
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "regulation_expired": {
       "type": "boolean"
     },
     "finish_after_inning": {
-      "type": "null"
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "score": {
       "type": "object",
@@ -169,10 +204,26 @@
           "minItems": 3
         },
         "holder_id": {
-          "type": "null"
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 256
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "origin": {
-          "type": "null"
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 256
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "has_touched_ground_since_bat": {
           "type": "boolean"
@@ -236,8 +287,21 @@
           },
           "active_intents": {
             "type": "object",
-            "properties": {},
-            "required": [],
+            "properties": {
+              "move": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "items": {
+                  "type": "string",
+                  "pattern": "-?(0|[1-9][0-9]*)",
+                  "maxLength": 20
+                }
+              },
+              "catch": {
+                "type": "boolean"
+              }
+            },
             "additionalProperties": false
           }
         },
@@ -256,13 +320,167 @@
     },
     "runners": {
       "type": "array",
-      "items": {},
-      "maxItems": 10000
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "origin_base": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000000
+          },
+          "last_legal_base": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000000
+          },
+          "target_base": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 10000000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "force_obligation": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 10000000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "retouch_obligation": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 10000000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "alive": {
+            "type": "boolean"
+          },
+          "touched_bases": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000000
+            },
+            "maxItems": 100
+          }
+        },
+        "required": [
+          "id",
+          "origin_base",
+          "last_legal_base",
+          "target_base",
+          "force_obligation",
+          "retouch_obligation",
+          "alive",
+          "touched_bases"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 9
     },
     "pitch_start_bases": {
       "type": "array",
-      "items": {},
-      "maxItems": 10000
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "origin_base": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000000
+          },
+          "last_legal_base": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000000
+          },
+          "target_base": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 10000000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "force_obligation": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 10000000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "retouch_obligation": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 10000000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "alive": {
+            "type": "boolean"
+          },
+          "touched_bases": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000000
+            },
+            "maxItems": 100
+          }
+        },
+        "required": [
+          "id",
+          "origin_base",
+          "last_legal_base",
+          "target_base",
+          "force_obligation",
+          "retouch_obligation",
+          "alive",
+          "touched_bases"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 9
     },
     "force_state": {
       "type": "array",
@@ -280,7 +498,35 @@
       "maxItems": 10000
     },
     "swing_windows": {
-      "type": "null"
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "start_tick": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000000
+            },
+            "end_tick": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000000
+            },
+            "action": {
+              "type": "object"
+            }
+          },
+          "required": [
+            "start_tick",
+            "end_tick",
+            "action"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "settle_counter": {
       "type": "integer",
@@ -341,23 +587,63 @@
       "maximum": 10000000
     },
     "terminal_status": {
-      "type": "null"
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 256
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "termination_reason": {
-      "type": "null"
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 256
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "ruleset_version": {
-      "const": "1.0.0-dev.P1"
+      "const": "1.0.0-dev.P2"
     },
     "physics_version": {
-      "const": "1.0.0-dev.P1"
+      "const": "1.0.0-dev.P2"
     },
     "map_version": {
-      "const": "1.0.0-dev.P1"
+      "const": "1.0.0-dev.P2"
     },
     "config_hash": {
       "type": "string",
       "pattern": "[0-9a-f]{64}"
+    },
+    "batter_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 256
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "half_runs": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10000000
+    },
+    "half_pa": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10000000
+    },
+    "swing_used": {
+      "type": "boolean"
     }
   },
   "required": [
@@ -402,7 +688,11 @@
     "ruleset_version",
     "physics_version",
     "map_version",
-    "config_hash"
+    "config_hash",
+    "batter_id",
+    "half_runs",
+    "half_pa",
+    "swing_used"
   ],
   "additionalProperties": false
 }

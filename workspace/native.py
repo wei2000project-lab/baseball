@@ -31,6 +31,8 @@ class Native:
             "bb_move": ([PTR, PTR], C.c_int),
             "bb_field": ([I64, I64, I64], C.c_int),
             "bb_lerp": ([PTR, PTR, I64, PTR], C.c_int),
+            "bb_strike": ([PTR, PTR, I64], C.c_int),
+            "bb_clamp_position": ([PTR, PTR, PTR], C.c_int),
         }
         for name, (args, result) in signatures.items():
             fn = getattr(self.lib, name); fn.argtypes = args; fn.restype = result
@@ -85,17 +87,19 @@ class Native:
         constants = [p[k+"_q"] for k in ("gravity", "ball_radius", "ground_restitution", "ground_retention", "rolling_deceleration", "stop_speed", "rolling_threshold")]
         constants += [f["wall_radius_q"], f["wall_height_q"], p["wall_restitution_q"]]
         constants += [f[k+"_q"] for k in ("xmin", "xmax", "ymin", "ymax")]
-        out = (I64 * 9)()
+        out = (I64 * 12)()
         if self.lib.bb_flight(array(position + velocity + [remaining, int(rolling), int(apply_forces)]), array(constants), out):
             raise ValueError("native_physics_error")
         return {"position_q": [str(v) for v in out[:3]], "velocity_q": [str(v) for v in out[3:6]],
-                "consumed_q": out[6], "event": [None, "ground", "wall", "out"][out[7]], "rolling": bool(out[8])}
+                "consumed_q": out[6], "event": [None, "ground", "wall", "out"][out[7]], "rolling": bool(out[8]),
+                "flight_velocity_q": [str(v) for v in out[9:12]]}
 
     def trace(self, position, velocity, config, rolling=False):
         """Standalone tick harness; engine may interleave earlier catch/bat contacts."""
         remaining, segments = ONE, []
         for i in range(32):
             result = self.advance(position, velocity, config, remaining, rolling, i == 0)
+            result.pop("flight_velocity_q")
             segments.append({"start_q": position[:], **result})
             position, velocity, rolling = result["position_q"], result["velocity_q"], result["rolling"]
             remaining -= result["consumed_q"]
@@ -121,3 +125,14 @@ class Native:
             if t >= 0:
                 contacts.append({"sub_tick_q": t, "player_id": p["id"], "kind": "catch"})
         return sorted(contacts, key=lambda c: (c["sub_tick_q"], c["player_id"]))
+
+    def strike(self, position, config):
+        f = config["field"]
+        zone = [f[k+"_q"] for k in ("strike_xmin", "strike_xmax", "strike_zmin", "strike_zmax")]
+        return bool(self.lib.bb_strike(array(position), array(zone), int(config["physics"]["ball_radius_q"])))
+
+    def clamp_position(self, position, field):
+        out = (I64 * 2)()
+        bounds = [field[k+"_q"] for k in ("xmin", "xmax", "ymin", "ymax")]
+        self.lib.bb_clamp_position(array(position),array(bounds),out)
+        return [str(v) for v in out]

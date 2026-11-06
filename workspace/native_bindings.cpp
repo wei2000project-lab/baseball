@@ -32,6 +32,7 @@ API int bb_flight(const int64_t* input,const int64_t* config,int64_t* out) {
             config[7],config[8],config[9],config[10],config[11],config[12],config[13]};
         auto f=bb::advance_ball(vec(input),vec(input+3),input[6],input[7],input[8],c);
         write_vec(out,f.position);write_vec(out+3,f.velocity);out[6]=f.consumed;out[7]=f.event;out[8]=f.rolling;
+        write_vec(out+9,f.flight_velocity);
         return 0;
     }catch(...) { return -1; }
 }
@@ -46,4 +47,13 @@ API int bb_move(const int64_t* input,int64_t* out) {
 API int bb_field(int64_t x,int64_t y,int64_t radius) { return bb::fair(x,y,radius); }
 API int bb_lerp(const int64_t* from,const int64_t* to,int64_t time,int64_t* out) {
     try { write_vec(out,bb::lerp(vec(from),vec(to),time));return 0; }catch(...) { return -1; }
+}
+API int bb_strike(const int64_t* at,const int64_t* zone,int64_t radius) {
+    bb::Q x=at[0],z=at[2];
+    bb::Q dx=x<zone[0]?zone[0]-x:x>zone[1]?x-zone[1]:0;
+    bb::Q dz=z<zone[2]?zone[2]-z:z>zone[3]?z-zone[3]:0;
+    return bb::Wide(dx)*dx+bb::Wide(dz)*dz<=bb::Wide(radius)*radius;
+}
+API int bb_clamp_position(const int64_t* at,const int64_t* bounds,int64_t* out) {
+    out[0]=bb::clamp(at[0],bounds[0],bounds[1]);out[1]=bb::clamp(at[1],bounds[2],bounds[3]);return 0;
 }

@@ -116,6 +116,7 @@ Flight advance_ball(Vec p, Vec v, Q remaining, bool rolling, bool forces, const 
             v=next<c.stop?Vec{0,0,0}:normalize(v,next);
         }
     }
+    Vec flight_velocity=v;
     Vec delta={checked(Wide(v.x)*remaining/(120*Wide(ONE))),checked(Wide(v.y)*remaining/(120*Wide(ONE))),checked(Wide(v.z)*remaining/(120*Wide(ONE)))};
     Vec end=add(p,delta); Q time=ONE; int event=0;
     auto candidate=[&](Q t,int kind) { if(t>=0&&t<=ONE&&(t<time||(t==time&&(event==0||kind<event)))) { time=t;event=kind; } };
@@ -141,6 +142,6 @@ Flight advance_ball(Vec p, Vec v, Q remaining, bool rolling, bool forces, const 
         v.x-=mul(impulse,normal.x);v.y-=mul(impulse,normal.y);
         Vec inside=scale(normal,c.wall_radius-1);at.x=inside.x;at.y=inside.y;
     }
-    return {at,v,consumed,event,int(rolling)};
+    return {at,v,consumed,event,int(rolling),flight_velocity};
 }
 }

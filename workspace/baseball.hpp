@@ -50,6 +50,7 @@ struct Flight {
     Q consumed;
     int event; // 0 none, 1 ground, 2 wall, 3 out of play
     int rolling;
+    Vec flight_velocity;
 };
 Flight advance_ball(Vec p, Vec v, Q remaining, bool rolling, bool apply_forces, const Physics& c);
 }
