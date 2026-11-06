@@ -3,7 +3,7 @@
   "type": "object",
   "properties": {
     "schema_version": {
-      "const": "2.0.0"
+      "const": "2.1.0"
     },
     "sim_tick": {
       "type": "integer",
@@ -339,6 +339,88 @@
             "type": "integer",
             "minimum": 0,
             "maximum": 10000000
+          },
+          "catch_recovery_until_tick": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000000
+          },
+          "throw_release_tick": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000000
+          },
+          "pending_throw": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "action": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "action_id": {
+                            "type": "string",
+                            "pattern": "[A-Za-z0-9_.:-]+",
+                            "maxLength": 128
+                          },
+                          "kind": {
+                            "const": "throw"
+                          },
+                          "player_id": {
+                            "type": "string",
+                            "pattern": "[A-Za-z0-9_.:-]+",
+                            "maxLength": 128
+                          },
+                          "direction_i32": {
+                            "type": "array",
+                            "minItems": 3,
+                            "maxItems": 3,
+                            "items": {
+                              "type": "integer",
+                              "minimum": -2147483648,
+                              "maximum": 2147483647
+                            }
+                          },
+                          "power_u16": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647
+                          }
+                        },
+                        "required": [
+                          "action_id",
+                          "kind",
+                          "player_id",
+                          "direction_i32",
+                          "power_u16"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  },
+                  "running_velocity_q": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "-?(0|[1-9][0-9]*)",
+                      "maxLength": 256
+                    },
+                    "maxItems": 2,
+                    "minItems": 2
+                  }
+                },
+                "required": [
+                  "action",
+                  "running_velocity_q"
+                ],
+                "additionalProperties": false
+              }
+            ]
           }
         },
         "required": [
@@ -350,7 +432,10 @@
           "active_intents",
           "dive_until_tick",
           "dive_ready_tick",
-          "catch_ready_tick"
+          "catch_ready_tick",
+          "catch_recovery_until_tick",
+          "throw_release_tick",
+          "pending_throw"
         ],
         "additionalProperties": false
       },
@@ -694,13 +779,13 @@
       ]
     },
     "ruleset_version": {
-      "const": "2.0.0"
+      "const": "2.1.0"
     },
     "physics_version": {
-      "const": "2.0.0"
+      "const": "2.1.0"
     },
     "map_version": {
-      "const": "2.0.0"
+      "const": "2.1.0"
     },
     "config_hash": {
       "type": "string",

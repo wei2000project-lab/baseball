@@ -118,7 +118,7 @@ def frame(state,cut=False):
             "score":dict(state["score"]),"outs":state["outs"],"balls":state["balls"],"strikes":state["strikes"],
             "batter_id":state["batter_id"],"regulation_expired":state["regulation_expired"],"finish_after_inning":state["finish_after_inning"],
             "ball":{k:copy_value(ball[k]) for k in ("mode","position_q","velocity_q","holder_id","origin","fair_foul_status")},
-            "players":[{k:copy_value(p[k]) for k in ("id","role","team_id","position_q","active_intents","dive_until_tick","dive_ready_tick","catch_ready_tick")} for p in state["players"]],
+            "players":[{k:copy_value(p[k]) for k in ("id","role","team_id","position_q","active_intents","dive_until_tick","dive_ready_tick","catch_ready_tick","catch_recovery_until_tick","throw_release_tick","pending_throw")} for p in state["players"]],
             "runners":[{k:r[k] for k in ("id","last_legal_base","target_base","force_obligation","retouch_obligation")} for r in state["runners"]],
             "pending_runs":[r["runner_id"] for r in state["pending_runs"]],"cut":cut}
 

@@ -1,0 +1,77 @@
+{
+  "ruleset_version": "2.1.0",
+  "physics_version": "2.1.0",
+  "config_hash": "96039aba8b99cc91df2bf00e98a0a1af29cbaee7f668b229b815464629633f75",
+  "trace_sha256": "45d8fbc42a957400f29e03367158de9f41f69ca6b6d579e9f612893b37517295",
+  "events": [
+    {
+      "schema_version": "2.1.0",
+      "seq": 4,
+      "sim_tick": 1,
+      "sub_tick_q": 2147483648,
+      "play_id": 1,
+      "type": "BallCaught",
+      "payload": {
+        "fielder_id": "home.P03",
+        "origin": "throw",
+        "before_first_ground_contact": false,
+        "position_q": [
+          "85899345920",
+          "85899345920",
+          "4294967296"
+        ],
+        "recovery_until_tick": 38
+      }
+    },
+    {
+      "schema_version": "2.1.0",
+      "seq": 5,
+      "sim_tick": 38,
+      "sub_tick_q": 0,
+      "play_id": 1,
+      "type": "ActionAccepted",
+      "payload": {
+        "team_id": "home",
+        "status": "accepted",
+        "action_id": "golden-throw"
+      }
+    },
+    {
+      "schema_version": "2.1.0",
+      "seq": 6,
+      "sim_tick": 38,
+      "sub_tick_q": 0,
+      "play_id": 1,
+      "type": "ThrowWindupStarted",
+      "payload": {
+        "fielder_id": "home.P03",
+        "release_tick": 65
+      }
+    },
+    {
+      "schema_version": "2.1.0",
+      "seq": 7,
+      "sim_tick": 65,
+      "sub_tick_q": 0,
+      "play_id": 1,
+      "type": "ThrowReleased",
+      "payload": {
+        "fielder_id": "home.P03",
+        "velocity_q": [
+          "0",
+          "119402459406",
+          "14328295127"
+        ],
+        "nominal_velocity_q": [
+          "0",
+          "119402459407",
+          "14328295128"
+        ],
+        "running_velocity_q": [
+          "0",
+          "0"
+        ]
+      }
+    }
+  ]
+}

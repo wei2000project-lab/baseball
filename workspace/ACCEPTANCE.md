@@ -1,3 +1,15 @@
+# 2.1.0 實驗里程碑驗收
+
+功能出口通過：140 Python、7 JS、20項隱藏離屏回放；10次正式外部Bot重賽TXT bytes／終局hash完全一致；隔離來源10個命令全過（當次138 Python，後增跨打席與快取測試在目前工作樹通過），含32項原生隱藏GUI驗收。報告見 tests/reports/advancement-*.json。
+
+新增接球恢復、延遲傳球與不可重啟、持球速度上限、實際出手授壘基準、snapshot／TXT狀態、舊2.0.0拒絕、跨打席推進／DP分母、固定來源快取閘門；golden及新版壓縮TXT範例已更新。
+
+**平衡出口未通過**：32組初篩、6組驗證、3組保留seeds，沒有四項同時達標候選；selected=null。起始設定與最接近組的原始報告均保留，--check-targets確實返回2，不宣稱已平衡。僅封存 `advancement-v2.1.0-experimental` 工具／規則成本里程碑；接續見根 PROGRESS.md、BALANCE.md。
+
+正式Bots未改；所有UI檢查皆自身不可見視窗，沒有操作桌面。
+
+---
+
 # 2.0.0 驗收與需求追蹤
 
 ## 原生對戰啟動器

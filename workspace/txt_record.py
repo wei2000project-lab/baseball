@@ -7,6 +7,7 @@ import copy
 import json
 
 MAGIC = "BASEBALL-TXT\t2"
+SKILL_FIELDS=("dive_until_tick","dive_ready_tick","catch_ready_tick","catch_recovery_until_tick","throw_release_tick")
 
 
 def encode(value):
@@ -32,7 +33,8 @@ def project(state):
         name = short_id(player["id"])
         values[name + "x"], values[name + "y"] = map(int, player["position_q"])
         values[name + "intents"] = copy.deepcopy(player["active_intents"])
-        values[name + "skill"] = [player[k] for k in ("dive_until_tick","dive_ready_tick","catch_ready_tick")]
+        values[name + "skill"] = [player[k] for k in SKILL_FIELDS]
+        values[name + "throw"] = copy.deepcopy(player["pending_throw"])
     values["runners"] = [{k: r[k] for k in ("id", "last_legal_base", "target_base", "force_obligation", "retouch_obligation")} for r in state["runners"]]
     values["pending_runs"] = [r["runner_id"] for r in state["pending_runs"]]
     return values
@@ -49,7 +51,8 @@ def restore(values, tick, rosters):
         for player in players:
             name = short_id(player["id"])
             p=dict(player, team_id=team, position_q=[str(values[name+a]) for a in "xy"], active_intents=copy.deepcopy(values[name+"intents"]))
-            p.update(zip(("dive_until_tick","dive_ready_tick","catch_ready_tick"),values.get(name+"skill",[0,0,0])))
+            p.update(zip(SKILL_FIELDS,values[name+"skill"]))
+            p["pending_throw"]=copy.deepcopy(values[name+"throw"])
             s["players"].append(p)
     s["pending_runs"] = [dict(runner_id=pid) for pid in values["pending_runs"]]
     return s

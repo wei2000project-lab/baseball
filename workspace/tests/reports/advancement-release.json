@@ -1,0 +1,57 @@
+{
+  "status": "experimental_functionality_verified_balance_unmet",
+  "tag": "advancement-v2.1.0-experimental",
+  "versions": {
+    "ruleset": "2.1.0",
+    "physics": "2.1.0",
+    "map": "2.1.0",
+    "bot_protocol": "1.0.0"
+  },
+  "config_hash": "96039aba8b99cc91df2bf00e98a0a1af29cbaee7f668b229b815464629633f75",
+  "tests": {
+    "python": 140,
+    "javascript": 7,
+    "offscreen_replay": 20,
+    "hidden_native_gui": 32,
+    "external_bot_identical_repeats": 10,
+    "cleanroom_commands": 10,
+    "cleanroom_python_at_snapshot": 138
+  },
+  "balance": {
+    "targets_met": false,
+    "selected": null,
+    "candidates": 32,
+    "simulation_jobs": 372,
+    "default_report": "workspace/balance_reports/advancement-default.json",
+    "scan_summary": "workspace/balance_reports/advancement-scan/summary.json"
+  },
+  "source_inputs": {
+    "engine": "524c6ee27796bd31b4f9e741997b3efd8042f2be231832c192ab0414b092cbf9",
+    "native": "aaf4c0f76c48ff6a0aee9294f8b91eae24c3793b3a231ee8976b9076fba15e08",
+    "controller": "2ed770202bb6faa09a3e3d0bc156c461267d0ca1c759348b5e1295ffe09ec5db",
+    "metrics": "85773522ca8ac3920585eb2bc974e097773b1a0cffbe408a6e8c36587fdf663d",
+    "baseline_bot": "06d35e4c11b563fcd4349e36b070b9c59c878103ed6e51e926bed2b8360af2ee",
+    "simulation_harness": "b988cc2c36d6a2e58f364ff62344a2d51c00e0594bf6d33b5fdd316a61dde18d",
+    "targets": {
+      "runs_per_half": [
+        1,
+        3
+      ],
+      "runner_advance_rate": [
+        0.35,
+        0.5
+      ],
+      "outfield_extra_base_rate": [
+        0.55,
+        0.65
+      ],
+      "double_play_rate": [
+        0,
+        0.1
+      ]
+    }
+  },
+  "production_bots_modified": false,
+  "desktop_control_used": false,
+  "parent_commit": "d06c7d76f39f86a3d581b09fbffad950fb136f82"
+}

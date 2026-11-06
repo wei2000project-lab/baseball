@@ -6,6 +6,24 @@ from configuration import default_config,VERSION
 from numeric import q,ONE,digest
 
 
+def fielding_trace(c):
+    from baseball_engine import BaseballEngine
+    e=BaseballEngine(c);e.step();s=e.state;p=e.player('home.P03')
+    s['phase']='BALL_IN_PLAY';s['ball'].update(mode='rolling',origin='throw',holder_id=None,
+        position_q=p['position_q']+[q(1)],velocity_q=['0']*3,fair_foul_status='fair')
+    r=e._new_runner(s['batter_id'],0);r['force_obligation']=1;s['runners']=[r]
+    e.events=[];e._sub=ONE//2;e._move_fielders();e._caught(p['id'],ONE//2)
+    trace=[dict(tick=s['sim_tick'],state_hash=e.canonical_state_hash(),events=e.events[:])]
+    for tick in range(150):
+        actions=[]
+        if s['sim_tick']==p['catch_recovery_until_tick']:
+            actions=[dict(action_id='golden-throw',player_id=p['id'],kind='throw',direction_i32=[0,1000000,120000],power_u16=65535)]
+        batch=e.validate_intents('home',actions)
+        events=e.step([batch])['events']
+        trace.append(dict(tick=s['sim_tick'],state_hash=e.canonical_state_hash(),events=events))
+    return trace
+
+
 def main():
     n=Native();c=default_config();root=Path(__file__).resolve().parent/'tests/golden'
     position=[q(x) for x in (0,0,10)];velocity=[q(x) for x in (1,2,0)];trace=[]
@@ -41,7 +59,10 @@ def main():
         contact_trace_sha256=digest(contacts),contacts=contacts,skills=skills,pitches=pitches,
         skill_trace_sha256=digest(skills),pitch_trace_sha256=digest(pitches),
         rolling_trace_sha256=digest(roll),fielder_trace_sha256=digest(movement)),indent=2)+'\n')
-    print('Regenerated p1 + balance-v2 native traces')
+    trace=fielding_trace(c)
+    (root/'fielding-v2.1.json').write_text(json.dumps(dict(ruleset_version=VERSION,physics_version=VERSION,
+        config_hash=digest(c),trace_sha256=digest(trace),events=[x for t in trace for x in t['events']]),indent=2)+'\n')
+    print('Regenerated p1 + balance-v2 native + fielding-v2.1 timing traces')
 
 
 if __name__=='__main__':main()

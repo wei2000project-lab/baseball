@@ -2,7 +2,7 @@
 
 本文件只定義遊戲規則、可見資料與輸入／輸出介面，不提供打擊、跑壘、守備或傳球策略。請把自行設計的 Bot 放在 `bots/<名稱>/`，不要修改引擎來替 Bot 決策。
 
-目前遊戲規則／物理為 **2.0.0**，Bot 通訊協定為 **1.0.0**。完整且可機器讀取的格式以 [message.schema.json](protocol/message.schema.json) 與 [action.schema.json](../workspace/contracts/action.schema.json) 為準。
+目前遊戲規則／物理為 **2.1.0**，Bot 通訊協定為 **1.0.0**。完整且可機器讀取的格式以 [message.schema.json](protocol/message.schema.json) 與 [action.schema.json](../workspace/contracts/action.schema.json) 為準。
 
 ## 1. C++ 與啟動方式
 
@@ -82,6 +82,8 @@ python workspace/build_bot.py bots/examples/cpp_passive/bot.cpp
 | `position_q` | `[x,y]`，地面邏輯座標 |
 | `velocity_q` | `[vx,vy]`，地面速度 |
 | `active_intents` | 已套用且仍持續的公開意圖 |
+| `catch_recovery_until_tick` | 接球後恢復截止 tick，期間不可 move／throw／dive |
+| `throw_release_tick`／`pending_throw` | 傳球準備截止 tick／已接受的傳球與啟動時跑速；null 表示無準備中的傳球 |
 | `dive_until_tick`／`dive_ready_tick`／`catch_ready_tick` | 撲接持續／可再撲接／掉球後可再接的 tick |
 
 同一球員擔任打者或跑者時仍使用原 ID，不產生新的球員。`role` 不代表現在一定站在該位置；跑者以 `state.runners`、當前打者以 `state.batter_id` 辨識。不要把顯示標籤或陣列索引當成 ID。
@@ -120,6 +122,8 @@ for (const auto& player : state.at("players")) {
 - 界外未接殺、HR、傳球出場等依規則成死球／授壘。傳球是實際 3D 飛行，不是指定接球者後直接換持球權。
 - 力度、時機、接觸位置與跑速影響物理結果；撲接有持續時間與冷卻。精確參數由 physics_config、rules_config 提供。
 - 每打席開始直接把球放回投手，投手／捕手位置重置；**其他守備員保留當前位置**。半局開始重設防守初始站位。
+- 每次接球後停在接觸點，速度歸零，恢復 catch_recovery_ticks（預設約 36 ticks）。恢復與傳球準備期間不可移動或再次傳球；hold 不會取消已準備的傳球。傳球方向／力度在接受時固定，跑速誤差依啟動傳球時的速度計算，出手後球正常飛行。死球會取消未出手的傳球。
+- 持球移動上限乘 held_speed_multiplier_q（0.8），傳球上限約 28 m/s，跑者上限 8.0～8.5 m/s；實際數值讀取 capabilities。
 - 跑者均合法安全停壘且守方持球，連續達 settle_ticks 才收球；有效跑壘／傳球會重置等待。第三出局或明確死球另行結束。
 
 常用狀態欄位：`sim_tick`、`phase`、`inning`、`half`、`score`、`outs`、`balls`、`strikes`、`batter_id`、`swing_used`、`swing_windows`、`runners`、`pending_runs`、`regulation_expired`、`finish_after_inning`。runner 的 `last_legal_base`、`target_base`、`force_obligation`、`retouch_obligation` 等用來表達當下規則義務；null 表示無該目標／義務。
@@ -138,7 +142,7 @@ for (const auto& player : state.at("players")) {
 | move | `target_q:[x,y]`，可選 `catch_enabled:bool` | 守方合法可移動階段，持續移動目標；受速度、加速度與邊界限制 |
 | catch | `enabled:bool` | 守方合法守備階段，設定持續接球意圖 |
 | dive | 無 | 守方 BALL_IN_PLAY、非持球者、冷卻已完成；限時擴大接球範圍 |
-| throw | `direction_i32:[dx,dy,dz]`, `power_u16` | 守方 BALL_IN_PLAY 的持球者；單次釋放、移除持球權 |
+| throw | `direction_i32:[dx,dy,dz]`, `power_u16` | 守方 BALL_IN_PLAY 的持球者且恢復已完成；先準備 throw_windup_ticks，再釋放並移除持球權 |
 | tag | `runner_id` | 守方活球持球者，對存在的跑者設定觸殺意圖 |
 | appeal_return | `runner_id` | 守方活球持球者，對存在跑者提出回壘申訴；須滿足規則接觸條件 |
 | run_to_base | `target_base` | 攻方活球跑者，target_base 必須大於 last_legal_base |

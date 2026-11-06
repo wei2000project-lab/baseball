@@ -7,6 +7,11 @@
 **/__pycache__/
 **/.pytest_cache/
 **/.cache/
+**/cache/
+**/.zig-cache/
+**/zig-out/
+**/.mypy_cache/
+**/.ruff_cache/
 *.py[cod]
 *.dll
 *.so

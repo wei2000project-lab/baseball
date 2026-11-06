@@ -60,10 +60,11 @@ def test_tampered_delta_and_event_fail_integrity(record_path):
     p.write_bytes(original)
 
 
-def test_truncation_is_incomplete_and_unknown_versions_unsupported(record_path,tmp_path):
+@pytest.mark.parametrize('version',['9.0.0','2.0.0'])
+def test_truncation_is_incomplete_and_unknown_versions_unsupported(record_path,tmp_path,version):
     p=record_path/"match.txt";original=p.read_bytes();p.write_bytes(original[:-12])
     assert ReplayRecord(record_path).verify()["verification_status"]=="incomplete"
-    p.write_bytes(original.replace(b'2.0.0',b'9.0.0',1))
+    p.write_bytes(original.replace(b'2.1.0',version.encode(),1))
     with pytest.raises(ReplayError) as error:ReplayRecord(record_path)
     assert error.value.report['verification_status']=='unsupported_version'
     legacy=tmp_path/'legacy';legacy.mkdir();(legacy/'manifest.json').write_text('{}')

@@ -1,10 +1,12 @@
 # 版本與範圍
 
-目前專案、schema、ruleset、physics、map 皆為 **2.0.0**，Bot JSONL 協定維持 1.0.0。
+目前專案、schema、ruleset、physics、map 皆為 **2.1.0**，Bot JSONL 協定維持 1.0.0。
 
-新版包含擊球時機／位置品質、力度縮窗、35 m/s 上限、滾動減速、獨立守備移動能力、撲接冷卻、跑動傳接球誤差與快球落點誤差。公式由 C++ Q32.32 決定性計算，沒有成功率骰子；見根 BALANCE.md。
+2.1.0 加入接球恢復與傳球準備的 tick 狀態、持球移動倍率與跑者／守備分離速度；新的時間成本保存於 snapshot、Bot 觀察及 TXT 回放。推進統計與固定 seeds 參數掃描見根 BALANCE.md，平衡達標狀態以該文件為準。
 
-記錄為 BASEBALL-TXT 2，快取為 bb-frames-v2。舊 P0–P7 JSON 記錄一律 unsupported_version，請使用原 Git tag；歷史報告不代表新版仍支援舊格式。
+2.0.0 已包含擊球時機／位置品質、力度縮窗、35 m/s 上限、滾動減速、獨立守備移動能力、撲接冷卻、跑動傳接球誤差與快球落點誤差。公式由 C++ Q32.32 決定性計算，沒有成功率骰子；見根 BALANCE.md。
+
+記錄為 BASEBALL-TXT 2，快取為 bb-frames-v2。舊 2.0.0 TXT／P0–P7 JSON 記錄一律 unsupported_version，請使用原 Git tag；歷史報告不代表新版仍支援舊格式。
 
 verified_record 僅表示 TXT／摘要完整性與終局觀看狀態雜湊相符，不重算物理、不驗證原動作合法性，也不是簽章。無 END 為 incomplete；原引擎終局雜湊為紀錄資訊，回放另使用 replay_state_hash。
 

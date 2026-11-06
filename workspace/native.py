@@ -175,7 +175,7 @@ class Native:
     def clamp_position(self, position, field):
         out = (I64 * 2)()
         bounds = [field[k+"_q"] for k in ("xmin", "xmax", "ymin", "ymax")]
-        status=self.lib.bb_clamp_position_v2(array(position),self.field_bounds(field),out) if field["version"]=="2.0.0" else self.lib.bb_clamp_position(array(position),array(bounds),out)
+        status=self.lib.bb_clamp_position_v2(array(position),self.field_bounds(field),out) if field['version'].startswith('2.') else self.lib.bb_clamp_position(array(position),array(bounds),out)
         if status:raise ValueError("native_geometry_error")
         return [str(v) for v in out]
 

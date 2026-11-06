@@ -1,0 +1,8 @@
+{
+  "passed": true,
+  "exit_code": 2,
+  "cached_screen_reports": 32,
+  "no_new_simulation": true,
+  "seconds": 0.285,
+  "output": "{\"selected\": null, \"winners\": [], \"report\": \"workspace\\\\build\\\\scan-resume-1794005644115988200\\\\cache\\\\summary.json\"}"
+}

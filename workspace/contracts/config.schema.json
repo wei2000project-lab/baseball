@@ -3,7 +3,7 @@
   "type": "object",
   "properties": {
     "version": {
-      "const": "2.0.0"
+      "const": "2.1.0"
     },
     "rules": {
       "type": "object",
@@ -95,6 +95,16 @@
           "type": "integer",
           "minimum": 0,
           "maximum": 10000000
+        },
+        "catch_recovery_ticks": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "throw_windup_ticks": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
         }
       },
       "required": [
@@ -115,7 +125,9 @@
         "half_pa_cap",
         "dive_duration_ticks",
         "dive_cooldown_ticks",
-        "catch_retry_ticks"
+        "catch_retry_ticks",
+        "catch_recovery_ticks",
+        "throw_windup_ticks"
       ],
       "additionalProperties": false
     },
@@ -123,7 +135,7 @@
       "type": "object",
       "properties": {
         "version": {
-          "const": "2.0.0"
+          "const": "2.1.0"
         },
         "gravity_q": {
           "type": "string",
@@ -304,6 +316,11 @@
           "type": "string",
           "pattern": "-?(0|[1-9][0-9]*)",
           "maxLength": 32
+        },
+        "held_speed_multiplier_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 32
         }
       },
       "required": [
@@ -343,7 +360,8 @@
         "dive_control_bonus_q",
         "throw_running_error_q",
         "drop_retention_q",
-        "pitch_max_error_q"
+        "pitch_max_error_q",
+        "held_speed_multiplier_q"
       ],
       "additionalProperties": false
     },
@@ -351,7 +369,7 @@
       "type": "object",
       "properties": {
         "version": {
-          "const": "2.0.0"
+          "const": "2.1.0"
         },
         "base_radius_q": {
           "type": "string",

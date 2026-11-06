@@ -3,7 +3,7 @@ from pathlib import Path
 from numeric import strict_loads
 
 ROOT = Path(__file__).resolve().parent
-VERSION = "2.0.0"
+VERSION = "2.1.0"
 SUPPORTED_RULES = (VERSION,)
 SUPPORTED_MAPS = (VERSION,)
 
@@ -52,7 +52,7 @@ def validate_config(config):
         raise ValueError("physics.wall_restitution_q: invalid_coefficient")
     if not 0 < int(p["ground_retention_q"]) <= 1 << 32:
         raise ValueError("physics.ground_retention_q: invalid_coefficient")
-    for key in ("swing_narrowing_q","timing_loss_q","spatial_loss_q","contact_speed_floor_q","catch_running_radius_loss_q","drop_retention_q"):
+    for key in ("swing_narrowing_q","timing_loss_q","spatial_loss_q","contact_speed_floor_q","catch_running_radius_loss_q","drop_retention_q","held_speed_multiplier_q"):
         if not 0<=int(p[key])<=1<<32:raise ValueError(f"physics.{key}: invalid_coefficient")
     if int(p["swing_narrowing_q"])>=1<<32 or int(p["catch_running_radius_loss_q"])>=1<<32:
         raise ValueError("physics: zero_window_or_radius")

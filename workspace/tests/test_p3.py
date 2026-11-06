@@ -147,9 +147,11 @@ def test_T19_overtaking_and_base_ownership():
 
 
 def test_T20_throw_out_uses_release_legal_bases():
-    e=batted_engine((1,));s=e.state;holder(e,base=1)
+    e=batted_engine((1,));s=e.state;holder(e,base=3)
     action={"action_id":"throw1","player_id":"home.P03","kind":"throw","direction_i32":[1000000,0,0],"power_u16":65535}
-    e.step(batches(e,"home",[action]));s["ball"].update(position_q=[q("84.99"),q(1),q(1)],velocity_q=[q(20),"0","0"])
+    e.step(batches(e,"home",[action]))
+    for _ in range(e.config['rules']['throw_windup_ticks']):e.step()
+    s["ball"].update(position_q=[q("84.99"),q(1),q(1)],velocity_q=[q(20),"0","0"])
     events=e.step()["events"]
     assert sorted(r["last_legal_base"] for r in s["runners"])==[2,3]
     assert any(x["type"]=="BaseAwarded" and x["payload"]["reason"]=="throw_out" for x in events)

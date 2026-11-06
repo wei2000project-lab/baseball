@@ -89,6 +89,6 @@ def test_future_payload_version_is_unsupported_before_current_schema(tmp_path):
     from unpack_demo import unpack
     from replay import ReplayRecord,ReplayError
     path=tmp_path/'future';unpack(path);file=path/'match.txt'
-    file.write_bytes(file.read_bytes().replace(b'2.0.0',b'9.0.0'))
+    file.write_bytes(file.read_bytes().replace(b'2.1.0',b'9.0.0'))
     with pytest.raises(ReplayError) as e:ReplayRecord(path)
     assert e.value.report['verification_status']=='unsupported_version'

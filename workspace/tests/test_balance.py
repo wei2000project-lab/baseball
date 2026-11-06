@@ -73,9 +73,9 @@ def test_pitch_error_envelope_increases_quadratically_with_speed():
 
 
 def test_new_versions_and_old_records_are_explicitly_unsupported():
-    c=default_config();assert c['version']==c['physics']['version']==c['field']['version']==VERSION=='2.0.0'
+    c=default_config();assert c['version']==c['physics']['version']==c['field']['version']==VERSION=='2.1.0'
     for group in (None,'physics','field'):
-        old=copy.deepcopy(c);(old if group is None else old[group])['version']='1.0.0-dev.P7'
+        old=copy.deepcopy(c);(old if group is None else old[group])['version']='2.0.0'
         with pytest.raises(ValueError,match='unsupported_version'):validate_config(old)
 
 
@@ -84,6 +84,7 @@ def test_throw_cannot_be_recaught_by_reenabling_catch_next_tick():
     e=batted_engine();holder(e,base=2);p=e.player('home.P03')
     action=dict(action_id='release',player_id=p['id'],kind='throw',direction_i32=[0,-1000000,0],power_u16=65535)
     e.step(batches(e,'home',[action]))
+    for _ in range(e.config['rules']['throw_windup_ticks']):e.step()
     assert e.state['ball']['release_exclusion_id']==p['id']
     for tick in range(4):
         catch=dict(action_id='catch'+str(tick),player_id=p['id'],kind='catch',enabled=True)

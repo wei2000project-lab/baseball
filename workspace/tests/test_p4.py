@@ -70,6 +70,8 @@ def test_thrower_does_not_recatch_own_ball_at_release():
     e=batted_engine();holder(e,base=2);p=e.player("home.P03");p["active_intents"]["catch"]=True
     throw={"action_id":"throw-regression","player_id":p["id"],"kind":"throw","direction_i32":[0,-1000000,0],"power_u16":65535}
     events=e.step(batches(e,"home",[throw]))["events"]
+    assert e.state['ball']['holder_id']==p['id']
+    for _ in range(e.config['rules']['throw_windup_ticks']):events+=e.step()['events']
     assert e.state["ball"]["holder_id"] is None
     assert not any(x["type"]=="BallCaught" and x["payload"]["fielder_id"]==p["id"] for x in events)
 

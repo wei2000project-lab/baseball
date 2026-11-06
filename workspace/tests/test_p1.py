@@ -110,7 +110,7 @@ def test_acceleration_speed_and_instant_base_stop(native, config, target):
             assert 0 <= step["touch_q"] <= ONE
             break
         assert math.isqrt(sum((int(a)-b)**2 for a,b in zip(speed,previous))) <= int(q(10))//120+3
-        assert math.isqrt(sum(int(a)**2 for a in speed)) <= int(q(7))+3
+        assert math.isqrt(sum(int(a)**2 for a in speed)) <= int(config["physics"]["player_speed_q"])+3
     else: pytest.fail("runner did not reach base")
     assert math.isqrt(sum((int(a)-int(b))**2 for a,b in zip(position,dest))) <= int(q(".30"))+10
 

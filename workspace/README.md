@@ -1,4 +1,4 @@
-# 執行與故障排查（2.0.0）
+# 執行與故障排查（2.1.0）
 
 以專案根目錄為工作目錄；快速開始見根 README。
 
@@ -37,9 +37,11 @@ Windows Job Object：worker 與 Bot 合計 256 MiB、2 程序、watchdog 2 秒�
 | Electron binary 缺少 | npm ci --prefix workspace 或本機 npm 安裝命令。 |
 | output_not_empty | 使用新目錄，不會覆寫比賽。 |
 | Bot crash／watchdog／memory fault | 看摘要 reason 與 build/runlogs；中止不算正式勝負。 |
-| unsupported_version | 舊記錄使用原 Git tag，新版只接受 2.0.0 TXT。 |
+| unsupported_version | 舊記錄使用原 Git tag，新版只接受 2.1.0 TXT。 |
 | mismatch／file_integrity | 記錄損壞，不可宣稱驗證通過。 |
 | incomplete | 無完整 END，僅可預覽已有部分。 |
 | 模型 profile 無效 | 使用基本幾何，不影響對戰。 |
 
 cleanroom_acceptance.py 可隔離來源與輸出驗收；ui_acceptance.py 使用自己的隱藏離屏 Electron，不操作桌面。
+
+推進統計使用 `balance_batch.py --controller advancement --n 40 --label local --output results/advance.json`。多參數掃描使用 `scan_advancement.py --workers 3 --apply`，中斷後同命令可讀取相同來源／設定／seed 的快取報告；無達標組時退出碼 2，不採用未達標參數。完整定義、固定控制器與目標見根 BALANCE.md。

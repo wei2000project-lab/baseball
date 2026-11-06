@@ -1,0 +1,254 @@
+{
+  "label": "screen-c001",
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "n": 6,
+  "completed": 6,
+  "config": {
+    "version": "2.1.0",
+    "rules": {
+      "tick_rate_hz": 120,
+      "decision_interval_ticks": 1,
+      "regulation_ticks": 1200,
+      "plate_appearance_setup_ticks": 360,
+      "pitch_reset_ticks": 240,
+      "half_inning_change_ticks": 1200,
+      "pitch_release_deadline_ticks": 960,
+      "max_ticks": 432000,
+      "max_pitches": 10000,
+      "settle_ticks": 120,
+      "loose_ball_recovery_ticks": 600,
+      "swing_delay_ticks": 6,
+      "swing_duration_ticks": 12,
+      "half_run_cap": 10,
+      "half_pa_cap": 15,
+      "dive_duration_ticks": 24,
+      "dive_cooldown_ticks": 360,
+      "catch_retry_ticks": 30,
+      "catch_recovery_ticks": 42,
+      "throw_windup_ticks": 24
+    },
+    "physics": {
+      "version": "2.1.0",
+      "gravity_q": "42119241033",
+      "ball_radius_q": "158913790",
+      "ground_restitution_q": "1503238554",
+      "wall_restitution_q": "2147483648",
+      "ground_retention_q": "3435973837",
+      "rolling_deceleration_q": "17179869184",
+      "stop_speed_q": "214748365",
+      "rolling_threshold_q": "2147483648",
+      "player_speed_q": "36507222016",
+      "player_acceleration_q": "42949672960",
+      "catch_radius_q": "4080218931",
+      "catch_height_q": "10737418240",
+      "tag_radius_q": "2576980378",
+      "pitch_height_q": "7730941133",
+      "throw_height_q": "6871947674",
+      "pitch_min_speed_q": "64424509440",
+      "pitch_max_speed_q": "193273528320",
+      "throw_min_speed_q": "21474836480",
+      "throw_max_speed_q": "120259084288",
+      "bat_min_speed_q": "42949672960",
+      "bat_max_speed_q": "150323855360",
+      "swing_narrowing_q": "2147483648",
+      "timing_loss_q": "3006477107",
+      "spatial_loss_q": "3113851290",
+      "contact_speed_floor_q": "1503238554",
+      "contact_deflection_mdeg": 8000,
+      "fielder_speed_q": "35433480192",
+      "fielder_acceleration_q": "51539607552",
+      "dive_radius_bonus_q": "3435973837",
+      "catch_running_radius_loss_q": "1288490189",
+      "catch_control_speed_q": "188978561024",
+      "catch_running_control_loss_q": "7730941133",
+      "dive_control_bonus_q": "42949672960",
+      "throw_running_error_q": "2576980378",
+      "drop_retention_q": "1932735283",
+      "pitch_max_error_q": "2061584302",
+      "held_speed_multiplier_q": "3435973837"
+    },
+    "field": {
+      "version": "2.1.0",
+      "base_radius_q": "1288490189",
+      "wall_radius_q": "429496729600",
+      "wall_height_q": "10737418240",
+      "xmin_q": "-365072220160",
+      "xmax_q": "365072220160",
+      "ymin_q": "-64424509440",
+      "ymax_q": "450971566080",
+      "strike_xmin_q": "-927712936",
+      "strike_xmax_q": "927712936",
+      "strike_zmin_q": "2147483648",
+      "strike_zmax_q": "4724464026",
+      "bases_q": [
+        [
+          "0",
+          "0"
+        ],
+        [
+          "83313775608",
+          "83313775608"
+        ],
+        [
+          "0",
+          "166627551216"
+        ],
+        [
+          "-83313775608",
+          "83313775608"
+        ]
+      ],
+      "defense_q": [
+        [
+          "0",
+          "79199196938"
+        ],
+        [
+          "0",
+          "-8589934592"
+        ],
+        [
+          "85899345920",
+          "85899345920"
+        ],
+        [
+          "51539607552",
+          "146028888064"
+        ],
+        [
+          "-85899345920",
+          "85899345920"
+        ],
+        [
+          "-51539607552",
+          "146028888064"
+        ],
+        [
+          "-193273528320",
+          "279172874240"
+        ],
+        [
+          "0",
+          "343597383680"
+        ],
+        [
+          "193273528320",
+          "279172874240"
+        ]
+      ],
+      "bat_box_q": [
+        "-2362232013",
+        "2362232013",
+        "-1288490189",
+        "3221225472",
+        "1073741824",
+        "6442450944"
+      ],
+      "body_box_q": [
+        "-4294967296",
+        "-2362232013",
+        "-1503238554",
+        "1503238554",
+        "858993459",
+        "7730941133"
+      ]
+    }
+  },
+  "bot_sha256": "06d35e4c11b563fcd4349e36b070b9c59c878103ed6e51e926bed2b8360af2ee",
+  "measurement": "in_process; same Bot observations, validation, simultaneous batches; no IPC/record I/O",
+  "denominators": "HR/fair BIP; batter retired/fair BIP; safe >=1 base without batter out or prior fielding error/fair BIP (includes HR); runs/completed halves; ticks/completed games. Error before first safe base is scored ROE, not hit.",
+  "totals": {
+    "contacts": 53,
+    "fair_balls": 53,
+    "home_runs": 6,
+    "fair_outs": 36,
+    "hits": 17,
+    "safe_reaches": 17,
+    "reaches_on_error": 0,
+    "fouls": 0,
+    "fielding_errors": 3,
+    "caps": 0,
+    "plate_appearances": 53,
+    "runner_opportunities": 23,
+    "runner_advances": 3,
+    "runner_attempts": 3,
+    "batter_first_reached": 11,
+    "batter_second_reached": 11,
+    "batter_second_attempts": 11,
+    "outfield_hits": 11,
+    "outfield_extra_base_hits": 11,
+    "outfield_runner_opportunities": 3,
+    "outfield_runner_advances": 3,
+    "double_play_opportunities": 10,
+    "double_plays": 0,
+    "non_hr_fair_plays": 47
+  },
+  "metrics": {
+    "home_run_rate": 0.11320754716981132,
+    "fair_out_rate": 0.6792452830188679,
+    "hit_rate": 0.32075471698113206,
+    "runs_per_half": 0.5833333333333334,
+    "ticks_per_game": 10764.833333333334,
+    "runner_advance_rate": 0.13043478260869565,
+    "batter_extra_base_rate": 1.0,
+    "outfield_extra_base_rate": 1.0,
+    "outfield_runner_advance_rate": 1.0,
+    "double_play_rate": 0.0,
+    "double_plays_per_fair_play": 0.0,
+    "runner_attempt_rate": 0.13043478260869565,
+    "plate_appearances_per_half": 4.416666666666667,
+    "plate_appearances_per_game": 8.833333333333334
+  },
+  "advancement_definition": "Non-HR fair plays; physical BaseTouched only, awards excluded; runner must survive to play end. Outfield hit: grounded ball enters >=45m radius before first control (including rolling through infield), batter physically reaches first without prior error and is not fly-out; extra base means batter survives at >=2. DP/eligible fair plays with runners and <=1 prior out.",
+  "parameters": {
+    "catch_recovery_ticks": 42,
+    "throw_windup_ticks": 24,
+    "runner_speed": 8.5,
+    "fielder_speed": 8.25,
+    "fielder_acceleration": 12,
+    "catch_radius": 0.95,
+    "throw_speed": 28
+  },
+  "controller": "advancement",
+  "search_identity": "f2aeec783a62b0ba67e7f0fbe6e70893c2070d37704d4479f8d1f3bb115641b6",
+  "targets": {
+    "runs_per_half": [
+      1,
+      3
+    ],
+    "runner_advance_rate": [
+      0.35,
+      0.5
+    ],
+    "outfield_extra_base_rate": [
+      0.55,
+      0.65
+    ],
+    "double_play_rate": [
+      0,
+      0.1
+    ]
+  },
+  "target_checks": {
+    "runs_per_half": false,
+    "runner_advance_rate": false,
+    "outfield_extra_base_rate": false,
+    "double_play_rate": true
+  },
+  "loss": 5.387264492753623,
+  "games": [
+    {"seed":0,"contacts":8,"fair_balls":8,"home_runs":1,"fair_outs":6,"hits":2,"safe_reaches":2,"reaches_on_error":0,"fouls":0,"fielding_errors":0,"caps":0,"plate_appearances":8,"runner_opportunities":2,"runner_advances":0,"runner_attempts":0,"batter_first_reached":1,"batter_second_reached":1,"batter_second_attempts":1,"outfield_hits":1,"outfield_extra_base_hits":1,"outfield_runner_opportunities":0,"outfield_runner_advances":0,"double_play_opportunities":1,"double_plays":0,"non_hr_fair_plays":7,"advancement_plays":[{"batter":"away.P01","origins":{},"outs_before":0,"fair":true,"hr":false,"outfield":false,"ground_seen":false,"first":true,"error":false,"touched":{"away.P01":1},"awards":[],"outs":["away.P01"],"scored":[],"cancelled":[],"attempts":{"away.P01":1},"flyout":true,"controlled":true},{"batter":"away.P02","origins":{},"outs_before":1,"fair":true,"hr":false,"outfield":false,"ground_seen":false,"first":false,"error":false,"touched":{},"awards":[],"outs":["away.P02"],"scored":[],"cancelled":[],"attempts":{"away.P02":1},"flyout":true,"controlled":true},{"batter":"away.P03","origins":{},"outs_before":2,"fair":true,"hr":true,"outfield":false,"ground_seen":false,"first":true,"error":false,"touched":{"away.P03":1},"awards":[["away.P03",1],["away.P03",2],["away.P03",3],["away.P03",4]],"outs":[],"scored":["away.P03"],"cancelled":[],"attempts":{"away.P03":1},"flyout":false,"controlled":false},{"batter":"away.P04","origins":{},"outs_before":2,"fair":true,"hr":false,"outfield":false,"ground_seen":true,"first":false,"error":false,"touched":{},"awards":[],"outs":["away.P04"],"scored":[],"cancelled":[],"attempts":{"away.P04":1},"flyout":false,"controlled":true},{"batter":"home.P01","origins":{},"outs_before":0,"fair":true,"hr":false,"outfield":false,"ground_seen":false,"first":true,"error":false,"touched":{"home.P01":1},"awards":[],"outs":["home.P01"],"scored":[],"cancelled":[],"attempts":{"home.P01":1},"flyout":true,"controlled":true},{"batter":"home.P02","origins":{},"outs_before":1,"fair":true,"hr":false,"outfield":true,"ground_seen":true,"first":true,"error":false,"touched":{"home.P02":2},"awards":[],"outs":[],"scored":[],"cancelled":[],"attempts":{"home.P02":2},"flyout":false,"controlled":true},{"batter":"home.P03","origins":{"home.P02":2},"outs_before":1,"fair":true,"hr":false,"outfield":false,"ground_seen":false,"first":true,"error":false,"touched":{"home.P03":1},"awards":[],"outs":["home.P03"],"scored":[],"cancelled":[],"attempts":{"home.P03":1},"flyout":true,"controlled":true},{"batter":"home.P04","origins":{"home.P02":2},"outs_before":2,"fair":true,"hr":false,"outfield":false,"ground_seen":false,"first":false,"error":false,"touched":{},"awards":[],"outs":["home.P04"],"scored":[],"cancelled":[],"attempts":{"home.P04":1},"flyout":true,"controlled":true}],"status":"completed","score":{"away":1,"home":0},"completed_halves":{"away":1,"home":1},"sim_tick":9169,"reason":"fair_inning_completed"},
+    {"seed":1,"contacts":9,"fair_balls":9,"home_runs":2,"fair_outs":6,"hits":3,"safe_reaches":3,"reaches_on_error":0,"fouls":0,"fielding_errors":0,"caps":0,"plate_appearances":9,"runner_opportunities":1,"runner_advances":0,"runner_attempts":0,"batter_first_reached":1,"batter_second_reached":1,"batter_second_attempts":1,"outfield_hits":1,"outfield_extra_base_hits":1,"outfield_runner_opportunities":0,"outfield_runner_advances":0,"double_play_opportunities":0,"double_plays":0,"non_hr_fair_plays":7,"advancement_plays":[{"batter":"away.P01","origins":{},"outs_before":0,"fair":true,"hr":false,"outfield":false,"ground_seen":false,"first":false,"error":false,"touched":{},"awards":[],"outs":["away.P01"],"scored":[],"cancelled":[],"attempts":{"away.P01":1},"flyout":true,"controlled":true},{"batter":"away.P02","origins":{},"outs_before":1,"fair":true,"hr":true,"outfield":false,"ground_seen":false,"first":true,"error":false,"touched":{"away.P02":1},"awards":[["away.P02",1],["away.P02",2],["away.P02",3],["away.P02",4]],"outs":[],"scored":["away.P02"],"cancelled":[],"attempts":{"away.P02":1},"flyout":false,"controlled":false},{"batter":"away.P03","origins":{},"outs_before":1,"fair":true,"hr":false,"outfield":false,"ground_seen":false,"first":false,"error":false,"touched":{},"awards":[],"outs":["away.P03"],"scored":[],"cancelled":[],"attempts":{"away.P03":1},"flyout":true,"controlled":true},{"batter":"away.P04","origins":{},"outs_before":2,"fair":true,"hr":false,"outfield":false,"ground_seen":false,"first":true,"error":false,"touched":{"away.P04":1},"awards":[],"outs":["away.P04"],"scored":[],"cancelled":[],"attempts":{"away.P04":1},"flyout":true,"controlled":true},{"batter":"home.P01","origins":{},"outs_before":0,"fair":true,"hr":true,"outfield":false,"ground_seen":false,"first":true,"error":false,"touched":{"home.P01":1},"awards":[["home.P01",1],["home.P01",2],["home.P01",3],["home.P01",4]],"outs":[],"scored":["home.P01"],"cancelled":[],"attempts":{"home.P01":1},"flyout":false,"controlled":false},{"batter":"home.P02","origins":{},"outs_before":0,"fair":true,"hr":false,"outfield":false,"ground_seen":false,"first":false,"error":false,"touched":{},"awards":[],"outs":["home.P02"],"scored":[],"cancelled":[],"attempts":{"home.P02":1},"flyout":true,"controlled":true},{"batter":"home.P03","origins":{},"outs_before":1,"fair":true,"hr":false,"outfield":false,"ground_seen":false,"first":true,"error":false,"touched":{"home.P03":1},"awards":[],"outs":["home.P03"],"scored":[],"cancelled":[],"attempts":{"home.P03":1},"flyout":true,"controlled":true},{"batter":"home.P04","origins":{},"outs_before":2,"fair":true,"hr":false,"outfield":true,"ground_seen":true,"first":true,"error":false,"touched":{"home.P04":2},"awards":[],"outs":[],"scored":[],"cancelled":[],"attempts":{"home.P04":2},"flyout":false,"controlled":true},{"batter":"home.P05","origins":{"home.P04":2},"outs_before":2,"fair":true,"hr":false,"outfield":false,"ground_seen":false,"first":true,"error":false,"touched":{"home.P05":1},"awards":[],"outs":["home.P05"],"scored":[],"cancelled":[],"attempts":{"home.P05":1},"flyout":true,"controlled":true}],"status":"completed","score":{"away":1,"home":1},"completed_halves":{"away":1,"home":1},"sim_tick":10100,"reason":"fair_inning_completed"},
+    {"seed":2,"contacts":9,"fair_balls":9,"home_runs":2,"fair_outs":6,"hits":3,"safe_reaches":3,"reaches_on_error":0,"fouls":0,"fielding_errors":0,"caps":0,"plate_appearances":9,"runner_opportunities":2,"runner_advances":0,"runner_attempts":0,"batter_first_reached":1,"batter_second_reached":1,"batter_second_attempts":1,"outfield_hits":1,"outfield_extra_base_hits":1,"outfield_runner_opportunities":0,"outfield_runner_advances":0,"double_play_opportunities":2,"double_plays":0,"non_hr_fair_plays":7,"advancement_plays":[{"batter":"away.P01","origins":{},"outs_before":0,"fair":true,"hr":false,"outfield":false,"ground_seen":false,"first":false,"error":false,"touched":{},"awards":[],"outs":["away.P01"],"scored":[],"cancelled":[],"attempts":{"away.P01":1},"flyout":true,"controlled":true},{"batter":"away.P02","origins":{},"outs_before":1,"fair":true,"hr":true,"outfield":false,"ground_seen":false,"first":true,"error":false,"touched":{"away.P02":1},"awards":[["away.P02",1],["away.P02",2],["away.P02",3],["away.P02",4]],"outs":[],"scored":["away.P02"],"cancelled":[],"attempts":{"away.P02":1},"flyout":false,"controlled":false},{"batter":"away.P03","origins":{},"outs_before":1,"fair":true,"hr":false,"outfield":false,"ground_seen":false,"first":false,"error":false,"touched":{},"awards":[],"outs":["away.P03"],"scored":[],"cancelled":[],"attempts":{"away.P03":1},"flyout":true,"controlled":true},{"batter":"away.P04","origins":{},"outs_before":2,"fair":true,"hr":false,"outfield":false,"ground_seen":false,"first":true,"error":false,"touched":{"away.P04":1},"awards":[],"outs":["away.P04"],"scored":[],"cancelled":[],"attempts":{"away.P04":1},"flyout":true,"controlled":true},{"batter":"home.P01","origins":{},"outs_before":0,"fair":true,"hr":false,"outfield":true,"ground_seen":true,"first":true,"error":false,"touched":{"home.P01":2},"awards":[],"outs":[],"scored":[],"cancelled":[],"attempts":{"home.P01":2},"flyout":false,"controlled":true},{"batter":"home.P02","origins":{"home.P01":2},"outs_before":0,"fair":true,"hr":false,"outfield":false,"ground_seen":false,"first":true,"error":false,"touched":{"home.P02":1},"awards":[],"outs":["home.P02"],"scored":[],"cancelled":[],"attempts":{"home.P02":1},"flyout":true,"controlled":true},{"batter":"home.P03","origins":{"home.P01":2},"outs_before":1,"fair":true,"hr":false,"outfield":false,"ground_seen":false,"first":false,"error":false,"touched":{},"awards":[],"outs":["home.P03"],"scored":[],"cancelled":[],"attempts":{"home.P03":1},"flyout":true,"controlled":true},{"batter":"home.P04","origins":{"home.P01":2},"outs_before":2,"fair":true,"hr":true,"outfield":false,"ground_seen":false,"first":true,"error":false,"touched":{"home.P04":1},"awards":[["home.P01",3],["home.P01",4],["home.P04",1],["home.P04",2],["home.P04",3],["home.P04",4]],"outs":[],"scored":["home.P01","home.P04"],"cancelled":[],"attempts":{"home.P04":1},"flyout":false,"controlled":false},{"batter":"home.P05","origins":{},"outs_before":2,"fair":true,"hr":false,"outfield":false,"ground_seen":false,"first":false,"error":false,"touched":{},"awards":[],"outs":["home.P05"],"scored":[],"cancelled":[],"attempts":{"home.P05":1},"flyout":true,"controlled":true}],"status":"completed","score":{"away":1,"home":2},"completed_halves":{"away":1,"home":1},"sim_tick":9616,"reason":"fair_inning_completed"},
+    {"seed":3,"contacts":10,"fair_balls":10,"home_runs":0,"fair_outs":6,"hits":4,"safe_reaches":4,"reaches_on_error":0,"fouls":0,"fielding_errors":1,"caps":0,"plate_appearances":10,"runner_opportunities":8,"runner_advances":2,"runner_attempts":2,"batter_first_reached":4,"batter_second_reached":4,"batter_second_attempts":4,"outfield_hits":4,"outfield_extra_base_hits":4,"outfield_runner_opportunities":2,"outfield_runner_advances":2,"double_play_opportunities":2,"double_plays":0,"non_hr_fair_plays":10,"advancement_plays":[{"batter":"away.P01","origins":{},"outs_before":0,"fair":true,"hr":false,"outfield":false,"ground_seen":false,"first":true,"error":false,"touched":{"away.P01":1},"awards":[],"outs":["away.P01"],"scored":[],"cancelled":[],"attempts":{"away.P01":1},"flyout":true,"controlled":true},{"batter":"away.P02","origins":{},"outs_before":1,"fair":true,"hr":false,"outfield":true,"ground_seen":true,"first":true,"error":false,"touched":{"away.P02":2},"awards":[],"outs":[],"scored":[],"cancelled":[],"attempts":{"away.P02":2},"flyout":false,"controlled":true},{"batter":"away.P03","origins":{"away.P02":2},"outs_before":1,"fair":true,"hr":false,"outfield":false,"ground_seen":false,"first":true,"error":false,"touched":{"away.P03":1},"awards":[],"outs":["away.P03"],"scored":[],"cancelled":[],"attempts":{"away.P03":1},"flyout":true,"controlled":true},{"batter":"away.P04","origins":{"away.P02":2},"outs_before":2,"fair":true,"hr":false,"outfield":true,"ground_seen":true,"first":true,"error":false,"touched":{"away.P04":2,"away.P02":3},"awards":[],"outs":[],"scored":[],"cancelled":[],"attempts":{"away.P04":2,"away.P02":3},"flyout":false,"controlled":true},{"batter":"away.P05","origins":{"away.P02":3,"away.P04":2},"outs_before":2,"fair":true,"hr":false,"outfield":false,"ground_seen":false,"first":true,"error":false,"touched":{"away.P05":1},"awards":[],"outs":["away.P05"],"scored":[],"cancelled":[],"attempts":{"away.P05":1},"flyout":true,"controlled":true},{"batter":"home.P01","origins":{},"outs_before":0,"fair":true,"hr":false,"outfield":false,"ground_seen":false,"first":true,"error":false,"touched":{"home.P01":1},"awards":[],"outs":["home.P01"],"scored":[],"cancelled":[],"attempts":{"home.P01":1},"flyout":true,"controlled":true},{"batter":"home.P02","origins":{},"outs_before":1,"fair":true,"hr":false,"outfield":true,"ground_seen":true,"first":true,"error":false,"touched":{"home.P02":2},"awards":[],"outs":[],"scored":[],"cancelled":[],"attempts":{"home.P02":2},"flyout":false,"controlled":true},{"batter":"home.P03","origins":{"home.P02":2},"outs_before":1,"fair":true,"hr":false,"outfield":false,"ground_seen":false,"first":true,"error":false,"touched":{"home.P03":1},"awards":[],"outs":["home.P03"],"scored":[],"cancelled":[],"attempts":{"home.P03":1},"flyout":true,"controlled":true},{"batter":"home.P04","origins":{"home.P02":2},"outs_before":2,"fair":true,"hr":false,"outfield":true,"ground_seen":true,"first":true,"error":false,"touched":{"home.P04":2,"home.P02":3},"awards":[],"outs":[],"scored":[],"cancelled":[],"attempts":{"home.P04":2,"home.P02":3},"flyout":false,"controlled":true},{"batter":"home.P05","origins":{"home.P02":3,"home.P04":2},"outs_before":2,"fair":true,"hr":false,"outfield":false,"ground_seen":false,"first":true,"error":false,"touched":{"home.P05":1},"awards":[],"outs":["home.P05"],"scored":[],"cancelled":[],"attempts":{"home.P05":1},"flyout":true,"controlled":true}],"status":"completed","score":{"away":0,"home":0},"completed_halves":{"away":1,"home":1},"sim_tick":14502,"reason":"fair_inning_completed"},
+    {"seed":4,"contacts":9,"fair_balls":9,"home_runs":0,"fair_outs":6,"hits":3,"safe_reaches":3,"reaches_on_error":0,"fouls":0,"fielding_errors":2,"caps":0,"plate_appearances":9,"runner_opportunities":8,"runner_advances":1,"runner_attempts":1,"batter_first_reached":3,"batter_second_reached":3,"batter_second_attempts":3,"outfield_hits":3,"outfield_extra_base_hits":3,"outfield_runner_opportunities":1,"outfield_runner_advances":1,"double_play_opportunities":4,"double_plays":0,"non_hr_fair_plays":9,"advancement_plays":[{"batter":"away.P01","origins":{},"outs_before":0,"fair":true,"hr":false,"outfield":true,"ground_seen":true,"first":true,"error":false,"touched":{"away.P01":2},"awards":[],"outs":[],"scored":[],"cancelled":[],"attempts":{"away.P01":2},"flyout":false,"controlled":true},{"batter":"away.P02","origins":{"away.P01":2},"outs_before":0,"fair":true,"hr":false,"outfield":false,"ground_seen":false,"first":true,"error":false,"touched":{"away.P02":1},"awards":[],"outs":["away.P02"],"scored":[],"cancelled":[],"attempts":{"away.P02":1},"flyout":true,"controlled":true},{"batter":"away.P03","origins":{"away.P01":2},"outs_before":1,"fair":true,"hr":false,"outfield":true,"ground_seen":true,"first":true,"error":false,"touched":{"away.P03":2,"away.P01":3},"awards":[],"outs":[],"scored":[],"cancelled":[],"attempts":{"away.P03":2,"away.P01":3},"flyout":false,"controlled":true},{"batter":"away.P04","origins":{"away.P01":3,"away.P03":2},"outs_before":1,"fair":true,"hr":false,"outfield":false,"ground_seen":false,"first":true,"error":false,"touched":{"away.P04":1},"awards":[],"outs":["away.P04"],"scored":[],"cancelled":[],"attempts":{"away.P04":1},"flyout":true,"controlled":true},{"batter":"away.P05","origins":{"away.P01":3,"away.P03":2},"outs_before":2,"fair":true,"hr":false,"outfield":false,"ground_seen":false,"first":false,"error":false,"touched":{},"awards":[],"outs":["away.P05"],"scored":[],"cancelled":[],"attempts":{"away.P05":1},"flyout":true,"controlled":true},{"batter":"home.P01","origins":{},"outs_before":0,"fair":true,"hr":false,"outfield":false,"ground_seen":false,"first":true,"error":false,"touched":{"home.P01":1},"awards":[],"outs":["home.P01"],"scored":[],"cancelled":[],"attempts":{"home.P01":1},"flyout":true,"controlled":true},{"batter":"home.P02","origins":{},"outs_before":1,"fair":true,"hr":false,"outfield":true,"ground_seen":true,"first":true,"error":false,"touched":{"home.P02":2},"awards":[],"outs":[],"scored":[],"cancelled":[],"attempts":{"home.P02":2},"flyout":false,"controlled":true},{"batter":"home.P03","origins":{"home.P02":2},"outs_before":1,"fair":true,"hr":false,"outfield":false,"ground_seen":false,"first":true,"error":false,"touched":{"home.P03":1},"awards":[],"outs":["home.P03"],"scored":[],"cancelled":[],"attempts":{"home.P03":1},"flyout":true,"controlled":true},{"batter":"home.P04","origins":{"home.P02":2},"outs_before":2,"fair":true,"hr":false,"outfield":false,"ground_seen":false,"first":false,"error":false,"touched":{},"awards":[],"outs":["home.P04"],"scored":[],"cancelled":[],"attempts":{"home.P04":1},"flyout":true,"controlled":true}],"status":"completed","score":{"away":0,"home":0},"completed_halves":{"away":1,"home":1},"sim_tick":12033,"reason":"fair_inning_completed"},
+    {"seed":5,"contacts":8,"fair_balls":8,"home_runs":1,"fair_outs":6,"hits":2,"safe_reaches":2,"reaches_on_error":0,"fouls":0,"fielding_errors":0,"caps":0,"plate_appearances":8,"runner_opportunities":2,"runner_advances":0,"runner_attempts":0,"batter_first_reached":1,"batter_second_reached":1,"batter_second_attempts":1,"outfield_hits":1,"outfield_extra_base_hits":1,"outfield_runner_opportunities":0,"outfield_runner_advances":0,"double_play_opportunities":1,"double_plays":0,"non_hr_fair_plays":7,"advancement_plays":[{"batter":"away.P01","origins":{},"outs_before":0,"fair":true,"hr":false,"outfield":false,"ground_seen":false,"first":true,"error":false,"touched":{"away.P01":1},"awards":[],"outs":["away.P01"],"scored":[],"cancelled":[],"attempts":{"away.P01":1},"flyout":true,"controlled":true},{"batter":"away.P02","origins":{},"outs_before":1,"fair":true,"hr":false,"outfield":false,"ground_seen":false,"first":false,"error":false,"touched":{},"awards":[],"outs":["away.P02"],"scored":[],"cancelled":[],"attempts":{"away.P02":1},"flyout":true,"controlled":true},{"batter":"away.P03","origins":{},"outs_before":2,"fair":true,"hr":true,"outfield":false,"ground_seen":false,"first":true,"error":false,"touched":{"away.P03":1},"awards":[["away.P03",1],["away.P03",2],["away.P03",3],["away.P03",4]],"outs":[],"scored":["away.P03"],"cancelled":[],"attempts":{"away.P03":1},"flyout":false,"controlled":false},{"batter":"away.P04","origins":{},"outs_before":2,"fair":true,"hr":false,"outfield":false,"ground_seen":true,"first":false,"error":false,"touched":{},"awards":[],"outs":["away.P04"],"scored":[],"cancelled":[],"attempts":{"away.P04":1},"flyout":false,"controlled":true},{"batter":"home.P01","origins":{},"outs_before":0,"fair":true,"hr":false,"outfield":false,"ground_seen":false,"first":true,"error":false,"touched":{"home.P01":1},"awards":[],"outs":["home.P01"],"scored":[],"cancelled":[],"attempts":{"home.P01":1},"flyout":true,"controlled":true},{"batter":"home.P02","origins":{},"outs_before":1,"fair":true,"hr":false,"outfield":true,"ground_seen":true,"first":true,"error":false,"touched":{"home.P02":2},"awards":[],"outs":[],"scored":[],"cancelled":[],"attempts":{"home.P02":2},"flyout":false,"controlled":true},{"batter":"home.P03","origins":{"home.P02":2},"outs_before":1,"fair":true,"hr":false,"outfield":false,"ground_seen":false,"first":true,"error":false,"touched":{"home.P03":1},"awards":[],"outs":["home.P03"],"scored":[],"cancelled":[],"attempts":{"home.P03":1},"flyout":true,"controlled":true},{"batter":"home.P04","origins":{"home.P02":2},"outs_before":2,"fair":true,"hr":false,"outfield":false,"ground_seen":false,"first":false,"error":false,"touched":{},"awards":[],"outs":["home.P04"],"scored":[],"cancelled":[],"attempts":{"home.P04":1},"flyout":true,"controlled":true}],"status":"completed","score":{"away":1,"home":0},"completed_halves":{"away":1,"home":1},"sim_tick":9169,"reason":"fair_inning_completed"}
+  ]
+}

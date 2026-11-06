@@ -29,7 +29,8 @@ class BaseballEngine:
             for i, (role, position) in enumerate(zip(ROLES, config["field"]["defense_q"])):
                 players.append({"id": f"{team}.P{i+1:02}", "team_id": team, "role": role,
                                 "position_q": position[:], "velocity_q": ["0", "0"], "active_intents": {},
-                                "dive_until_tick":0,"dive_ready_tick":0,"catch_ready_tick":0})
+                                "dive_until_tick":0,"dive_ready_tick":0,"catch_ready_tick":0,
+                                "catch_recovery_until_tick":0,"throw_release_tick":0,"pending_throw":None})
         return {"schema_version": config["version"], "ruleset_version": config["version"],
                 "physics_version": config["physics"]["version"], "map_version": config["field"]["version"],
                 "config_hash": digest(config), "sim_tick": 0, "phase": "INIT", "phase_start_tick": 0,
@@ -145,7 +146,8 @@ class BaseballEngine:
                          position_q=p["position_q"] + [self.config["physics"]["pitch_height_q"]],
                          velocity_q=["0"]*3, has_touched_ground_since_bat=False, fair_foul_status="undecided",release_exclusion_id=None)
         s["swing_windows"] = None; s["swing_used"] = False
-        for player in s["players"]: player["active_intents"] = {}
+        for player in s["players"]:
+            player.update(active_intents={},catch_recovery_until_tick=0,throw_release_tick=0,pending_throw=None)
 
     def _start_half(self):
         s = self.state
@@ -188,7 +190,8 @@ class BaseballEngine:
         s["pending_transition"] = "bottom" if s["half"] == "top" else "next_inning"
         s["runners"] = []; s["ball"]["mode"] = "dead"; s["ball"]["holder_id"] = None
         s["balls"]=s["strikes"]=0;s["ball"]["velocity_q"]=["0"]*3
-        for p in s["players"]: p.update(active_intents={},velocity_q=["0","0"])
+        for p in s["players"]:
+            p.update(active_intents={},velocity_q=["0","0"],pending_throw=None,throw_release_tick=0,catch_recovery_until_tick=0)
         self._phase("HALF_TRANSITION", self.config["rules"]["half_inning_change_ticks"])
 
     def _finish_pa(self):
@@ -279,6 +282,8 @@ class BaseballEngine:
         if kind == "noop": return
         p = self.player(action["player_id"])
         if p["team_id"] != team: raise ValueError("unauthorized_player")
+        if kind in ("move","throw","dive") and self._fielding_busy(p):
+            raise ValueError("fielder_recovering_or_winding_up")
         if kind in ("pitch", "swing", "take"):
             if kind == "pitch":
                 if team != self.defense or p["role"] != "P" or s["phase"] != "PITCH_READY" or s["ball"]["holder_id"] != p["id"]:
@@ -374,19 +379,36 @@ class BaseballEngine:
                 r["running_direction"]=direction;r["target_base"]=action["target_base"]
             s["settle_counter"]=s["recovery_counter"]=0
         elif kind=="throw":
-            _,velocity=self.native.action(kind,action,self.config["physics"])
-            nominal=velocity[:]
-            velocity=self.native.field_skill(1,p["velocity_q"],velocity,self.config["physics"])
+            p["pending_throw"]={"action":copy.deepcopy(action),"running_velocity_q":p["velocity_q"][:]}
+            p["throw_release_tick"]=s["sim_tick"]+self.config["rules"]["throw_windup_ticks"]
+            p["active_intents"].pop("move",None);p["velocity_q"]=["0","0"]
+            s["settle_counter"]=s["recovery_counter"]=0
+            self._emit("ThrowWindupStarted",fielder_id=p["id"],release_tick=p["throw_release_tick"])
+        elif kind in ("tag","appeal_return"):p["active_intents"][kind]=action["runner_id"]
+
+    def _fielding_busy(self,p):
+        return self.state["sim_tick"]<p["catch_recovery_until_tick"] or p["pending_throw"] is not None
+
+    def _release_due_throws(self):
+        s=self.state
+        for p in s["players"]:
+            pending=p["pending_throw"]
+            if pending is None:continue
+            if s["phase"]!="BALL_IN_PLAY" or s["ball"]["holder_id"]!=p["id"]:
+                p.update(pending_throw=None,throw_release_tick=0);continue
+            if s["sim_tick"]<p["throw_release_tick"]:continue
+            _,nominal=self.native.action("throw",pending["action"],self.config["physics"])
+            running=pending["running_velocity_q"]
+            velocity=self.native.field_skill(1,running,nominal,self.config["physics"])
             s["throw_start_bases"]=[{"id":r["id"],"base":r["last_legal_base"]} for r in s["runners"]]
             s["ball"].update(mode="thrown",holder_id=None,origin="throw",velocity_q=velocity,
-                             release_exclusion_id=p["id"],
-                             position_q=p["position_q"]+[self.config["physics"]["throw_height_q"]])
-            p["active_intents"].pop("tag",None);p["active_intents"].pop("appeal_return",None)
+                release_exclusion_id=p["id"],position_q=p["position_q"]+[self.config["physics"]["throw_height_q"]])
+            p.update(pending_throw=None,throw_release_tick=0)
+            for intent in ("tag","appeal_return","move"):p["active_intents"].pop(intent,None)
             p["active_intents"]["catch"]=False
             s["settle_counter"]=s["recovery_counter"]=0
             self._emit("ThrowReleased",fielder_id=p["id"],velocity_q=velocity,
-                       nominal_velocity_q=nominal,running_velocity_q=p["velocity_q"][:])
-        elif kind in ("tag","appeal_return"):p["active_intents"][kind]=action["runner_id"]
+                       nominal_velocity_q=nominal,running_velocity_q=running)
 
     def _move_fielders(self):
         s = self.state
@@ -396,11 +418,16 @@ class BaseballEngine:
         if s["phase"] in ("HALF_TRANSITION","GAME_OVER","ABORTED"): return
         for p in s["players"]:
             if p["team_id"] != self.defense: continue
+            if self._fielding_busy(p):
+                p["velocity_q"]=["0","0"];continue
             target = p["active_intents"].get("move")
             if target is None and p["velocity_q"] == ["0","0"]: continue
-            result = self.native.move(p["position_q"],p["velocity_q"],target or p["position_q"],self.config["physics"],
+            physics=self.config["physics"]
+            if s["ball"]["holder_id"]==p["id"]:
+                physics=dict(physics,fielder_speed_q=self.native.numeric(0,physics["fielder_speed_q"],physics["held_speed_multiplier_q"]))
+            result = self.native.move(p["position_q"],p["velocity_q"],target or p["position_q"],physics,
                                       radius=q(".001"),moving=target is not None,
-                                      field=self.config["field"] if self.config["field"]["version"]=="2.0.0" else None)
+                                      field=self.config["field"])
             p.update(position_q=result["position_q"],velocity_q=result["velocity_q"])
             self._motions[p["id"]].update(end=p["position_q"][:],stop=result["touch_q"] if result["stopped"] else None)
             if result["stopped"]: p["active_intents"].pop("move",None)
@@ -562,7 +589,13 @@ class BaseballEngine:
                        running_velocity_q=p["velocity_q"][:],relative_speed_q=str(skill[3]),control_limit_q=str(skill[2]))
             return False
         fly=ball["origin"]=="batted" and not ball["has_touched_ground_since_bat"]
-        self._emit("BallCaught",fielder_id=fielder_id,origin=ball["origin"],before_first_ground_contact=fly,position_q=ball["position_q"][:])
+        contact=self._at(fielder_id,time)
+        p.update(position_q=contact,velocity_q=["0","0"],pending_throw=None,throw_release_tick=0,
+                 catch_recovery_until_tick=s["sim_tick"]+int(time>0)+self.config["rules"]["catch_recovery_ticks"])
+        p["active_intents"].pop("move",None)
+        self._motions[fielder_id].update(end=contact[:],stop=time)
+        self._emit("BallCaught",fielder_id=fielder_id,origin=ball["origin"],before_first_ground_contact=fly,
+                   position_q=ball["position_q"][:],recovery_until_tick=p["catch_recovery_until_tick"])
         ball.update(mode="fielder_held",holder_id=fielder_id,velocity_q=["0"]*3,release_exclusion_id=None)
         self._holder_since=time
         if fly:
@@ -620,7 +653,8 @@ class BaseballEngine:
         if s["outs"]>=3:self._finish_play();return
         stopped=all(r["target_base"] is None and self.player(r["id"])["velocity_q"]==["0","0"] and self._safe(r) for r in s["runners"])
         held=s["ball"]["holder_id"] is not None
-        s["settle_counter"]=s["settle_counter"]+1 if stopped and held else 0
+        busy=held and self._fielding_busy(self.player(s["ball"]["holder_id"]))
+        s["settle_counter"]=s["settle_counter"]+1 if stopped and held and not busy else 0
         static=not any(int(v) for v in s["ball"]["velocity_q"])
         s["recovery_counter"]=s["recovery_counter"]+1 if stopped and static and not held else 0
         if s["settle_counter"]>=self.config["rules"]["settle_ticks"]:self._finish_play()
@@ -792,7 +826,7 @@ class BaseballEngine:
         actions = [(b["team_id"], a) for b in accepted_intents for a in b["accepted_intents"]]
         for _, action in sorted(actions,key=lambda pair:(pair[0],pair[1].get("player_id",""),pair[1]["kind"])): self._apply(action)
         self.state["action_cursor"] += len(accepted_intents)
-        self._move_fielders(); self._flight();self._competition(ONE)
+        self._release_due_throws();self._move_fielders(); self._flight();self._competition(ONE)
         self._sub=ONE
         if self.state["phase"]=="BALL_IN_PLAY" and self.state["ball"]["holder_id"]:
             self.state["ball"]["position_q"]=self.player(self.state["ball"]["holder_id"])["position_q"]+[self.config["physics"]["throw_height_q"]]
