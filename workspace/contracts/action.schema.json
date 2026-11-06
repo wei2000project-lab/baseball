@@ -1,0 +1,405 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "action"
+    },
+    "protocol_version": {
+      "const": "1.0.0"
+    },
+    "decision_id": {
+      "type": "string",
+      "pattern": "[A-Za-z0-9_.:-]+",
+      "maxLength": 128
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "action_id": {
+                "type": "string",
+                "pattern": "[A-Za-z0-9_.:-]+",
+                "maxLength": 128
+              },
+              "kind": {
+                "const": "pitch"
+              },
+              "player_id": {
+                "type": "string",
+                "pattern": "[A-Za-z0-9_.:-]+",
+                "maxLength": 128
+              },
+              "direction_i32": {
+                "type": "array",
+                "minItems": 3,
+                "maxItems": 3,
+                "items": {
+                  "type": "integer",
+                  "minimum": -2147483648,
+                  "maximum": 2147483647
+                }
+              },
+              "power_u16": {
+                "type": "integer",
+                "minimum": -2147483648,
+                "maximum": 2147483647
+              }
+            },
+            "required": [
+              "action_id",
+              "kind",
+              "player_id",
+              "direction_i32",
+              "power_u16"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "action_id": {
+                "type": "string",
+                "pattern": "[A-Za-z0-9_.:-]+",
+                "maxLength": 128
+              },
+              "kind": {
+                "const": "throw"
+              },
+              "player_id": {
+                "type": "string",
+                "pattern": "[A-Za-z0-9_.:-]+",
+                "maxLength": 128
+              },
+              "direction_i32": {
+                "type": "array",
+                "minItems": 3,
+                "maxItems": 3,
+                "items": {
+                  "type": "integer",
+                  "minimum": -2147483648,
+                  "maximum": 2147483647
+                }
+              },
+              "power_u16": {
+                "type": "integer",
+                "minimum": -2147483648,
+                "maximum": 2147483647
+              }
+            },
+            "required": [
+              "action_id",
+              "kind",
+              "player_id",
+              "direction_i32",
+              "power_u16"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "action_id": {
+                "type": "string",
+                "pattern": "[A-Za-z0-9_.:-]+",
+                "maxLength": 128
+              },
+              "kind": {
+                "const": "swing"
+              },
+              "player_id": {
+                "type": "string",
+                "pattern": "[A-Za-z0-9_.:-]+",
+                "maxLength": 128
+              },
+              "power_u16": {
+                "type": "integer",
+                "minimum": -2147483648,
+                "maximum": 2147483647
+              },
+              "azimuth_mdeg": {
+                "type": "integer",
+                "minimum": -2147483648,
+                "maximum": 2147483647
+              },
+              "elevation_mdeg": {
+                "type": "integer",
+                "minimum": -2147483648,
+                "maximum": 2147483647
+              }
+            },
+            "required": [
+              "action_id",
+              "kind",
+              "player_id",
+              "power_u16",
+              "azimuth_mdeg",
+              "elevation_mdeg"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "action_id": {
+                "type": "string",
+                "pattern": "[A-Za-z0-9_.:-]+",
+                "maxLength": 128
+              },
+              "kind": {
+                "const": "take"
+              },
+              "player_id": {
+                "type": "string",
+                "pattern": "[A-Za-z0-9_.:-]+",
+                "maxLength": 128
+              }
+            },
+            "required": [
+              "action_id",
+              "kind",
+              "player_id"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "action_id": {
+                "type": "string",
+                "pattern": "[A-Za-z0-9_.:-]+",
+                "maxLength": 128
+              },
+              "kind": {
+                "const": "hold"
+              },
+              "player_id": {
+                "type": "string",
+                "pattern": "[A-Za-z0-9_.:-]+",
+                "maxLength": 128
+              }
+            },
+            "required": [
+              "action_id",
+              "kind",
+              "player_id"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "action_id": {
+                "type": "string",
+                "pattern": "[A-Za-z0-9_.:-]+",
+                "maxLength": 128
+              },
+              "kind": {
+                "const": "catch"
+              },
+              "player_id": {
+                "type": "string",
+                "pattern": "[A-Za-z0-9_.:-]+",
+                "maxLength": 128
+              },
+              "enabled": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "action_id",
+              "kind",
+              "player_id",
+              "enabled"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "action_id": {
+                "type": "string",
+                "pattern": "[A-Za-z0-9_.:-]+",
+                "maxLength": 128
+              },
+              "kind": {
+                "const": "move"
+              },
+              "player_id": {
+                "type": "string",
+                "pattern": "[A-Za-z0-9_.:-]+",
+                "maxLength": 128
+              },
+              "target_q": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "items": {
+                  "type": "string",
+                  "pattern": "-?(0|[1-9][0-9]*)",
+                  "maxLength": 20
+                }
+              }
+            },
+            "required": [
+              "action_id",
+              "kind",
+              "player_id",
+              "target_q"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "action_id": {
+                "type": "string",
+                "pattern": "[A-Za-z0-9_.:-]+",
+                "maxLength": 128
+              },
+              "kind": {
+                "const": "run_to_base"
+              },
+              "player_id": {
+                "type": "string",
+                "pattern": "[A-Za-z0-9_.:-]+",
+                "maxLength": 128
+              },
+              "target_base": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 4
+              }
+            },
+            "required": [
+              "action_id",
+              "kind",
+              "player_id",
+              "target_base"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "action_id": {
+                "type": "string",
+                "pattern": "[A-Za-z0-9_.:-]+",
+                "maxLength": 128
+              },
+              "kind": {
+                "const": "return_to_base"
+              },
+              "player_id": {
+                "type": "string",
+                "pattern": "[A-Za-z0-9_.:-]+",
+                "maxLength": 128
+              },
+              "target_base": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 4
+              }
+            },
+            "required": [
+              "action_id",
+              "kind",
+              "player_id",
+              "target_base"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "action_id": {
+                "type": "string",
+                "pattern": "[A-Za-z0-9_.:-]+",
+                "maxLength": 128
+              },
+              "kind": {
+                "const": "tag"
+              },
+              "player_id": {
+                "type": "string",
+                "pattern": "[A-Za-z0-9_.:-]+",
+                "maxLength": 128
+              },
+              "runner_id": {
+                "type": "string",
+                "pattern": "[A-Za-z0-9_.:-]+",
+                "maxLength": 128
+              }
+            },
+            "required": [
+              "action_id",
+              "kind",
+              "player_id",
+              "runner_id"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "action_id": {
+                "type": "string",
+                "pattern": "[A-Za-z0-9_.:-]+",
+                "maxLength": 128
+              },
+              "kind": {
+                "const": "appeal_return"
+              },
+              "player_id": {
+                "type": "string",
+                "pattern": "[A-Za-z0-9_.:-]+",
+                "maxLength": 128
+              },
+              "runner_id": {
+                "type": "string",
+                "pattern": "[A-Za-z0-9_.:-]+",
+                "maxLength": 128
+              }
+            },
+            "required": [
+              "action_id",
+              "kind",
+              "player_id",
+              "runner_id"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "action_id": {
+                "type": "string",
+                "pattern": "[A-Za-z0-9_.:-]+",
+                "maxLength": 128
+              },
+              "kind": {
+                "const": "noop"
+              }
+            },
+            "required": [
+              "action_id",
+              "kind"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "maxItems": 9
+    }
+  },
+  "required": [
+    "type",
+    "protocol_version",
+    "decision_id",
+    "actions"
+  ],
+  "additionalProperties": false
+}

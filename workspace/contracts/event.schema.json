@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "seq": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "sim_tick": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "sub_tick_q": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 4294967295
+    },
+    "play_id": {
+      "type": "integer"
+    },
+    "type": {
+      "type": "string",
+      "maxLength": 64
+    },
+    "payload": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "seq",
+    "sim_tick",
+    "sub_tick_q",
+    "play_id",
+    "type",
+    "payload"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,3 @@
+{"type": "init", "protocol_version": "1.0.0", "team_id": "away", "seed": "42"}
+{"type": "ready", "protocol_version": "1.0.0"}
+{"type": "action", "protocol_version": "1.0.0", "decision_id": "d000001", "actions": []}

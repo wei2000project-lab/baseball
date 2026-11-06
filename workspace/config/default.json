@@ -1,0 +1,130 @@
+{
+  "version": "1.0.0-dev.P0",
+  "rules": {
+    "tick_rate_hz": 120,
+    "decision_interval_ticks": 6,
+    "regulation_ticks": 108000,
+    "plate_appearance_setup_ticks": 360,
+    "pitch_reset_ticks": 240,
+    "half_inning_change_ticks": 1200,
+    "pitch_release_deadline_ticks": 960,
+    "max_ticks": 432000,
+    "max_pitches": 10000,
+    "settle_ticks": 120,
+    "loose_ball_recovery_ticks": 600,
+    "swing_delay_ticks": 6,
+    "swing_duration_ticks": 12,
+    "half_run_cap": 10,
+    "half_pa_cap": 15
+  },
+  "physics": {
+    "version": "1.0.0-dev.P0",
+    "gravity_q": "42119241033",
+    "ball_radius_q": "158913790",
+    "ground_restitution_q": "1503238554",
+    "wall_restitution_q": "2147483648",
+    "ground_retention_q": "3435973837",
+    "rolling_deceleration_q": "6442450944",
+    "stop_speed_q": "214748365",
+    "rolling_threshold_q": "2147483648",
+    "player_speed_q": "30064771072",
+    "player_acceleration_q": "42949672960",
+    "catch_radius_q": "2791728742",
+    "catch_height_q": "10737418240",
+    "tag_radius_q": "2576980378",
+    "pitch_height_q": "7730941133",
+    "throw_height_q": "6871947674",
+    "pitch_min_speed_q": "64424509440",
+    "pitch_max_speed_q": "193273528320",
+    "throw_min_speed_q": "21474836480",
+    "throw_max_speed_q": "171798691840",
+    "bat_min_speed_q": "42949672960",
+    "bat_max_speed_q": "236223201280"
+  },
+  "field": {
+    "version": "1.0.0-dev.P0",
+    "base_radius_q": "1288490189",
+    "wall_radius_q": "429496729600",
+    "wall_height_q": "10737418240",
+    "xmin_q": "-365072220160",
+    "xmax_q": "365072220160",
+    "ymin_q": "-64424509440",
+    "ymax_q": "450971566080",
+    "strike_xmin_q": "-927712936",
+    "strike_xmax_q": "927712936",
+    "strike_zmin_q": "2147483648",
+    "strike_zmax_q": "4724464026",
+    "bases_q": [
+      [
+        "0",
+        "0"
+      ],
+      [
+        "83313775608",
+        "83313775608"
+      ],
+      [
+        "0",
+        "166627551216"
+      ],
+      [
+        "-83313775608",
+        "83313775608"
+      ]
+    ],
+    "defense_q": [
+      [
+        "0",
+        "79199196938"
+      ],
+      [
+        "0",
+        "-8589934592"
+      ],
+      [
+        "85899345920",
+        "85899345920"
+      ],
+      [
+        "51539607552",
+        "146028888064"
+      ],
+      [
+        "-85899345920",
+        "85899345920"
+      ],
+      [
+        "-51539607552",
+        "146028888064"
+      ],
+      [
+        "-193273528320",
+        "279172874240"
+      ],
+      [
+        "0",
+        "343597383680"
+      ],
+      [
+        "193273528320",
+        "279172874240"
+      ]
+    ],
+    "bat_box_q": [
+      "-2362232013",
+      "2362232013",
+      "-1288490189",
+      "3221225472",
+      "1073741824",
+      "6442450944"
+    ],
+    "body_box_q": [
+      "-4294967296",
+      "-2362232013",
+      "-1503238554",
+      "1503238554",
+      "858993459",
+      "7730941133"
+    ]
+  }
+}
