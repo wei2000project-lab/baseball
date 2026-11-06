@@ -1,25 +1,27 @@
 {
   "archive": "demo-0042.bbrec.zip",
-  "sha256": "0fdf98facbe3f59243a0b4081e170d2e91e4425b2953a14858cf2de854f6b162",
-  "size_bytes": 825972,
+  "sha256": "9b1090ede433bdc08795fcc6bd7c98a55be99fe6702de26b7dd5c793f1d365ee",
+  "size_bytes": 322457,
   "seed": "42",
-  "ruleset_version": "1.0.0-dev.P5",
-  "map_version": "1.0.0-dev.P4",
+  "ruleset_version": "2.0.0",
+  "physics_version": "2.0.0",
+  "map_version": "2.0.0",
   "summary": {
     "completed_halves": {
       "away": 1,
       "home": 1
     },
-    "final_state_hash": "ab24eab5200f4275eb3d0f79354150b2fc1127dfe32adc2f717335455ca4cf55",
+    "final_state_hash": "afbee6e9185c00b416033c767940858cdeb09dad51bebcce069d9ba6a033e68e",
     "finish_after_inning": 1,
     "reason": "fair_inning_completed",
+    "replay_state_hash": "7ddb310ab5daa06dcd16e3de0aa59de25d8e7c3a660d4a0b147bb81ab14755de",
     "score": {
-      "away": 10,
-      "home": 9
+      "away": 0,
+      "home": 0
     },
-    "sim_tick": 25618,
+    "sim_tick": 9916,
     "status": "completed",
-    "winner": "away"
+    "winner": null
   },
-  "description": "P5 baseline reference, high flies, ground balls, catches, running and scoring; no Bot or cache required."
+  "description": "V2 TXT delta reference; direct playback without Bot or native physics. Seed 42 short game, no overwriting old results."
 }

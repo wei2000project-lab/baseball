@@ -23,7 +23,7 @@ function render(f,exact=false){
   $('fair').textContent=`界內／界外：${{fair:'界內',foul:'界外',undecided:'尚未定案'}[f.ball.fair_foul_status]||'—'}`;
   $('tick-label').textContent=`tick ${Math.floor(cursor)} / ${metadata.total_ticks}`;$('timeline').value=Math.floor(cursor);
   if(document.activeElement!==$('tick-input'))$('tick-input').value=Math.floor(cursor);
-  $('seek-state').textContent=exact?`精確狀態 ${exactHash.slice(0,16)} · tick ${f.tick}`:'播放插值 · 暫停後重算精確狀態';
+  $('seek-state').textContent=exact?`精確狀態 ${exactHash.slice(0,16)} · tick ${f.tick}`:'播放插值 · 暫停後讀取精確狀態';
   $('seek-state').title=exactHash;
   $('runner-count').textContent=`${f.runners.length} 位跑者`;
   $('runner-list').textContent=f.runners.length?f.runners.map(r=>`${r.id} · ${r.last_legal_base===0?'打者':r.last_legal_base+' 壘'}${r.force_obligation?' → 強迫 '+r.force_obligation+' 壘':''}${r.retouch_obligation?' · 欠回壘 '+r.retouch_obligation:''}`).join('\n'):'目前無跑者';
@@ -33,14 +33,14 @@ function render(f,exact=false){
 }
 async function seek(tick){
   if(!metadata||loading)return;setPlaying(false);const epoch=++seekEpoch;
-  cursor=clamp(Math.round(tick),0,metadata.total_ticks);$('seek-state').textContent='從檢查點重算…';
+  cursor=clamp(Math.round(tick),0,metadata.total_ticks);$('seek-state').textContent='讀取 TXT 差分…';
   try{const result=await api.seek(cursor);if(epoch!==seekEpoch)return;exactHash=result.state_hash;trail=[];render(result.frame,true);message(`精確定位完成 · ${result.elapsed_ms} ms · ${exactHash}${profile.load_warning?' · '+profile.load_warning:''}`);await updateEvents(cursor);}
   catch(e){if(epoch===seekEpoch)error(e);}
 }
 async function loaded(data){
   seekEpoch++;recordEpoch++;metadata=data.metadata;cache=new ChunkCache(index=>api.chunk(index),3);cursor=0;exactHash='';eventKey='';showLoading(false);$('empty').classList.add('hidden');
   $('record-name').textContent=data.name;$('timeline').max=metadata.total_ticks;$('tick-input').max=metadata.total_ticks;$('duration').textContent=timeLabel(metadata.total_ticks,false);
-  const status=metadata.verification.verification_status;$('verification').textContent=status==='verified_full'?'✓ 整場重算驗證通過':'已驗證前綴 · 記錄不完整';$('verification').className='badge '+(status==='verified_full'?'good':'warn');
+  const status=metadata.verification.verification_status;$('verification').textContent=status==='verified_record'?'✓ TXT 完整性驗證通過':'記錄未封存 · 僅可預覽';$('verification').className='badge '+(status==='verified_record'?'good':'warn');
   const innings=$('inning-jump');innings.replaceChildren(new Option('跳至半局',''));
   for(const entry of metadata.navigation.filter(e=>e.type==='HalfInningStarted'))innings.add(new Option(`${entry.payload.inning} 局${entry.payload.half==='top'?'上':'下'}`,String(entry.tick)));
   message(`${metadata.total_frames.toLocaleString()} 影格 · 來源 ${metadata.source_hash.slice(0,16)} · 不執行 Bot`);
@@ -75,7 +75,7 @@ async function animate(now){
 function nextBall(direction){if(!metadata)return;const entries=metadata.navigation.filter(e=>e.type!=='HalfInningStarted').map(e=>({...e,tick:Math.min(metadata.total_ticks,e.tick+1)}));const item=direction>0?entries.find(e=>e.tick>cursor):entries.findLast(e=>e.tick<cursor);if(item)seek(item.tick);}
 $('open').onclick=async()=>{try{await api.open();}catch(e){error(e);}};
 $('reload').onclick=async()=>{try{await api.reload();}catch(e){error(e);}};
-$('cancel').onclick=async()=>{await api.cancel();showLoading(false);metadata=null;cache=null;exactHash='';seekEpoch++;recordEpoch++;$('verification').textContent='已取消 · 尚未驗證';$('verification').className='badge warn';$('seek-state').textContent='未完成驗證';message('已取消重算；原比賽記錄未變更');};
+$('cancel').onclick=async()=>{await api.cancel();showLoading(false);metadata=null;cache=null;exactHash='';seekEpoch++;recordEpoch++;$('verification').textContent='已取消 · 尚未驗證';$('verification').className='badge warn';$('seek-state').textContent='未完成驗證';message('已取消讀取；原比賽記錄未變更');};
 $('play').onclick=()=>{if(!metadata||loading)return;if(playing)seek(Math.floor(cursor));else if(cursor>=metadata.total_ticks)seek(0);else{setPlaying(true);fpsStart=performance.now();framesDrawn=0;}};
 $('step').onclick=()=>seek(Math.floor(cursor)+1);$('step-back').onclick=()=>seek(Math.floor(cursor)-1);
 $('previous').onclick=()=>nextBall(-1);$('next').onclick=()=>nextBall(1);
@@ -87,6 +87,6 @@ for(const id of ['debug','offsets','scale'])$(id).oninput=()=>{options.debug=$('
 $('field').onclick=event=>{const rect=$('field').getBoundingClientRect(),x=event.clientX-rect.left,y=event.clientY-rect.top;const target=hitTargets.find(p=>Math.hypot(p.x-x,p.y-y)<18);if(target){const p=currentFrame.players.find(p=>p.id===target.id);$('inspector').textContent=JSON.stringify({...p,position_m:p.position_q.map(meters)},null,2);}};
 document.addEventListener('keydown',e=>{if(['INPUT','SELECT','TEXTAREA'].includes(document.activeElement?.tagName))return;if(e.code==='Space'){e.preventDefault();$('play').click();}if(e.code==='ArrowRight')$('step').click();if(e.code==='ArrowLeft')$('step-back').click();});
 new ResizeObserver(draw).observe($('field'));
-api.onLoaded(data=>loaded(data).catch(error));api.onProgress(data=>{if(!loading){seekEpoch++;recordEpoch++;metadata=null;cache=null;exactHash='';$('verification').textContent='重算驗證中';$('verification').className='badge';}showLoading(true);$('loading-text').textContent=data.message||`完整重算 · ${timeLabel(data.sim_tick,false)} / ${timeLabel(data.total_ticks,false)}`;$('progress').value=data.total_ticks?data.sim_tick/data.total_ticks*100:0;});api.onError(error);
+api.onLoaded(data=>loaded(data).catch(error));api.onProgress(data=>{if(!loading){seekEpoch++;recordEpoch++;metadata=null;cache=null;exactHash='';$('verification').textContent='讀取驗證中';$('verification').className='badge';}showLoading(true);$('loading-text').textContent=data.message||`讀取 TXT · ${timeLabel(data.sim_tick,false)} / ${timeLabel(data.total_ticks,false)}`;$('progress').value=data.total_ticks?data.sim_tick/data.total_ticks*100:0;});api.onError(error);
 profile=await api.profile();draw();const existing=await api.current();if(existing)await loaded(existing);
 requestAnimationFrame(animate);

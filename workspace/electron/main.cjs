@@ -21,7 +21,7 @@ function send(channel, value) { if (window && !window.isDestroyed()) window.webC
 function checkSender(event) {
   if (!window || event.sender !== window.webContents || event.senderFrame?.url !== VIEWER_URL) throw new Error('Unauthorized IPC sender');
 }
-function stopWorker(reason = '已取消重算') {
+function stopWorker(reason = '已取消讀取') {
   const previous = worker; worker = null;
   if (previous) previous.kill();
   if (loading) { loading.reject(new Error(reason)); loading = null; }
@@ -55,7 +55,7 @@ async function loadDirectory(directory) {
   process.stdout.on('data', text => {
     if (worker !== process) return;
     buffer += text;
-    if (buffer.length > 8 * 1024 * 1024) { fail('重算輸出過大'); return; }
+    if (buffer.length > 8 * 1024 * 1024) { fail('讀取輸出過大'); return; }
     let newline;
     while ((newline = buffer.indexOf('\n')) >= 0) {
       const line = buffer.slice(0, newline); buffer = buffer.slice(newline + 1);
@@ -64,7 +64,7 @@ async function loadDirectory(directory) {
         if (packet.type === 'progress') send('record:progress', packet);
         else if (packet.type === 'loaded') {
           metadata = packet.metadata;
-          if (metadata.format !== 'bb-frames-v1' || metadata.cache_status !== 'ready') throw new Error('不支援的影格快取');
+          if (metadata.format !== 'bb-frames-v2' || metadata.cache_status !== 'ready') throw new Error('不支援的影格快取');
           const data = current(); send('record:loaded', data);
           if (loading) { loading.resolve(data); loading = null; }
         } else if (packet.type === 'seek_result' || packet.type === 'request_error') {
@@ -81,7 +81,7 @@ async function loadDirectory(directory) {
     send('record:error', String(reason).slice(0, 4096));stopWorker(reason);
   }
   process.on('error', error => fail(`無法啟動 Python：${error.message}`));
-  process.on('exit', code => { if (worker === process) fail(`重算程序已結束 (${code}) ${diagnostic}`); });
+  process.on('exit', code => { if (worker === process) fail(`讀取程序已結束 (${code}) ${diagnostic}`); });
   return promise;
 }
 function current() { return metadata ? { name: path.basename(selection), metadata } : null; }

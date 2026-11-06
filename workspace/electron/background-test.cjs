@@ -24,8 +24,8 @@ exports.run=async({window,loadDirectory,getMetadata,root})=>{
     await waitFor(`Boolean(window.baseball)`,'preload');
     await loadDirectory(config.record);await verifyTick(0);
     report.source_hash=getMetadata().source_hash;
-    assert.match(await js(`document.getElementById('verification').textContent`),/整場重算驗證通過/);
-    passed('full replay verified and rendered');
+    assert.match(await js(`document.getElementById('verification').textContent`),/TXT 完整性驗證通過/);
+    passed('TXT integrity verified and rendered');
     assert.deepEqual(await js(`[typeof window.require,typeof window.process]`),['undefined','undefined']);
     assert.equal(await js(`window.baseball.chunk('../manifest.json').then(()=>false,()=>true)`),true);
     passed('renderer has no Node; IPC rejects path-shaped chunk indexes');
@@ -48,7 +48,7 @@ exports.run=async({window,loadDirectory,getMetadata,root})=>{
     }
     const before=(await snapshot()).hash;
     await js(`document.getElementById('offsets').click();document.getElementById('debug').click();document.getElementById('scale').value='2';document.getElementById('scale').dispatchEvent(new Event('input'))`);
-    assert.equal((await snapshot()).hash,before);passed('offset, debug and scale leave authoritative hash unchanged');
+    assert.equal((await snapshot()).hash,before);passed('offset, debug and scale leave record projection hash unchanged');
     for(const [kind,tick] of Object.entries(config.selected)){await seek(tick);passed('state synchronization: '+kind,{tick});}
     if(config.selected.GroundContact){await seek(config.selected.GroundContact);await waitFor(`Array.from(document.querySelectorAll('.event-row')).some(e=>e.textContent.includes('球觸地'))`,'ground event');await js(`Array.from(document.querySelectorAll('.event-row')).find(e=>e.textContent.includes('球觸地')).click()`);await waitFor(`document.getElementById('inspector').textContent.includes('GroundContact')`,'event inspector');passed('event click and exact logical payload');}
     await seek(config.preview_tick);
@@ -56,7 +56,7 @@ exports.run=async({window,loadDirectory,getMetadata,root})=>{
     await delay(150);const image=await window.webContents.capturePage();await fs.writeFile(config.screenshot,image.toPNG());
     assert.deepEqual(image.getSize(),{width:1920,height:1080});
     passed('1920 x 1080 offscreen visual artifact',{size:image.getSize()});
-    await seek(getMetadata().total_ticks);assert.equal((await snapshot()).hash,getMetadata().verification.summary.final_state_hash);passed('terminal state matches verified summary');
+    await seek(getMetadata().total_ticks);assert.equal((await snapshot()).hash,getMetadata().verification.summary.replay_state_hash);passed('terminal state matches verified summary');
     await loadDirectory(config.audit_record);await waitFor(`document.getElementById('seek-state').textContent.includes('· tick 0')`,'audit record');
     await waitFor(`Array.from(document.querySelectorAll('.event-row')).some(e=>e.textContent.includes('動作遭拒絕'))`,'audit event');
     await js(`Array.from(document.querySelectorAll('.event-row')).find(e=>e.textContent.includes('動作遭拒絕')).click()`);

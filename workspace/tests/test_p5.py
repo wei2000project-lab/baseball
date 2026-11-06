@@ -1,23 +1,26 @@
+"""V2 replaces P5 simulation checkpoints with lossless TXT deltas."""
+import hashlib
 import json
 from pathlib import Path
 import subprocess
 import pytest
 from baseball_engine import BaseballEngine
 from recording import Recorder,decision_record,advance_recorded,atomic_json
-from numeric import digest,RNG
-from numeric import strict_loads,stream_seed,q,ONE
-from replay import ReplayRecord,ReplayError,file_digest,export_frames
+from numeric import digest,RNG,strict_loads,stream_seed,q,ONE
+from replay import ReplayRecord,ReplayError,file_digest,export_frames,frame
 from test_p2 import quick_config,strikeout_actions
 
 
-def make_record(path):
+def make_record(path,capture=None):
     e=BaseballEngine(quick_config());rec=Recorder(path,e);seq=0
+    if capture is not None:capture[0]=frame(e.state)
     while not e.terminal_result():
         records=[]
         for team in ("away","home"):
             actions=strikeout_actions(e.observe(team),team)
             if actions:seq+=1;records.append(decision_record(e,team,actions,seq))
         result=advance_recorded(e,records);rec.write_step(e,result,records)
+        if capture is not None:capture[e.state["sim_tick"]]=frame(e.state)
     rec.finalize(e);return path
 
 
@@ -25,110 +28,95 @@ def make_record(path):
 def record_path(tmp_path):return make_record(tmp_path/"record")
 
 
-def reseal(path,name):
-    manifest=json.loads((path/"manifest.json").read_text())
-    manifest["file_index"][name]={"size_bytes":(path/name).stat().st_size,"sha256":file_digest(path/name)}
-    atomic_json(path/"manifest.json",manifest)
+def test_ten_reads_without_bot_or_native_execution(record_path,monkeypatch):
+    def forbidden(*a,**k):raise AssertionError("TXT replay started a process or physics")
+    from native import Native
+    monkeypatch.setattr(subprocess,"Popen",forbidden);monkeypatch.setattr(Native,"__init__",forbidden)
+    record=ReplayRecord(record_path);expected=record.verify()
+    assert expected["verification_status"]=="verified_record"
+    for _ in range(10):assert record.verify()==expected
 
 
-def edit_line(path,name,predicate,edit):
-    values=[json.loads(s) for s in (path/name).read_text().splitlines()]
-    edit(next(v for v in values if predicate(v)))
-    (path/name).write_text("".join(json.dumps(v,separators=(",",":"))+"\n" for v in values),encoding="utf-8",newline="\n")
-    reseal(path,name)
+def test_100_random_seeks_equal_live_engine_frames(tmp_path):
+    expected={};path=make_record(tmp_path/"seeks",expected);r=ReplayRecord(path);rng=RNG(2026)
+    ticks={0,r.final_tick};ticks.update(rng.next()%(r.final_tick+1) for _ in range(150))
+    assert len(ticks)>=100
+    for tick in ticks:assert frame(r.seek(tick))==expected[tick]
 
 
-def test_D1_ten_full_recalculations_without_bot_execution(record_path,monkeypatch):
-    def forbidden(*a,**k):raise AssertionError("replay attempted to start a Bot")
-    monkeypatch.setattr(subprocess,"Popen",forbidden)
-    record=ReplayRecord(record_path);expected=None
-    for _ in range(10):
-        report=record.verify();assert report["verification_status"]=="verified_full"
-        if expected is None:expected=report
-        assert report==expected
+def test_txt_omits_unchanged_coordinates_and_idle_ticks(record_path):
+    lines=(record_path/"match.txt").read_text().splitlines();ticks=[x for x in lines if x.startswith("T\t")]
+    assert len(list(record_path.iterdir()))==1
+    assert "a9x=" in ticks[0] and not any("a9x=" in x for x in ticks[1:])
+    assert len(ticks)<=ReplayRecord(record_path).final_tick+1
+    assert not any(x.startswith("E\t") and 'ActionAccepted' in x for x in lines)
 
 
-def test_every_checkpoint_restores_to_same_terminal(record_path):
-    record=ReplayRecord(record_path)
-    for index in range(len(record.checkpoint_index)):
-        result=record.verify(checkpoint=index)
-        assert result["verification_status"]=="verified_prefix"
-        assert result["summary"]==record.summary
+def test_tampered_delta_and_event_fail_integrity(record_path):
+    p=record_path/"match.txt";original=p.read_bytes()
+    for old,new in ((b'scoreA=0',b'scoreA=9'),(b'StrikeCalled',b'StrikeEdited')):
+        assert old in original;p.write_bytes(original.replace(old,new,1))
+        with pytest.raises(ReplayError,match="file_integrity"):ReplayRecord(record_path)
+    p.write_bytes(original)
 
 
-def test_100_exact_random_seeks_equal_sequential_states(record_path):
-    record=ReplayRecord(record_path);rng=RNG(2026)
-    ticks={0,record.final_tick};ticks.update(rng.next()%(record.final_tick+1) for _ in range(120))
-    e=BaseballEngine();e.initialize(record.manifest["config"],record.initial)
-    inputs=record.actions();next_action=next(inputs,None);expected={}
-    while True:
-        t=e.state["sim_tick"]
-        if t in ticks:expected[t]=e.canonical_state_hash()
-        if e.terminal_result():break
-        records,next_action=record._inputs(e,inputs,next_action);advance_recorded(e,records)
-    assert len(expected)>=100
-    for t,h in expected.items():assert digest(record.seek(t))==h
+def test_truncation_is_incomplete_and_unknown_versions_unsupported(record_path,tmp_path):
+    p=record_path/"match.txt";original=p.read_bytes();p.write_bytes(original[:-12])
+    assert ReplayRecord(record_path).verify()["verification_status"]=="incomplete"
+    p.write_bytes(original.replace(b'2.0.0',b'9.0.0',1))
+    with pytest.raises(ReplayError) as error:ReplayRecord(record_path)
+    assert error.value.report['verification_status']=='unsupported_version'
+    legacy=tmp_path/'legacy';legacy.mkdir();(legacy/'manifest.json').write_text('{}')
+    with pytest.raises(ReplayError,match='legacy_json_record'):ReplayRecord(legacy)
 
 
-def test_rehashed_event_reports_first_field_difference(record_path):
-    edit_line(record_path,"events.jsonl",lambda e:e["type"]=="StrikeCalled",lambda e:e["payload"].update(strikes=99))
-    with pytest.raises(ReplayError) as error:ReplayRecord(record_path).verify()
-    r=error.value.report
-    assert r["reason"]=="event_difference" and r["field"]=="$.payload.strikes" and r["seq"]>0
-
-
-def test_rehashed_accepted_intent_corruption_rejected(record_path):
-    edit_line(record_path,"actions.jsonl",lambda a:bool(a["accepted_intents"]),lambda a:a["accepted_intents"][0].update(power_u16=1))
-    with pytest.raises(ReplayError,match="accepted_intents"):ReplayRecord(record_path).verify()
-
-
-def test_rehashed_checkpoint_corruption_rejected(record_path):
-    def edit(cp):
-        cp["state"]["score"]["away"]=9;cp["state_hash"]=digest(cp["state"])
-    edit_line(record_path,"checkpoints.jsonl",lambda cp:cp["resume_tick"]>0,edit)
-    with pytest.raises(ReplayError,match="checkpoint_state"):ReplayRecord(record_path).verify()
-
-
-def test_truncation_fails_integrity_and_unknown_version_rejected(record_path):
-    path=record_path/"events.jsonl";original=path.read_bytes();path.write_bytes(original[:-3])
-    with pytest.raises(ReplayError,match="file_integrity"):ReplayRecord(record_path)
-    path.write_bytes(original)
-    manifest=json.loads((record_path/"manifest.json").read_text());manifest["schema_version"]="future"
-    atomic_json(record_path/"manifest.json",manifest)
-    with pytest.raises(ReplayError) as e:ReplayRecord(record_path)
-    assert e.value.report["verification_status"]=="unsupported_version"
-
-
-def test_incomplete_record_only_verifies_sealed_prefix(tmp_path):
+def test_incomplete_record_does_not_claim_integrity(tmp_path):
     e=BaseballEngine(quick_config());rec=Recorder(tmp_path/"prefix",e)
     for _ in range(200):rec.write_step(e,e.step())
-    rec.close();record=ReplayRecord(tmp_path/"prefix");report=record.verify()
-    assert report["verification_status"]=="verified_prefix" and report["record_status"]=="incomplete"
-    assert report["verified_through_tick"]<200
+    rec.close();r=ReplayRecord(tmp_path/"prefix")
+    assert r.verify()['verification_status']=='incomplete'
+    assert 'no physics re-simulation' in r.verify()['verification_scope']
 
 
-def test_regenerable_chunk_cache_and_stale_chunk_rebuild(record_path,tmp_path):
-    record=ReplayRecord(record_path);out=tmp_path/"cache";a=export_frames(record,out)
-    assert a["verification"]["verification_status"]=="verified_full"
-    assert a["total_frames"]>0 and all(c["count"]<=600 for c in a["chunks"])
-    first=out/"chunk-000000.json";data=first.read_bytes();first.write_bytes(b"broken")
-    b=export_frames(record,out)
-    assert b==a and first.read_bytes()==data
-    first.unlink();assert export_frames(record,out)==a
+def test_regenerable_cache_and_stale_chunk_rebuild(record_path,tmp_path):
+    r=ReplayRecord(record_path);out=tmp_path/'cache';a=export_frames(r,out)
+    assert a['verification']['verification_status']=='verified_record'
+    assert a['total_frames']>0 and all(c['count']<=600 for c in a['chunks'])
+    first=out/'chunk-000000.json';data=first.read_bytes();first.write_bytes(b'broken')
+    assert export_frames(r,out)==a and first.read_bytes()==data
+    first.unlink();assert export_frames(r,out)==a
 
 
-def test_rejected_fractional_json_is_audited_and_replayable(tmp_path):
-    e=BaseballEngine(quick_config());rec=Recorder(tmp_path/"fractional",e)
-    r=decision_record(e,"away",[{"action_id":.5,"player_id":"away.P01","kind":"swing","power_u16":.5}],1)
-    rec.write_step(e,advance_recorded(e,[r]),[r]);seq=1
-    while not e.terminal_result():
-        inputs=[]
-        for team in ("away","home"):
-            actions=strikeout_actions(e.observe(team),team)
-            if actions:seq+=1;inputs.append(decision_record(e,team,actions,seq))
-        rec.write_step(e,advance_recorded(e,inputs),inputs)
-    rec.finalize(e)
-    assert ReplayRecord(tmp_path/"fractional").verify()["verification_status"]=="verified_full"
+def test_rejected_fractions_never_change_authoritative_intents():
+    e=BaseballEngine(quick_config());r=decision_record(e,'away',[{'action_id':.5,'kind':'swing','power_u16':.5}],1)
+    assert r['accepted_intents']==[] and r['validation_results'][0]['status']=='rejected'
+
+
+def test_early_swing_whiff_and_legacy_config_rejection():
+    from test_p2 import pitch_scene
+    from configuration import validate_config
+    e=pitch_scene(x='2');e.state['swing_windows'].update(start_tick=0,end_tick=e.state['sim_tick'])
+    for _ in range(4):e.step()
+    assert (e.state['balls'],e.state['strikes'])==(0,1)
+    c=quick_config();c['version']='1.0.0-dev.P4'
+    with pytest.raises(ValueError,match='unsupported_version'):validate_config(c)
+
+
+def test_unicode_boundary_and_contact_vectors():
+    with pytest.raises(ValueError):strict_loads('"\\ud800"')
+    assert [stream_seed('42',name) for name in ('setup','engine','bot:away')]==[16059173231784216673,6010439204905073236,15716365118942522187]
+    from native import Native
+    v=lambda *a:[q(x) for x in a]
+    assert Native().sweep_cylinder(v(-2,0,1),v(2,0,1),v(0,0,0),v(0,0,0),q(1),q(2))==ONE//4
+
+
+def test_same_tick_abort_is_preserved(tmp_path):
+    e=BaseballEngine(quick_config());rec=Recorder(tmp_path/'aborted',e)
+    r=decision_record(e,'away',None,1);r['fault']='watchdog_timeout'
+    rec.write_step(e,advance_recorded(e,[r]),[r]);summary=rec.finalize(e)
+    record=ReplayRecord(tmp_path/'aborted')
+    assert record.final_tick==0 and record.verify()['summary']==summary
+    assert record.seek(0)['terminal_status']=='aborted' and summary['winner'] is None
 
 
 def test_bounded_legal_intent_fuzz_does_not_mutate_observation():
@@ -145,65 +133,6 @@ def test_bounded_legal_intent_fuzz_does_not_mutate_observation():
             raise
 
 
-def test_early_swing_whiff_is_strike_and_P4_behavior_is_versioned():
-    from test_p2 import pitch_scene
-    for legacy in (False,True):
-        e=pitch_scene(x="2");e.state["swing_windows"].update(start_tick=0,end_tick=e.state["sim_tick"])
-        if legacy:
-            config=e.config.copy();config["version"]="1.0.0-dev.P4"
-            state=e.snapshot();state.update(schema_version="1.0.0-dev.P4",ruleset_version="1.0.0-dev.P4",config_hash=digest(config))
-            e.initialize(config,state)
-        for _ in range(4):e.step()
-        assert (e.state["balls"],e.state["strikes"])==((1,0) if legacy else (0,1))
-
-
-def test_unpaired_surrogates_rejected_at_json_boundary():
-    with pytest.raises(ValueError):strict_loads('"\\ud800"')
-
-
-def test_derived_rng_and_exact_contact_golden_vectors():
-    assert [stream_seed("42",name) for name in ("setup","engine","bot:away")]==[16059173231784216673,6010439204905073236,15716365118942522187]
-    from native import Native
-    n=Native();v=lambda *a:[q(x) for x in a]
-    assert n.sweep_cylinder(v(-2,0,1),v(2,0,1),v(0,0,0),v(0,0,0),q(1),q(2))==ONE//4
-
-
-def test_aborted_trace_at_same_tick_as_initial_checkpoint(tmp_path):
-    e=BaseballEngine(quick_config());rec=Recorder(tmp_path/"aborted",e)
-    record=decision_record(e,"away",None,1);record["fault"]="watchdog_timeout"
-    rec.write_step(e,advance_recorded(e,[record]),[record]);rec.finalize(e)
-    r=ReplayRecord(tmp_path/"aborted");report=r.verify()
-    assert report["verification_status"]=="verified_full" and report["summary"]["status"]=="aborted"
-    assert report["summary"]["winner"] is None
-
-
-@pytest.mark.parametrize("scene",["swing","return"])
-def test_rich_checkpoint_states_replay_every_suffix_to_terminal(tmp_path,scene):
-    from test_p2 import pitch_scene
-    from test_p3 import batted_engine
-    if scene=="swing":e=pitch_scene(x="2")
-    else:
-        e=batted_engine((1,));r=next(r for r in e.state["runners"] if r["origin_base"]==1)
-        r.update(target_base=2,leg_base=2);e.player(r["id"])["position_q"]=[q(15),q(24)]
-        e.state["ball"]["has_touched_ground_since_bat"]=False;e._move_fielders();e._caught("home.P01",0)
-    path=tmp_path/scene;rec=Recorder(path,e);seq=0
-    while not e.terminal_result():
-        records=[]
-        for team in ("away","home"):
-            actions=strikeout_actions(e.observe(team),team)
-            if team==e.offense and e.state["phase"]=="BALL_IN_PLAY":
-                for r in e.state["runners"]:
-                    if r["retouch_obligation"] is not None and r["target_base"]!=r["retouch_obligation"]:
-                        actions.append({"action_id":f"return-{seq}","player_id":r["id"],"kind":"return_to_base","target_base":r["retouch_obligation"]})
-            if actions:seq+=1;records.append(decision_record(e,team,actions,seq))
-        rec.write_step(e,advance_recorded(e,records),records)
-        if e.state["sim_tick"] in (3,50):rec.checkpoint(e)
-    rec.finalize(e);record=ReplayRecord(path)
-    assert record.verify()["verification_status"]=="verified_full"
-    for i in range(len(record.checkpoint_index)):
-        assert record.verify(checkpoint=i)["summary"]==record.summary
-
-
 def test_mapping_insertion_and_team_reply_order_do_not_change_state():
     from test_p2 import ready_engine
     a=ready_engine();b=BaseballEngine()
@@ -217,3 +146,11 @@ def test_mapping_insertion_and_team_reply_order_do_not_change_state():
     home=a.validate_intents("home",pitch);away=a.validate_intents("away",swing)
     assert a.step([home,away])==b.step([away,home])
     assert a.canonical_state_hash()==b.canonical_state_hash()
+
+
+def test_entire_idle_tick_is_absent(tmp_path):
+    c=quick_config();c['rules']['plate_appearance_setup_ticks']=20
+    e=BaseballEngine(c);rec=Recorder(tmp_path/'idle',e)
+    for _ in range(10):rec.write_step(e,e.step())
+    rec.close();lines=(tmp_path/'idle/match.txt').read_text().splitlines()
+    assert len([s for s in lines if s.startswith('T\t')])==2

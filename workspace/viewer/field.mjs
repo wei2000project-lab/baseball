@@ -35,6 +35,7 @@ export function drawField(canvas,frame,metadata,options,trail,profile) {
     if(options.debug){circle(...logical,Math.max(1.5,.65*scale),'#709e89',false);circle(...logical,1.5,'#d6e3cc');path([]);c.beginPath();c.moveTo(...logical);c.lineTo(...display);c.strokeStyle='#688f7c';c.stroke();}
     circle(display[0]+1,display[1]+2,size+2,'#00170e88');circle(...display,size,color);
     if(p.id===frame.ball.holder_id)circle(...display,size+4,'#ecf5b8',false);
+    if(frame.tick<(p.dive_until_tick||0)){circle(...display,size+8,'#ffdf81',false);c.fillStyle='#ffdf81';c.font='10px sans-serif';c.fillText('撲接',display[0],display[1]+size+15);}
     c.font='9px Consolas';c.textAlign='center';c.fillStyle='#e5ebd9';c.shadowColor='#05160d';c.shadowBlur=4;c.fillText(`${p.id.slice(-3)} · ${slot==='batter'?'打者':slot==='runner'?'跑者':p.role}`,display[0],display[1]-size-5);c.shadowBlur=0;
     hitTargets.push({id:p.id,x:display[0],y:display[1]});
   }

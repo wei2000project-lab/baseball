@@ -130,7 +130,7 @@ def test_action_clamps_zero_direction_and_cordic(native, config):
     with pytest.raises(ValueError): native.action("pitch",dict(action,direction_i32=[0,0,0]),config["physics"])
     normalized, speed = native.action("swing",{"power_u16":65535,"azimuth_mdeg":0,"elevation_mdeg":0},config["physics"])
     assert abs(int(speed[0])) < 1000 and abs(int(speed[2])) < 1000
-    assert abs(int(speed[1])-int(q(55))) < 1000
+    assert abs(int(speed[1])-int(config["physics"]["bat_max_speed_q"])) < 1000
     for _ in range(10):
         assert native.action("swing",normalized,config["physics"])[1] == speed
 

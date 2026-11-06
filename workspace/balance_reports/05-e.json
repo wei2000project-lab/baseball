@@ -1,0 +1,679 @@
+{
+  "label": "e-running-skills",
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "n": 20,
+  "completed": 20,
+  "config": {
+    "version": "2.0.0",
+    "rules": {
+      "tick_rate_hz": 120,
+      "decision_interval_ticks": 6,
+      "regulation_ticks": 1200,
+      "plate_appearance_setup_ticks": 360,
+      "pitch_reset_ticks": 240,
+      "half_inning_change_ticks": 1200,
+      "pitch_release_deadline_ticks": 960,
+      "max_ticks": 432000,
+      "max_pitches": 10000,
+      "settle_ticks": 120,
+      "loose_ball_recovery_ticks": 600,
+      "swing_delay_ticks": 6,
+      "swing_duration_ticks": 12,
+      "half_run_cap": 10,
+      "half_pa_cap": 15,
+      "dive_duration_ticks": 24,
+      "dive_cooldown_ticks": 360,
+      "catch_retry_ticks": 30
+    },
+    "physics": {
+      "version": "2.0.0",
+      "gravity_q": "42119241033",
+      "ball_radius_q": "158913790",
+      "ground_restitution_q": "1503238554",
+      "wall_restitution_q": "2147483648",
+      "ground_retention_q": "3435973837",
+      "rolling_deceleration_q": "19327352832",
+      "stop_speed_q": "214748365",
+      "rolling_threshold_q": "2147483648",
+      "player_speed_q": "30064771072",
+      "player_acceleration_q": "42949672960",
+      "catch_radius_q": "4294967296",
+      "catch_height_q": "10737418240",
+      "tag_radius_q": "2576980378",
+      "pitch_height_q": "7730941133",
+      "throw_height_q": "6871947674",
+      "pitch_min_speed_q": "64424509440",
+      "pitch_max_speed_q": "193273528320",
+      "throw_min_speed_q": "21474836480",
+      "throw_max_speed_q": "171798691840",
+      "bat_min_speed_q": "42949672960",
+      "bat_max_speed_q": "150323855360",
+      "swing_narrowing_q": "1717986918",
+      "timing_loss_q": "2791728742",
+      "spatial_loss_q": "2791728742",
+      "contact_speed_floor_q": "1503238554",
+      "contact_deflection_mdeg": 8000,
+      "fielder_speed_q": "38654705664",
+      "fielder_acceleration_q": "68719476736",
+      "dive_radius_bonus_q": "3865470566",
+      "catch_running_radius_loss_q": "1288490189",
+      "catch_control_speed_q": "197568495616",
+      "catch_running_control_loss_q": "7301444403",
+      "dive_control_bonus_q": "42949672960",
+      "throw_running_error_q": "2576980378",
+      "drop_retention_q": "1932735283"
+    },
+    "field": {
+      "version": "2.0.0",
+      "base_radius_q": "1288490189",
+      "wall_radius_q": "429496729600",
+      "wall_height_q": "10737418240",
+      "xmin_q": "-365072220160",
+      "xmax_q": "365072220160",
+      "ymin_q": "-64424509440",
+      "ymax_q": "450971566080",
+      "strike_xmin_q": "-927712936",
+      "strike_xmax_q": "927712936",
+      "strike_zmin_q": "2147483648",
+      "strike_zmax_q": "4724464026",
+      "bases_q": [
+        [
+          "0",
+          "0"
+        ],
+        [
+          "83313775608",
+          "83313775608"
+        ],
+        [
+          "0",
+          "166627551216"
+        ],
+        [
+          "-83313775608",
+          "83313775608"
+        ]
+      ],
+      "defense_q": [
+        [
+          "0",
+          "79199196938"
+        ],
+        [
+          "0",
+          "-8589934592"
+        ],
+        [
+          "85899345920",
+          "85899345920"
+        ],
+        [
+          "51539607552",
+          "146028888064"
+        ],
+        [
+          "-85899345920",
+          "85899345920"
+        ],
+        [
+          "-51539607552",
+          "146028888064"
+        ],
+        [
+          "-193273528320",
+          "279172874240"
+        ],
+        [
+          "0",
+          "343597383680"
+        ],
+        [
+          "193273528320",
+          "279172874240"
+        ]
+      ],
+      "bat_box_q": [
+        "-2362232013",
+        "2362232013",
+        "-1288490189",
+        "3221225472",
+        "1073741824",
+        "6442450944"
+      ],
+      "body_box_q": [
+        "-4294967296",
+        "-2362232013",
+        "-1503238554",
+        "1503238554",
+        "858993459",
+        "7730941133"
+      ]
+    }
+  },
+  "bot_sha256": "4488592d8096b3956afb785767e708119c0f610dab90e9245917e18dd464b75a",
+  "measurement": "in_process; same Bot observations, validation, simultaneous batches; no IPC/record I/O",
+  "denominators": "HR/fair BIP; batter retired/fair BIP; safe >=1 base without batter out or prior fielding error/fair BIP (includes HR); runs/completed halves; ticks/completed games. Error before first safe base is scored ROE, not hit.",
+  "totals": {
+    "contacts": 148,
+    "fair_balls": 137,
+    "home_runs": 8,
+    "fair_outs": 109,
+    "hits": 28,
+    "safe_reaches": 28,
+    "reaches_on_error": 0,
+    "fouls": 0,
+    "fielding_errors": 11,
+    "caps": 0
+  },
+  "metrics": {
+    "home_run_rate": 0.058394160583941604,
+    "fair_out_rate": 0.7956204379562044,
+    "hit_rate": 0.20437956204379562,
+    "runs_per_half": 0.25,
+    "ticks_per_game": 8101.5
+  },
+  "games": [
+    {
+      "seed": 0,
+      "contacts": 7,
+      "fair_balls": 7,
+      "home_runs": 0,
+      "fair_outs": 6,
+      "hits": 1,
+      "safe_reaches": 1,
+      "reaches_on_error": 0,
+      "fouls": 0,
+      "fielding_errors": 0,
+      "caps": 0,
+      "status": "completed",
+      "score": {
+        "away": 0,
+        "home": 0
+      },
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "sim_tick": 8047,
+      "reason": "fair_inning_completed"
+    },
+    {
+      "seed": 1,
+      "contacts": 7,
+      "fair_balls": 7,
+      "home_runs": 1,
+      "fair_outs": 6,
+      "hits": 1,
+      "safe_reaches": 1,
+      "reaches_on_error": 0,
+      "fouls": 0,
+      "fielding_errors": 0,
+      "caps": 0,
+      "status": "completed",
+      "score": {
+        "away": 0,
+        "home": 1
+      },
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "sim_tick": 6667,
+      "reason": "fair_inning_completed"
+    },
+    {
+      "seed": 2,
+      "contacts": 7,
+      "fair_balls": 6,
+      "home_runs": 0,
+      "fair_outs": 5,
+      "hits": 1,
+      "safe_reaches": 1,
+      "reaches_on_error": 0,
+      "fouls": 0,
+      "fielding_errors": 0,
+      "caps": 0,
+      "status": "completed",
+      "score": {
+        "away": 0,
+        "home": 0
+      },
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "sim_tick": 7213,
+      "reason": "fair_inning_completed"
+    },
+    {
+      "seed": 3,
+      "contacts": 8,
+      "fair_balls": 7,
+      "home_runs": 1,
+      "fair_outs": 5,
+      "hits": 2,
+      "safe_reaches": 2,
+      "reaches_on_error": 0,
+      "fouls": 0,
+      "fielding_errors": 0,
+      "caps": 0,
+      "status": "completed",
+      "score": {
+        "away": 1,
+        "home": 0
+      },
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "sim_tick": 8489,
+      "reason": "fair_inning_completed"
+    },
+    {
+      "seed": 4,
+      "contacts": 8,
+      "fair_balls": 7,
+      "home_runs": 0,
+      "fair_outs": 5,
+      "hits": 2,
+      "safe_reaches": 2,
+      "reaches_on_error": 0,
+      "fouls": 0,
+      "fielding_errors": 0,
+      "caps": 0,
+      "status": "completed",
+      "score": {
+        "away": 0,
+        "home": 0
+      },
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "sim_tick": 9427,
+      "reason": "fair_inning_completed"
+    },
+    {
+      "seed": 5,
+      "contacts": 7,
+      "fair_balls": 7,
+      "home_runs": 0,
+      "fair_outs": 6,
+      "hits": 1,
+      "safe_reaches": 1,
+      "reaches_on_error": 0,
+      "fouls": 0,
+      "fielding_errors": 0,
+      "caps": 0,
+      "status": "completed",
+      "score": {
+        "away": 0,
+        "home": 0
+      },
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "sim_tick": 8047,
+      "reason": "fair_inning_completed"
+    },
+    {
+      "seed": 6,
+      "contacts": 6,
+      "fair_balls": 6,
+      "home_runs": 0,
+      "fair_outs": 6,
+      "hits": 0,
+      "safe_reaches": 0,
+      "reaches_on_error": 0,
+      "fouls": 0,
+      "fielding_errors": 0,
+      "caps": 0,
+      "status": "completed",
+      "score": {
+        "away": 0,
+        "home": 0
+      },
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "sim_tick": 5881,
+      "reason": "fair_inning_completed"
+    },
+    {
+      "seed": 7,
+      "contacts": 8,
+      "fair_balls": 7,
+      "home_runs": 1,
+      "fair_outs": 5,
+      "hits": 2,
+      "safe_reaches": 2,
+      "reaches_on_error": 0,
+      "fouls": 0,
+      "fielding_errors": 0,
+      "caps": 0,
+      "status": "completed",
+      "score": {
+        "away": 2,
+        "home": 0
+      },
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "sim_tick": 7883,
+      "reason": "fair_inning_completed"
+    },
+    {
+      "seed": 8,
+      "contacts": 7,
+      "fair_balls": 7,
+      "home_runs": 0,
+      "fair_outs": 6,
+      "hits": 1,
+      "safe_reaches": 1,
+      "reaches_on_error": 0,
+      "fouls": 0,
+      "fielding_errors": 3,
+      "caps": 0,
+      "status": "completed",
+      "score": {
+        "away": 0,
+        "home": 0
+      },
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "sim_tick": 8791,
+      "reason": "fair_inning_completed"
+    },
+    {
+      "seed": 9,
+      "contacts": 7,
+      "fair_balls": 6,
+      "home_runs": 0,
+      "fair_outs": 5,
+      "hits": 1,
+      "safe_reaches": 1,
+      "reaches_on_error": 0,
+      "fouls": 0,
+      "fielding_errors": 0,
+      "caps": 0,
+      "status": "completed",
+      "score": {
+        "away": 0,
+        "home": 0
+      },
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "sim_tick": 7213,
+      "reason": "fair_inning_completed"
+    },
+    {
+      "seed": 10,
+      "contacts": 7,
+      "fair_balls": 5,
+      "home_runs": 0,
+      "fair_outs": 4,
+      "hits": 1,
+      "safe_reaches": 1,
+      "reaches_on_error": 0,
+      "fouls": 0,
+      "fielding_errors": 0,
+      "caps": 0,
+      "status": "completed",
+      "score": {
+        "away": 0,
+        "home": 0
+      },
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "sim_tick": 7709,
+      "reason": "fair_inning_completed"
+    },
+    {
+      "seed": 11,
+      "contacts": 9,
+      "fair_balls": 9,
+      "home_runs": 2,
+      "fair_outs": 6,
+      "hits": 3,
+      "safe_reaches": 3,
+      "reaches_on_error": 0,
+      "fouls": 0,
+      "fielding_errors": 0,
+      "caps": 0,
+      "status": "completed",
+      "score": {
+        "away": 1,
+        "home": 1
+      },
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "sim_tick": 9097,
+      "reason": "fair_inning_completed"
+    },
+    {
+      "seed": 12,
+      "contacts": 7,
+      "fair_balls": 6,
+      "home_runs": 0,
+      "fair_outs": 5,
+      "hits": 1,
+      "safe_reaches": 1,
+      "reaches_on_error": 0,
+      "fouls": 0,
+      "fielding_errors": 0,
+      "caps": 0,
+      "status": "completed",
+      "score": {
+        "away": 0,
+        "home": 0
+      },
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "sim_tick": 7651,
+      "reason": "fair_inning_completed"
+    },
+    {
+      "seed": 13,
+      "contacts": 8,
+      "fair_balls": 8,
+      "home_runs": 1,
+      "fair_outs": 6,
+      "hits": 2,
+      "safe_reaches": 2,
+      "reaches_on_error": 0,
+      "fouls": 0,
+      "fielding_errors": 3,
+      "caps": 0,
+      "status": "completed",
+      "score": {
+        "away": 1,
+        "home": 0
+      },
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "sim_tick": 9487,
+      "reason": "fair_inning_completed"
+    },
+    {
+      "seed": 14,
+      "contacts": 9,
+      "fair_balls": 9,
+      "home_runs": 1,
+      "fair_outs": 6,
+      "hits": 3,
+      "safe_reaches": 3,
+      "reaches_on_error": 0,
+      "fouls": 0,
+      "fielding_errors": 0,
+      "caps": 0,
+      "status": "completed",
+      "score": {
+        "away": 2,
+        "home": 0
+      },
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "sim_tick": 9601,
+      "reason": "fair_inning_completed"
+    },
+    {
+      "seed": 15,
+      "contacts": 8,
+      "fair_balls": 7,
+      "home_runs": 0,
+      "fair_outs": 5,
+      "hits": 2,
+      "safe_reaches": 2,
+      "reaches_on_error": 0,
+      "fouls": 0,
+      "fielding_errors": 0,
+      "caps": 0,
+      "status": "completed",
+      "score": {
+        "away": 0,
+        "home": 0
+      },
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "sim_tick": 9115,
+      "reason": "fair_inning_completed"
+    },
+    {
+      "seed": 16,
+      "contacts": 6,
+      "fair_balls": 6,
+      "home_runs": 0,
+      "fair_outs": 6,
+      "hits": 0,
+      "safe_reaches": 0,
+      "reaches_on_error": 0,
+      "fouls": 0,
+      "fielding_errors": 3,
+      "caps": 0,
+      "status": "completed",
+      "score": {
+        "away": 0,
+        "home": 0
+      },
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "sim_tick": 7327,
+      "reason": "fair_inning_completed"
+    },
+    {
+      "seed": 17,
+      "contacts": 6,
+      "fair_balls": 6,
+      "home_runs": 0,
+      "fair_outs": 6,
+      "hits": 0,
+      "safe_reaches": 0,
+      "reaches_on_error": 0,
+      "fouls": 0,
+      "fielding_errors": 2,
+      "caps": 0,
+      "status": "completed",
+      "score": {
+        "away": 0,
+        "home": 0
+      },
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "sim_tick": 6469,
+      "reason": "fair_inning_completed"
+    },
+    {
+      "seed": 18,
+      "contacts": 7,
+      "fair_balls": 5,
+      "home_runs": 0,
+      "fair_outs": 4,
+      "hits": 1,
+      "safe_reaches": 1,
+      "reaches_on_error": 0,
+      "fouls": 0,
+      "fielding_errors": 0,
+      "caps": 0,
+      "status": "completed",
+      "score": {
+        "away": 0,
+        "home": 0
+      },
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "sim_tick": 7709,
+      "reason": "fair_inning_completed"
+    },
+    {
+      "seed": 19,
+      "contacts": 9,
+      "fair_balls": 9,
+      "home_runs": 1,
+      "fair_outs": 6,
+      "hits": 3,
+      "safe_reaches": 3,
+      "reaches_on_error": 0,
+      "fouls": 0,
+      "fielding_errors": 0,
+      "caps": 0,
+      "status": "completed",
+      "score": {
+        "away": 1,
+        "home": 0
+      },
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "sim_tick": 10207,
+      "reason": "fair_inning_completed"
+    }
+  ],
+  "wall_seconds": 32.738
+}

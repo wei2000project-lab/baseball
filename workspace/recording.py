@@ -40,76 +40,60 @@ def atomic_json(path, value):
 
 
 class Recorder:
-    FILES = ("initial_state.json","actions.jsonl","events.jsonl","checkpoints.jsonl","summary.json")
-
-    def __init__(self, path, engine, seed="42", bots=None, run_mode="diagnostic"):
-        self.path = Path(path)
-        if self.path.exists() and any(self.path.iterdir()): raise ValueError("output_not_empty")
+    """One human-readable match.txt; unchanged coordinates are never repeated."""
+    def __init__(self,path,engine,seed="42",bots=None,run_mode="diagnostic"):
+        from txt_record import MAGIC,encode,project,delta_line
+        self.path=Path(path)
+        if self.path.exists() and any(self.path.iterdir()):raise ValueError("output_not_empty")
         self.path.mkdir(parents=True,exist_ok=True)
-        (self.path/"diagnostics").mkdir()
-        self.manifest = {"schema_version":engine.state["schema_version"],"ruleset_version":engine.config["version"],
-                         "physics_version":engine.config["physics"]["version"],"map_version":engine.config["field"]["version"],
-                         "bot_protocol_version":"1.0.0","match_id":self.path.name,"seed":seed,"run_mode":run_mode,
-                         "tick_rate_hz":120,"regulation_ticks":engine.config["rules"]["regulation_ticks"],
-                         "rules_config":engine.config["rules"],"physics_config":engine.config["physics"],"field_config":engine.config["field"],
-                         "config":engine.config,"bots":bots or {},"numeric_format":"Q32.32",
-                         "canonicalization_version":"bb-canon-v1","hash_algorithm":"SHA-256","file_index":{},"record_status":"recording",
-                         "engine_build_id":source_hash(),"native_build_id":source_hash(native=True)}
-        initial=engine.snapshot()
-        self.manifest["rosters"]={team:[{"id":p["id"],"role":p["role"]} for p in initial["players"] if p["team_id"]==team] for team in ("away","home")}
-        self.manifest["batting_orders"]={team:[p["id"] for p in initial["players"] if p["team_id"]==team] for team in ("away","home")}
-        self.manifest["initial_defense"]={p["id"]:p["position_q"] for p in initial["players"]}
-        from build_native import LIB
-        self.manifest["native_build"]=__import__("json").loads((LIB.parent/"native-build.json").read_text())
-        atomic_json(self.path/"manifest.json",self.manifest)
-        atomic_json(self.path/"initial_state.json",engine.snapshot())
-        self.streams = {name:open(self.path/(name+".jsonl"),"wb") for name in ("actions","events","checkpoints")}
-        self.last_checkpoint = -1
-        self.last_checkpoint_hash = None
-        self.checkpoint(engine)
+        self.diagnostics_path=Path(__file__).resolve().parent/"build/runlogs"/hashlib.sha256(str(self.path.resolve()).encode()).hexdigest()[:16]
+        self.diagnostics_path.mkdir(parents=True,exist_ok=True)
+        self.manifest={"schema_version":engine.config["version"],"ruleset_version":engine.config["version"],
+            "physics_version":engine.config["physics"]["version"],"map_version":engine.config["field"]["version"],
+            "config":engine.config,"field_config":engine.config["field"],"seed":str(seed),"bots":bots or {},
+            "run_mode":run_mode,"tick_rate_hz":120,"numeric_format":"Q32.32 integer units; metres = value / 4294967296",
+            "rosters":{team:[{"id":p["id"],"role":p["role"]} for p in engine.state["players"] if p["team_id"]==team] for team in ("away","home")}}
+        self.stream=open(self.path/"match.txt","wb");self.sha=hashlib.sha256();self.closed=False
+        self._write(MAGIC+"\n");self._write("M\t"+encode(self.manifest)+"\n")
+        self.previous=project(engine.state);self._write(delta_line(engine.state["sim_tick"],{},self.previous))
 
-    def append(self, name, value):
-        # Rejected raw numeric inputs are audit data, not authoritative Q32.32.
-        # Preserve finite JSON fractions here; accepted intents still use strict schemas.
-        data=json.dumps(value,ensure_ascii=True,allow_nan=False,separators=(",",":"),sort_keys=True).encode("utf-8") if name=="actions" else canonical(value)
-        self.streams[name].write(data+b"\n")
+    def _write(self,line,hashed=True):
+        data=line.encode("utf-8");self.stream.write(data)
+        if hashed:self.sha.update(data)
 
-    def checkpoint(self, engine):
-        state = engine.snapshot()
-        h=digest(state)
-        if state["sim_tick"]==self.last_checkpoint and h==self.last_checkpoint_hash:return
-        self.append("checkpoints",{"stage":"POST_BOUNDARY","resume_tick":state["sim_tick"],"state":state,
-                                   "state_hash":digest(state),"action_cursor":state["action_cursor"],"last_event_seq":state["last_event_seq"]})
-        self.last_checkpoint = state["sim_tick"]
-        self.last_checkpoint_hash=h
+    def update_bots(self):
+        from txt_record import encode
+        self._write("B\t"+encode(self.manifest["bots"])+"\n")
 
-    def write_step(self, engine, result, decisions=()):
-        for record in decisions: self.append("actions",record)
-        for event in result["events"]: self.append("events",event)
-        if result["checkpoint"]: self.checkpoint(engine)
-        if engine.state["sim_tick"] % 600 == 0:
-            for stream in self.streams.values(): stream.flush()
+    def write_step(self,engine,result,decisions=()):
+        from txt_record import encode,project,delta_line
+        current=project(engine.state);line=delta_line(engine.state["sim_tick"],self.previous,current)
+        if line:self._write(line)
+        self.previous=current
+        for event in result["events"]:
+            if event["type"] not in ("ActionAccepted","ActionClamped"):
+                self._write("E\t"+str(engine.state["sim_tick"])+"\t"+encode(event)+"\n")
+        if engine.state["sim_tick"]%600==0:self.stream.flush()
 
-    def finalize(self, engine):
-        result = engine.terminal_result()
-        if result is None: raise ValueError("cannot_finalize_running_match")
-        self.checkpoint(engine)
-        for stream in self.streams.values(): stream.flush();stream.close()
-        atomic_json(self.path/"summary.json",result)
-        self.manifest["file_index"] = {name:{"size_bytes":(self.path/name).stat().st_size,
-                                               "sha256":hashlib.sha256((self.path/name).read_bytes()).hexdigest()} for name in self.FILES}
-        self.manifest["record_status"] = "complete" if result["status"] == "completed" else "aborted"
-        atomic_json(self.path/"manifest.json",self.manifest)
+    def finalize(self,engine):
+        from txt_record import encode,project,restore
+        result=engine.terminal_result()
+        if result is None:raise ValueError("cannot_finalize_running_match")
+        # Abort may happen without advancing the clock; persist that final delta too.
+        self.write_step(engine,{"events":[]})
+        state=restore(self.previous,engine.state["sim_tick"],self.manifest["rosters"])
+        result["replay_state_hash"]=digest(state)
+        footer={"summary":result,"summary_sha256":digest(result),"sha256":self.sha.hexdigest()}
+        self._write("END\t"+encode(footer)+"\n",hashed=False);self.close()
         return result
 
     def close(self):
-        for stream in self.streams.values():
-            if not stream.closed: stream.close()
+        if not self.closed:self.stream.close();self.closed=True
 
 
 def source_hash(native=False):
     root = Path(__file__).resolve().parent
-    names = ["baseball.hpp","baseball.cpp","map.hpp","map.cpp","native_bindings.cpp"] if native else ["baseball_engine.py","numeric.py","configuration.py","contracts.py","native.py","recording.py"]
+    names = ["baseball.hpp","baseball.cpp","map.hpp","map.cpp","native_bindings.cpp"] if native else ["baseball_engine.py","numeric.py","configuration.py","contracts.py","native.py","recording.py","txt_record.py"]
     if not native:names+=sorted("contracts/"+p.name for p in (root/"contracts").glob("*.json"))
     sha = hashlib.sha256()
     for name in names: sha.update(name.encode());sha.update((root/name).read_bytes().replace(b"\r\n",b"\n"))

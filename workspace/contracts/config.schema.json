@@ -3,11 +3,7 @@
   "type": "object",
   "properties": {
     "version": {
-      "enum": [
-        "1.0.0-dev.P4",
-        "1.0.0-dev.P5",
-        "1.0.0-dev.P7"
-      ]
+      "const": "2.0.0"
     },
     "rules": {
       "type": "object",
@@ -84,6 +80,21 @@
           "type": "integer",
           "minimum": 0,
           "maximum": 10000000
+        },
+        "dive_duration_ticks": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "dive_cooldown_ticks": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "catch_retry_ticks": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
         }
       },
       "required": [
@@ -101,7 +112,10 @@
         "swing_delay_ticks",
         "swing_duration_ticks",
         "half_run_cap",
-        "half_pa_cap"
+        "half_pa_cap",
+        "dive_duration_ticks",
+        "dive_cooldown_ticks",
+        "catch_retry_ticks"
       ],
       "additionalProperties": false
     },
@@ -109,7 +123,7 @@
       "type": "object",
       "properties": {
         "version": {
-          "const": "1.0.0-dev.P4"
+          "const": "2.0.0"
         },
         "gravity_q": {
           "type": "string",
@@ -215,6 +229,81 @@
           "type": "string",
           "pattern": "-?(0|[1-9][0-9]*)",
           "maxLength": 256
+        },
+        "swing_narrowing_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 32
+        },
+        "timing_loss_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 32
+        },
+        "spatial_loss_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 32
+        },
+        "contact_speed_floor_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 32
+        },
+        "contact_deflection_mdeg": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "fielder_speed_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 32
+        },
+        "fielder_acceleration_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 32
+        },
+        "dive_radius_bonus_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 32
+        },
+        "catch_running_radius_loss_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 32
+        },
+        "catch_control_speed_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 32
+        },
+        "catch_running_control_loss_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 32
+        },
+        "dive_control_bonus_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 32
+        },
+        "throw_running_error_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 32
+        },
+        "drop_retention_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 32
+        },
+        "pitch_max_error_q": {
+          "type": "string",
+          "pattern": "-?(0|[1-9][0-9]*)",
+          "maxLength": 32
         }
       },
       "required": [
@@ -239,7 +328,22 @@
         "throw_min_speed_q",
         "throw_max_speed_q",
         "bat_min_speed_q",
-        "bat_max_speed_q"
+        "bat_max_speed_q",
+        "swing_narrowing_q",
+        "timing_loss_q",
+        "spatial_loss_q",
+        "contact_speed_floor_q",
+        "contact_deflection_mdeg",
+        "fielder_speed_q",
+        "fielder_acceleration_q",
+        "dive_radius_bonus_q",
+        "catch_running_radius_loss_q",
+        "catch_control_speed_q",
+        "catch_running_control_loss_q",
+        "dive_control_bonus_q",
+        "throw_running_error_q",
+        "drop_retention_q",
+        "pitch_max_error_q"
       ],
       "additionalProperties": false
     },
@@ -247,10 +351,7 @@
       "type": "object",
       "properties": {
         "version": {
-          "enum": [
-            "1.0.0-dev.P4",
-            "1.0.0-dev.P7"
-          ]
+          "const": "2.0.0"
         },
         "base_radius_q": {
           "type": "string",

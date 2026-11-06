@@ -392,6 +392,30 @@
               "kind"
             ],
             "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "action_id": {
+                "type": "string",
+                "pattern": "[A-Za-z0-9_.:-]+",
+                "maxLength": 128
+              },
+              "kind": {
+                "const": "dive"
+              },
+              "player_id": {
+                "type": "string",
+                "pattern": "[A-Za-z0-9_.:-]+",
+                "maxLength": 128
+              }
+            },
+            "required": [
+              "action_id",
+              "kind",
+              "player_id"
+            ],
+            "additionalProperties": false
           }
         ]
       },

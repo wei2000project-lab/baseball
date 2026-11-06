@@ -38,6 +38,7 @@ void sincos(int64_t millidegrees, Q& sine, Q& cosine);
 Vec normalize(Vec direction, Q speed);
 Vec action_velocity(int kind, Vec direction, int64_t power, int64_t azimuth, int64_t elevation,
                     Q min_speed, Q max_speed, int64_t* normalized);
+Vec contact_velocity(const Q* input, const Q* config, Q* quality);
 // Sweep time is Q0.32, -1 = no contact. Geometry includes boundaries.
 Q sweep_box(Vec a, Vec b, const Q* box, Q radius);
 Q sweep_cylinder(Vec a, Vec b, Vec player_a, Vec player_b, Q radius, Q height);

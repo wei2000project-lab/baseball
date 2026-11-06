@@ -3,9 +3,9 @@ from pathlib import Path
 from numeric import strict_loads
 
 ROOT = Path(__file__).resolve().parent
-VERSION = "1.0.0-dev.P7"
-SUPPORTED_RULES = ("1.0.0-dev.P4","1.0.0-dev.P5", VERSION)
-SUPPORTED_MAPS = ("1.0.0-dev.P4",VERSION)
+VERSION = "2.0.0"
+SUPPORTED_RULES = (VERSION,)
+SUPPORTED_MAPS = (VERSION,)
 
 
 def default_config():
@@ -28,7 +28,7 @@ def validate_config(config):
             for n, (v, e) in enumerate(zip(value, expected)):
                 check(v, e, f"{path}[{n}]")
         elif type(expected) is int:
-            if value <= 0 or value > 10_000_000:
+            if value < (0 if path=="config.physics.contact_deflection_mdeg" else 1) or value > 10_000_000:
                 raise ValueError(f"{path}: out_of_range")
         elif isinstance(expected, str):
             if expected.lstrip("-").isdigit():
@@ -41,14 +41,24 @@ def validate_config(config):
     if r["max_ticks"] <= r["regulation_ticks"] or r["tick_rate_hz"] != 120:
         raise ValueError("rules: max_ticks/tick_rate_hz")
     for k, value in p.items():
-        if k != "version" and int(value) <= 0:
+        neutral=("version","swing_narrowing_q","timing_loss_q","spatial_loss_q","contact_deflection_mdeg",
+                 "catch_running_radius_loss_q","catch_running_control_loss_q","throw_running_error_q","pitch_max_error_q")
+        if k not in neutral and int(value) <= 0:
             raise ValueError(f"physics.{k}: positive_required")
+        if k!="version" and int(value)<0:raise ValueError(f"physics.{k}: negative_coefficient")
     if not 0 < int(p["ground_restitution_q"]) <= 1 << 32:
         raise ValueError("physics.ground_restitution_q: invalid_coefficient")
     if not 0 < int(p["wall_restitution_q"]) <= 1 << 32:
         raise ValueError("physics.wall_restitution_q: invalid_coefficient")
     if not 0 < int(p["ground_retention_q"]) <= 1 << 32:
         raise ValueError("physics.ground_retention_q: invalid_coefficient")
+    for key in ("swing_narrowing_q","timing_loss_q","spatial_loss_q","contact_speed_floor_q","catch_running_radius_loss_q","drop_retention_q"):
+        if not 0<=int(p[key])<=1<<32:raise ValueError(f"physics.{key}: invalid_coefficient")
+    if int(p["swing_narrowing_q"])>=1<<32 or int(p["catch_running_radius_loss_q"])>=1<<32:
+        raise ValueError("physics: zero_window_or_radius")
+    if int(p["catch_control_speed_q"])<=int(p["catch_running_control_loss_q"])*int(p["fielder_speed_q"])//(1<<32):
+        raise ValueError("physics: negative_running_control")
+    if r["dive_cooldown_ticks"]<=r["dive_duration_ticks"]:raise ValueError("rules: dive_cooldown_too_short")
     for kind in ("pitch", "throw", "bat"):
         if not 0 < int(p[f"{kind}_min_speed_q"]) <= int(p[f"{kind}_max_speed_q"]) <= 100 * (1 << 32):
             raise ValueError(f"physics.{kind}: invalid_speed_range")
@@ -67,7 +77,7 @@ def validate_config(config):
     for x, y in positions + [tuple(pos) for pos in f["bases_q"]]:
         if not int(f["xmin_q"]) <= int(x) <= int(f["xmax_q"]) or not int(f["ymin_q"]) <= int(y) <= int(f["ymax_q"]):
             raise ValueError("field: position_out_of_bounds")
-        if f["version"]=="1.0.0-dev.P7" and int(y)>=abs(int(x)) and int(x)**2+int(y)**2>int(f["wall_radius_q"])**2:
+        if f["version"]==VERSION and int(y)>=abs(int(x)) and int(x)**2+int(y)**2>int(f["wall_radius_q"])**2:
             raise ValueError("field: position_beyond_fair_wall")
     if int(f["wall_radius_q"]) < 50 * (1 << 32):
         raise ValueError("field.wall_radius_q: too_small")

@@ -28,7 +28,8 @@ class BaseballEngine:
         for team in ("away", "home"):
             for i, (role, position) in enumerate(zip(ROLES, config["field"]["defense_q"])):
                 players.append({"id": f"{team}.P{i+1:02}", "team_id": team, "role": role,
-                                "position_q": position[:], "velocity_q": ["0", "0"], "active_intents": {}})
+                                "position_q": position[:], "velocity_q": ["0", "0"], "active_intents": {},
+                                "dive_until_tick":0,"dive_ready_tick":0,"catch_ready_tick":0})
         return {"schema_version": config["version"], "ruleset_version": config["version"],
                 "physics_version": config["physics"]["version"], "map_version": config["field"]["version"],
                 "config_hash": digest(config), "sim_tick": 0, "phase": "INIT", "phase_start_tick": 0,
@@ -39,7 +40,7 @@ class BaseballEngine:
                 "play_id": 0, "plate_appearance_id": 0, "pitch_id": 0, "pitches_total": 0,
                 "ball": {"mode": "dead", "position_q": ["0", "0", "0"], "velocity_q": ["0"]*3,
                          "holder_id": None, "origin": None, "has_touched_ground_since_bat": False,
-                         "fair_foul_status": "undecided"},
+                         "fair_foul_status": "undecided", "release_exclusion_id":None},
                 "players": players, "runners": [], "pitch_start_bases": [], "force_state": [],
                 "pending_runs": [], "pending_appeals": [], "swing_windows": None,
                 "settle_counter": 0, "recovery_counter": 0, "scheduled_actions": [],
@@ -79,7 +80,8 @@ class BaseballEngine:
         require(ids=={f"{t}.P{i:02}" for t in ("away","home") for i in range(1,10)},"roster")
         for p in s["players"]:
             require(all(type(v) is str and abs(int(v))<=1000*ONE for v in p["position_q"]),"player_position")
-            require(sum(int(v)**2 for v in p["velocity_q"])<=(int(self.config["physics"]["player_speed_q"])+8)**2,"player_speed")
+            limit="fielder_speed_q" if p["team_id"]==self.defense else "player_speed_q"
+            require(sum(int(v)**2 for v in p["velocity_q"])<=(int(self.config["physics"][limit])+8)**2,"player_speed")
         b=s["ball"];held=b["mode"] in ("pitcher_held","fielder_held")
         require((b["holder_id"] in ids and b["velocity_q"]==["0"]*3) if held else b["holder_id"] is None,"ball_holder")
         require(all(type(v) is str and abs(int(v))<=1000*ONE for v in b["position_q"]),"ball_position")
@@ -141,7 +143,7 @@ class BaseballEngine:
         s = self.state; p = self.player(f"{self.defense}.P01")
         s["ball"].update(mode="pitcher_held", holder_id=p["id"], origin=None,
                          position_q=p["position_q"] + [self.config["physics"]["pitch_height_q"]],
-                         velocity_q=["0"]*3, has_touched_ground_since_bat=False, fair_foul_status="undecided")
+                         velocity_q=["0"]*3, has_touched_ground_since_bat=False, fair_foul_status="undecided",release_exclusion_id=None)
         s["swing_windows"] = None; s["swing_used"] = False
         for player in s["players"]: player["active_intents"] = {}
 
@@ -186,7 +188,7 @@ class BaseballEngine:
         s["pending_transition"] = "bottom" if s["half"] == "top" else "next_inning"
         s["runners"] = []; s["ball"]["mode"] = "dead"; s["ball"]["holder_id"] = None
         s["balls"]=s["strikes"]=0;s["ball"]["velocity_q"]=["0"]*3
-        for p in s["players"]: p["active_intents"] = {}
+        for p in s["players"]: p.update(active_intents={},velocity_q=["0","0"])
         self._phase("HALF_TRANSITION", self.config["rules"]["half_inning_change_ticks"])
 
     def _finish_pa(self):
@@ -289,6 +291,9 @@ class BaseballEngine:
             elif kind == "swing" and s["swing_used"]: raise ValueError("swing_already_used")
         elif kind == "hold" and team==self.offense and s["phase"]=="BALL_IN_PLAY" and any(r["id"]==p["id"] for r in s["runners"]):
             return
+        elif kind == "dive":
+            if team!=self.defense or s["phase"]!="BALL_IN_PLAY" or s["sim_tick"]<p["dive_ready_tick"] or s["ball"]["holder_id"]==p["id"]:
+                raise ValueError("illegal_dive_or_cooldown")
         elif kind in ("move", "catch", "hold"):
             if team != self.defense or s["phase"] not in ("PLATE_APPEARANCE_SETUP", "PITCH_READY", "PITCH_RESET", "PITCH_IN_FLIGHT", "BALL_IN_PLAY"):
                 raise ValueError("illegal_fielding_phase")
@@ -336,12 +341,19 @@ class BaseballEngine:
         if kind == "pitch":
             _, velocity = self.native.action(kind, action, self.config["physics"])
             s["pitches_total"] += 1; s["pitch_id"] += 1
+            velocity,error=self.native.pitch_scatter(velocity,s["ball"]["position_q"][1],s["pitch_id"],self.config["physics"])
             s["ball"].update(mode="pitched",holder_id=None,origin="pitch",velocity_q=velocity)
-            self._phase("PITCH_IN_FLIGHT"); self._emit("PitchReleased", pitcher_id=p["id"], velocity_q=velocity)
+            self._phase("PITCH_IN_FLIGHT"); self._emit("PitchReleased", pitcher_id=p["id"], velocity_q=velocity,
+                                                       placement_error_q=error[:2],error_envelope_q=error[2])
         elif kind == "swing":
             start = s["sim_tick"] + self.config["rules"]["swing_delay_ticks"]
             s["swing_windows"] = {"start_tick":start,"end_tick":start+self.config["rules"]["swing_duration_ticks"],"action":copy.deepcopy(action)}
             s["swing_used"] = True; self._emit("SwingStarted", batter_id=p["id"],start_tick=start)
+        elif kind == "dive":
+            p["dive_until_tick"]=s["sim_tick"]+self.config["rules"]["dive_duration_ticks"]
+            p["dive_ready_tick"]=s["sim_tick"]+self.config["rules"]["dive_cooldown_ticks"]
+            p["active_intents"]["catch"]=True
+            self._emit("DiveStarted",fielder_id=p["id"],until_tick=p["dive_until_tick"],ready_tick=p["dive_ready_tick"])
         elif kind == "move":
             p["active_intents"]["move"] = action["target_q"][:]
             if "catch_enabled" in action: p["active_intents"]["catch"] = action["catch_enabled"]
@@ -363,13 +375,17 @@ class BaseballEngine:
             s["settle_counter"]=s["recovery_counter"]=0
         elif kind=="throw":
             _,velocity=self.native.action(kind,action,self.config["physics"])
+            nominal=velocity[:]
+            velocity=self.native.field_skill(1,p["velocity_q"],velocity,self.config["physics"])
             s["throw_start_bases"]=[{"id":r["id"],"base":r["last_legal_base"]} for r in s["runners"]]
             s["ball"].update(mode="thrown",holder_id=None,origin="throw",velocity_q=velocity,
+                             release_exclusion_id=p["id"],
                              position_q=p["position_q"]+[self.config["physics"]["throw_height_q"]])
             p["active_intents"].pop("tag",None);p["active_intents"].pop("appeal_return",None)
             p["active_intents"]["catch"]=False
             s["settle_counter"]=s["recovery_counter"]=0
-            self._emit("ThrowReleased",fielder_id=p["id"],velocity_q=velocity)
+            self._emit("ThrowReleased",fielder_id=p["id"],velocity_q=velocity,
+                       nominal_velocity_q=nominal,running_velocity_q=p["velocity_q"][:])
         elif kind in ("tag","appeal_return"):p["active_intents"][kind]=action["runner_id"]
 
     def _move_fielders(self):
@@ -384,7 +400,7 @@ class BaseballEngine:
             if target is None and p["velocity_q"] == ["0","0"]: continue
             result = self.native.move(p["position_q"],p["velocity_q"],target or p["position_q"],self.config["physics"],
                                       radius=q(".001"),moving=target is not None,
-                                      field=self.config["field"] if self.config["field"]["version"]=="1.0.0-dev.P7" else None)
+                                      field=self.config["field"] if self.config["field"]["version"]=="2.0.0" else None)
             p.update(position_q=result["position_q"],velocity_q=result["velocity_q"])
             self._motions[p["id"]].update(end=p["position_q"][:],stop=result["touch_q"] if result["stopped"] else None)
             if result["stopped"]: p["active_intents"].pop("move",None)
@@ -537,9 +553,17 @@ class BaseballEngine:
 
     def _caught(self,fielder_id,time):
         s=self.state;ball=s["ball"]
+        p=self.player(fielder_id)
+        skill=self.native.field_skill(0,p["velocity_q"],ball["velocity_q"],self.config["physics"],s["sim_tick"]<p["dive_until_tick"])
+        if not skill[1]:
+            p["catch_ready_tick"]=s["sim_tick"]+self.config["rules"]["catch_retry_ticks"]
+            ball["velocity_q"]=self.native.field_skill(2,p["velocity_q"],ball["velocity_q"],self.config["physics"])
+            self._emit("FieldingError",fielder_id=fielder_id,position_q=ball["position_q"][:],
+                       running_velocity_q=p["velocity_q"][:],relative_speed_q=str(skill[3]),control_limit_q=str(skill[2]))
+            return False
         fly=ball["origin"]=="batted" and not ball["has_touched_ground_since_bat"]
-        self._emit("BallCaught",fielder_id=fielder_id,origin=ball["origin"],before_first_ground_contact=fly)
-        ball.update(mode="fielder_held",holder_id=fielder_id,velocity_q=["0"]*3)
+        self._emit("BallCaught",fielder_id=fielder_id,origin=ball["origin"],before_first_ground_contact=fly,position_q=ball["position_q"][:])
+        ball.update(mode="fielder_held",holder_id=fielder_id,velocity_q=["0"]*3,release_exclusion_id=None)
         self._holder_since=time
         if fly:
             self._runner_out(s["batter_id"],"flyout",time)
@@ -548,6 +572,11 @@ class BaseballEngine:
                 r["force_obligation"]=None
                 r["retouch_obligation"]=None if self._touching(r["id"],r["origin_base"],time) else r["origin_base"]
         elif ball["origin"]=="batted" and self.adjudicate_fair(ball["position_q"],"touch")=="foul":self._foul()
+        return True
+
+    def _catch_radius(self,p):
+        s=self.state
+        return str(self.native.field_skill(0,p["velocity_q"],s["ball"]["velocity_q"],self.config["physics"],s["sim_tick"]<p["dive_until_tick"])[0])
 
     def _foul(self):
         s=self.state;s["runners"]=copy.deepcopy(s["pitch_start_bases"])
@@ -611,7 +640,10 @@ class BaseballEngine:
 
     def _bat_contact(self):
         s = self.state; ball = s["ball"]
-        _, velocity = self.native.action("swing",s["swing_windows"]["action"],self.config["physics"])
+        window=s["swing_windows"]
+        elapsed=(s["sim_tick"]-window["start_tick"])*ONE+getattr(self,"_sub",0)
+        velocity,quality=self.native.contact(window["action"],ball["position_q"],elapsed,
+                                            (window["end_tick"]-window["start_tick"])*ONE,self.config)
         ball.update(mode="batted_airborne",origin="batted",velocity_q=velocity,has_touched_ground_since_bat=False)
         ordered=sorted(s["runners"],key=lambda r:(-r["last_legal_base"],r["id"]))
         for i,r in enumerate(ordered):
@@ -626,7 +658,8 @@ class BaseballEngine:
             r=by_base[base];r["force_obligation"]=base+1
             s["force_state"].append({"runner_id":r["id"],"target_base":base+1,"depends_on":dependencies[:]})
             dependencies.append(r["id"])
-        self._phase("BALL_IN_PLAY"); self._emit("BatContact",batter_id=s["batter_id"],velocity_q=velocity)
+        self._phase("BALL_IN_PLAY"); self._emit("BatContact",batter_id=s["batter_id"],velocity_q=velocity,
+                                               quality_q=quality,position_q=ball["position_q"][:],timing_ticks_q=str(elapsed))
 
     def _flight(self):
         s = self.state; ball = s["ball"]; remaining=ONE; elapsed=0; forces=True
@@ -634,6 +667,12 @@ class BaseballEngine:
         for _ in range(64):
             if ball["mode"] not in ("pitched","batted_airborne","rolling","thrown"): return
             start = ball["position_q"][:]
+            excluded=ball.get("release_exclusion_id")
+            if excluded:
+                center=self._at(excluded,elapsed)+["0"]
+                radius=str(int(self.config["physics"]["catch_radius_q"])+int(self.config["physics"]["dive_radius_bonus_q"]))
+                if self.native.sweep_cylinder(start,start,center,center,radius,q(1000))<0:
+                    ball["release_exclusion_id"]=None
             result = self.native.advance(start,ball["velocity_q"],self.config,remaining,ball["mode"]=="rolling",forces)
             # Split at a fielder's hard stop so relative sweeps remain piecewise linear.
             stops=[m["stop"] for m in self._motions.values() if m["stop"] is not None and elapsed<m["stop"]<elapsed+result["consumed_q"]]
@@ -668,7 +707,9 @@ class BaseballEngine:
                         time=self.native.sweep_cylinder(start,result["position_q"],center,center,radius,q(".1"))
                         if time>=0:candidates.append((time,-1,"fair_base"))
                 fielders=[{"id":p["id"],"start_q":self._at(p["id"],elapsed),"end_q":self._at(p["id"],elapsed+result["consumed_q"]),
-                           "catch_enabled":p["active_intents"].get("catch",False)} for p in s["players"] if p["team_id"]==self.defense]
+                           "catch_enabled":p["active_intents"].get("catch",False) and s["sim_tick"]>=p["catch_ready_tick"] and p["id"]!=ball.get("release_exclusion_id"),
+                           "catch_radius_q":self._catch_radius(p)}
+                           for p in s["players"] if p["team_id"]==self.defense]
                 for catch in self.native.find_catches(start,result["position_q"],fielders,self.config["physics"]):
                     if catch["sub_tick_q"]==ONE and result["event"] in ("ground","out"):continue
                     candidates.append((catch["sub_tick_q"],3,"catch",catch["player_id"]))
@@ -684,14 +725,18 @@ class BaseballEngine:
                     self._bat_contact(); remaining-=consumed; elapsed+=consumed; forces=False
                     if not remaining: return
                     continue
-                if kind=="catch":self._caught(selected[3],self._sub);return
+                if kind=="catch":
+                    if self._caught(selected[3],self._sub):return
+                    remaining-=consumed;elapsed+=consumed;forces=False
+                    if not remaining:return
+                    continue
                 if kind in ("fair_boundary","fair_base"):
                     self.adjudicate_fair(ball["position_q"],"boundary" if kind=="fair_boundary" else "base")
                     if ball["fair_foul_status"]=="foul":self._foul();return
                     remaining-=consumed;elapsed+=consumed;forces=False
                     if not remaining:return
                     continue
-                attempted=active if s["ruleset_version"]=="1.0.0-dev.P4" else window is not None and window["start_tick"]<=s["sim_tick"]
+                attempted=window is not None and window["start_tick"]<=s["sim_tick"]
                 self._pitch_call(strike=attempted or (kind=="plane" and self.native.strike(ball["position_q"],self.config)),hbp=kind=="body" and not attempted)
                 return
             ball["position_q"] = result["position_q"]; ball["velocity_q"] = result["velocity_q"]

@@ -22,7 +22,7 @@ def test_persistent_worker_verifies_then_seeks_without_bot(tmp_path):
     process=subprocess.Popen([sys.executable,str(ROOT/'viewer_worker.py'),'--input',str(path)],
         stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True,encoding='utf-8')
     try:
-        loaded=read_until(process,'loaded');assert loaded['metadata']['verification']['verification_status']=='verified_full'
+        loaded=read_until(process,'loaded');assert loaded['metadata']['verification']['verification_status']=='verified_record'
         record=ReplayRecord(path)
         for request_id,tick in enumerate([0,123,600,record.final_tick],1):
             process.stdin.write(json.dumps({'id':request_id,'type':'seek','tick':tick})+'\n');process.stdin.flush()

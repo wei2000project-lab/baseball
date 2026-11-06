@@ -18,15 +18,15 @@ def run_match(away,home,config,seed,output,timeout=2.0,max_record_bytes=512*1024
         for team,path in (("away",away),("home",home)):
             bot_seed=stream_seed(str(seed),"bot:"+team)
             try:
-                hosts[team]=BotHost(path,team,bot_seed,recorder.path/"diagnostics",timeout,capabilities={
+                hosts[team]=BotHost(path,team,bot_seed,recorder.diagnostics_path,timeout,capabilities={
                     "field_config":config["field"],"physics_config":config["physics"],"rules_config":config["rules"],
-                    "action_types":["pitch","swing","take","move","catch","throw","tag","run_to_base","return_to_base","hold","appeal_return","noop"]})
+                    "action_types":["pitch","swing","take","move","catch","dive","throw","tag","run_to_base","return_to_base","hold","appeal_return","noop"]})
                 recorder.manifest["bots"][team]={"program_sha256":hosts[team].program_hash,"seed":str(bot_seed),"resource_limits":hosts[team].capability}
             except Exception as error:
                 seq+=1;record=decision_record(engine,team,None,seq)
                 record["fault"]=str(error)[:256]
                 result=advance_recorded(engine,[record]);recorder.write_step(engine,result,[record]);break
-        if not engine.terminal_result():atomic_json(recorder.path/"manifest.json",recorder.manifest)
+        if not engine.terminal_result():recorder.update_bots()
         while not engine.terminal_result():
             records=[];s=engine.state
             if s["sim_tick"]%config["rules"]["decision_interval_ticks"]==0 or s["phase"]!=last_phase:
@@ -59,7 +59,7 @@ def run_match(away,home,config,seed,output,timeout=2.0,max_record_bytes=512*1024
                     record=decision_record(engine,"away",None,seq+1);record["fault"]={"source":"host","reason":"record_size_limit"}
                     seq+=1;result=advance_recorded(engine,[record]);recorder.write_step(engine,result,[record])
         summary=recorder.finalize(engine)
-        atomic_json(recorder.path/"diagnostics/performance.json",{"wall_seconds_ms":round((time.perf_counter()-started)*1000),
+        atomic_json(recorder.diagnostics_path/"performance.json",{"wall_seconds_ms":round((time.perf_counter()-started)*1000),
                     "sim_ticks":engine.state["sim_tick"],"python":sys.version,"bot_watchdog_ms":round(timeout*1000)})
         return summary
     finally:
@@ -71,7 +71,7 @@ def legal_types(engine,team):
     phase=engine.state["phase"]
     if team==engine.offense:
         return ["swing","take","noop"] if phase in ("PITCH_READY","PITCH_IN_FLIGHT") else ["run_to_base","return_to_base","hold","noop"] if phase=="BALL_IN_PLAY" else ["noop"]
-    return ["move","catch","hold","pitch","noop"] if phase=="PITCH_READY" else ["move","catch","hold","throw","tag","appeal_return","noop"] if phase=="BALL_IN_PLAY" else ["move","catch","hold","noop"] if phase in ("PLATE_APPEARANCE_SETUP","PITCH_RESET","PITCH_IN_FLIGHT") else ["noop"]
+    return ["move","catch","hold","pitch","noop"] if phase=="PITCH_READY" else ["move","catch","dive","hold","throw","tag","appeal_return","noop"] if phase=="BALL_IN_PLAY" else ["move","catch","hold","noop"] if phase in ("PLATE_APPEARANCE_SETUP","PITCH_RESET","PITCH_IN_FLIGHT") else ["noop"]
 
 
 def main():

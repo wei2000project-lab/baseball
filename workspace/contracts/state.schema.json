@@ -3,11 +3,7 @@
   "type": "object",
   "properties": {
     "schema_version": {
-      "enum": [
-        "1.0.0-dev.P4",
-        "1.0.0-dev.P5",
-        "1.0.0-dev.P7"
-      ]
+      "const": "2.0.0"
     },
     "sim_tick": {
       "type": "integer",
@@ -237,6 +233,17 @@
           "type": "string",
           "pattern": "[\\s\\S]*",
           "maxLength": 256
+        },
+        "release_exclusion_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 128
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       },
       "required": [
@@ -246,7 +253,8 @@
         "holder_id",
         "origin",
         "has_touched_ground_since_bat",
-        "fair_foul_status"
+        "fair_foul_status",
+        "release_exclusion_id"
       ],
       "additionalProperties": false
     },
@@ -316,6 +324,21 @@
               }
             },
             "additionalProperties": false
+          },
+          "dive_until_tick": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000000
+          },
+          "dive_ready_tick": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000000
+          },
+          "catch_ready_tick": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000000
           }
         },
         "required": [
@@ -324,7 +347,10 @@
           "role",
           "position_q",
           "velocity_q",
-          "active_intents"
+          "active_intents",
+          "dive_until_tick",
+          "dive_ready_tick",
+          "catch_ready_tick"
         ],
         "additionalProperties": false
       },
@@ -668,20 +694,13 @@
       ]
     },
     "ruleset_version": {
-      "enum": [
-        "1.0.0-dev.P4",
-        "1.0.0-dev.P5",
-        "1.0.0-dev.P7"
-      ]
+      "const": "2.0.0"
     },
     "physics_version": {
-      "const": "1.0.0-dev.P4"
+      "const": "2.0.0"
     },
     "map_version": {
-      "enum": [
-        "1.0.0-dev.P4",
-        "1.0.0-dev.P7"
-      ]
+      "const": "2.0.0"
     },
     "config_hash": {
       "type": "string",

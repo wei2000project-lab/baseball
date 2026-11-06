@@ -184,8 +184,9 @@ def test_two_scripted_halves_with_complete_recomputable_record(tmp_path):
         r=by_tick.get(e2.state["sim_tick"])
         replayed+=e2.step([batch_from_record(r)] if r else [])["events"]
     assert replayed==events and e2.canonical_state_hash()==summary["final_state_hash"]
-    manifest=json.loads((tmp_path/"match/manifest.json").read_text())
-    assert manifest["record_status"]=="complete" and len(manifest["file_index"])==5
+    from replay import ReplayRecord
+    assert ReplayRecord(tmp_path/"match").verify()["summary"]==summary
+    assert [p.name for p in (tmp_path/"match").iterdir()]==["match.txt"]
     with pytest.raises(ValueError):Recorder(tmp_path/"match",e)
 
 

@@ -6,7 +6,7 @@ from pathlib import Path
 import zipfile
 
 ROOT=Path(__file__).resolve().parent
-FILES={'manifest.json','initial_state.json','actions.jsonl','events.jsonl','checkpoints.jsonl','summary.json'}
+FILES={'match.txt'}
 
 
 def unpack(output,archive=None,metadata=None):

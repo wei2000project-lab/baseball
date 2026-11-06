@@ -11,14 +11,14 @@ def test_fielder_target_does_not_use_runner_instant_stop_exception():
     p['velocity_q']=[q(7),'0'];p['active_intents']={'move':target}
     e.step()
     assert int(p['velocity_q'][0])>0
-    assert int(q(7))-int(p['velocity_q'][0])<=int(q(10))//120+2
+    assert int(q(7))-int(p['velocity_q'][0])<=int(e.config['physics']['fielder_acceleration_q'])//120+2
 
 
 def test_fielder_brakes_and_converges_at_ordinary_target():
     n=Native();c=default_config();p=[q(0),q(15)];v=['0','0'];goal=[q(7),q(20)]
     for _ in range(1000):
         before=v[:];r=n.move(p,v,goal,c['physics'],q('.001'),field=c['field']);p,v=r['position_q'],r['velocity_q']
-        assert math.isqrt(sum((int(x)-int(y))**2 for x,y in zip(v,before)))<=int(q(10))//120+3
+        assert math.isqrt(sum((int(x)-int(y))**2 for x,y in zip(v,before)))<=int(c['physics']['fielder_acceleration_q'])//120+3
         if r['stopped']:break
     else:raise AssertionError('fielder failed to converge')
     assert v==['0','0']
@@ -67,7 +67,7 @@ def test_packaged_reference_verifies_without_bot_and_refuses_overwrite(tmp_path)
     from replay import ReplayRecord
     path=tmp_path/'demo';info=unpack(path)
     result=ReplayRecord(path).verify()
-    assert result['verification_status']=='verified_full' and result['summary']==info['summary']
+    assert result['verification_status']=='verified_record' and result['summary']==info['summary']
     with pytest.raises(ValueError,match='output_not_empty'):unpack(path)
 
 
@@ -88,9 +88,7 @@ def test_future_payload_version_is_unsupported_before_current_schema(tmp_path):
     import json,pytest
     from unpack_demo import unpack
     from replay import ReplayRecord,ReplayError
-    path=tmp_path/'future';unpack(path);file=path/'manifest.json';m=json.loads(file.read_text(encoding='utf-8'))
-    for key in ('schema_version','ruleset_version','physics_version','map_version'):m[key]='2.0.0'
-    m['config']['version']='2.0.0';m['config']['field']['version']='2.0.0'
-    file.write_text(json.dumps(m),encoding='utf-8')
+    path=tmp_path/'future';unpack(path);file=path/'match.txt'
+    file.write_bytes(file.read_bytes().replace(b'2.0.0',b'9.0.0'))
     with pytest.raises(ReplayError) as e:ReplayRecord(path)
     assert e.value.report['verification_status']=='unsupported_version'

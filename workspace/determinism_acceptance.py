@@ -16,12 +16,11 @@ def main():
     expected=None;results=[]
     for i in range(args.repeats):
         path=out/f"repeat-{i:02}";summary=run_match("bots/base_bot","bots/base_bot",config,args.seed,path)
-        actions=[{k:r[k] for k in ("applied_tick","team_id","accepted_intents","validation_results","observation_hash")} for r in map(json.loads,(path/"actions.jsonl").read_text().splitlines())]
-        signature={"accepted_sha256":digest(actions),"events_sha256":file_digest(path/"events.jsonl"),"summary":summary}
+        signature={"txt_sha256":file_digest(path/"match.txt"),"summary":summary}
         if expected is None:expected=signature
         assert signature==expected and summary["status"]=="completed"
-        results.append({"repeat":i,**signature});print(f"repeat {i}: same accepted intents, events and terminal hash",flush=True)
-    verification=ReplayRecord(out/"repeat-00").verify();assert verification["verification_status"]=="verified_full"
+        results.append({"repeat":i,**signature});print(f"repeat {i}: same TXT deltas, events and terminal hash",flush=True)
+    verification=ReplayRecord(out/"repeat-00").verify();assert verification["verification_status"]=="verified_record"
     atomic_json(Path(args.report),{"repeats":args.repeats,"seed":args.seed,"config":config,"results":results,"first_match_verification":verification})
 
 

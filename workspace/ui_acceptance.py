@@ -36,12 +36,12 @@ def malicious_fixture(path):
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--input',required=True);parser.add_argument('--report',default=str(ROOT/'tests/reports/p6-ui.json'))
+    parser.add_argument('--input',required=True);parser.add_argument('--report',default=str(ROOT/'tests/reports/v2-ui.json'))
     args=parser.parse_args();source=Path(args.input).resolve();work=ROOT/'build/ui-acceptance'/str(time.time_ns())
     path=work/'record';path.mkdir(parents=True)
-    originals={name:file_digest(source/name) for name in ('manifest.json',*Recorder.FILES)}
+    originals={name:file_digest(source/name) for name in ('match.txt',)}
     for name in originals:shutil.copyfile(source/name,path/name)
-    record=ReplayRecord(path);events=[json.loads(line) for line in (path/'events.jsonl').read_text().splitlines()]
+    record=ReplayRecord(path);events=[e for group in record.events_by_tick.values() for e in group]
     ticks={0,1000,1001,record.final_tick}
     types=('BatContact','GroundContact','BallCaught','HomeRun','RunPending','RunScored','RunnerOut')
     selected={}

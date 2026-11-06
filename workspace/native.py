@@ -32,6 +32,9 @@ class Native:
             raise RuntimeError("native_abi_mismatch")
         signatures = {
             "bb_action": ([C.c_int, PTR, PTR, PTR], C.c_int),
+            "bb_contact": ([PTR, PTR, PTR], C.c_int),
+            "bb_field_skill": ([C.c_int, PTR, PTR, PTR], C.c_int),
+            "bb_pitch_scatter": ([PTR, PTR, PTR], C.c_int),
             "bb_sweep_box": ([PTR, PTR, PTR, I64], I64),
             "bb_sweep_cylinder": ([PTR, PTR, PTR, PTR, I64, I64], I64),
             "bb_flight": ([PTR, PTR, PTR], C.c_int),
@@ -70,6 +73,32 @@ class Native:
         else:
             normalized["direction_i32"] = list(out[6:9])
         return normalized, [str(v) for v in out[:3]]
+
+    def contact(self, action, position, elapsed, duration, config):
+        p=config["physics"];box=list(map(int,config["field"]["bat_box_q"]))
+        c=[p[k] for k in ("bat_min_speed_q","bat_max_speed_q","swing_narrowing_q","timing_loss_q","spatial_loss_q","contact_speed_floor_q")]
+        c += [(box[0]+box[1])//2,(box[1]-box[0])//2,(box[4]+box[5])//2,(box[5]-box[4])//2,p["contact_deflection_mdeg"]]
+        values=[action["power_u16"],action["azimuth_mdeg"],action["elevation_mdeg"],elapsed,duration,position[0],position[2]]
+        out=(I64*4)()
+        if self.lib.bb_contact(array(values),array(c),out):raise ValueError("native_contact_error")
+        return [str(v) for v in out[:3]],str(out[3])
+
+    def field_skill(self,op,player_velocity,ball_velocity,physics,diving=False):
+        if op==1 and int(physics["throw_running_error_q"])==0:return ball_velocity[:]
+        keys=("fielder_speed_q","catch_radius_q","catch_running_radius_loss_q","catch_control_speed_q",
+              "catch_running_control_loss_q","dive_radius_bonus_q","dive_control_bonus_q","throw_running_error_q","drop_retention_q")
+        out=(I64*4)()
+        if self.lib.bb_field_skill(op,array(player_velocity+ball_velocity+[int(diving)]),array([physics[k] for k in keys]),out):
+            raise ValueError("native_field_skill_error")
+        return list(out) if op==0 else [str(v) for v in out[:3]]
+
+    def pitch_scatter(self,velocity,release_y,pitch_id,physics):
+        out=(I64*6)()
+        if int(velocity[1])>=0 or int(physics["pitch_max_error_q"])==0:return velocity[:],["0","0","0"]
+        if self.lib.bb_pitch_scatter(array(velocity+[release_y,pitch_id]),
+                array([physics[k] for k in ("pitch_min_speed_q","pitch_max_speed_q","pitch_max_error_q")]),out):
+            raise ValueError("native_pitch_error")
+        return [str(v) for v in out[:3]], [str(v) for v in out[3:]]
 
     def sweep_box(self, start, end, box, radius="0"):
         result = self.lib.bb_sweep_box(array(start), array(end), array(box), int(radius))
@@ -118,7 +147,8 @@ class Native:
         raise ValueError("physics_contact_limit")
 
     def move(self, position, velocity, target, physics, radius="0", moving=True, stop_on_touch=True,field=None):
-        values = position + velocity + target + [int(moving), int(stop_on_touch), physics["player_speed_q"], physics["player_acceleration_q"], radius]
+        stem="fielder" if field is not None else "player"
+        values = position + velocity + target + [int(moving), int(stop_on_touch), physics[stem+"_speed_q"], physics[stem+"_acceleration_q"], radius]
         out = (I64 * 6)()
         status=self.lib.bb_move_fielder(array(values),self.field_bounds(field),out) if field is not None else self.lib.bb_move(array(values),out)
         if status:
@@ -132,7 +162,7 @@ class Native:
             if not p.get("catch_enabled", False):
                 continue
             t = self.sweep_cylinder(start, end, p["start_q"]+["0"], p["end_q"]+["0"],
-                                    physics["catch_radius_q"], physics["catch_height_q"])
+                                    p.get("catch_radius_q",physics["catch_radius_q"]), physics["catch_height_q"])
             if t >= 0:
                 contacts.append({"sub_tick_q": t, "player_id": p["id"], "kind": "catch"})
         return sorted(contacts, key=lambda c: (c["sub_tick_q"], c["player_id"]))
@@ -145,7 +175,7 @@ class Native:
     def clamp_position(self, position, field):
         out = (I64 * 2)()
         bounds = [field[k+"_q"] for k in ("xmin", "xmax", "ymin", "ymax")]
-        status=self.lib.bb_clamp_position_v2(array(position),self.field_bounds(field),out) if field["version"]=="1.0.0-dev.P7" else self.lib.bb_clamp_position(array(position),array(bounds),out)
+        status=self.lib.bb_clamp_position_v2(array(position),self.field_bounds(field),out) if field["version"]=="2.0.0" else self.lib.bb_clamp_position(array(position),array(bounds),out)
         if status:raise ValueError("native_geometry_error")
         return [str(v) for v in out]
 

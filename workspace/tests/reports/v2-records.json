@@ -1,0 +1,233 @@
+[
+  {
+    "record": "v2-release-demo",
+    "summary": {
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "final_state_hash": "afbee6e9185c00b416033c767940858cdeb09dad51bebcce069d9ba6a033e68e",
+      "finish_after_inning": 1,
+      "reason": "fair_inning_completed",
+      "replay_state_hash": "7ddb310ab5daa06dcd16e3de0aa59de25d8e7c3a660d4a0b147bb81ab14755de",
+      "score": {
+        "away": 0,
+        "home": 0
+      },
+      "sim_tick": 9916,
+      "status": "completed",
+      "winner": null
+    },
+    "verification": {
+      "verification_status": "verified_record",
+      "verification_scope": "TXT SHA-256 integrity and final viewer projection; no physics re-simulation",
+      "record_status": "completed",
+      "verified_through_tick": 9916,
+      "source_hash": "c772dc267cfcbf0ab2dd167c3c3716f244c9978397cc3fb3cbb0dc68319bf153",
+      "summary": {
+        "completed_halves": {
+          "away": 1,
+          "home": 1
+        },
+        "final_state_hash": "afbee6e9185c00b416033c767940858cdeb09dad51bebcce069d9ba6a033e68e",
+        "finish_after_inning": 1,
+        "reason": "fair_inning_completed",
+        "replay_state_hash": "7ddb310ab5daa06dcd16e3de0aa59de25d8e7c3a660d4a0b147bb81ab14755de",
+        "score": {
+          "away": 0,
+          "home": 0
+        },
+        "sim_tick": 9916,
+        "status": "completed",
+        "winner": null
+      }
+    },
+    "event_counts": {
+      "GameStarted": 1,
+      "HalfInningStarted": 2,
+      "PlateAppearanceStarted": 8,
+      "PitchReleased": 8,
+      "SwingStarted": 8,
+      "BatContact": 8,
+      "DiveStarted": 8,
+      "BallCaught": 11,
+      "RunnerOut": 6,
+      "PlayEnded": 8,
+      "RegulationExpired": 1,
+      "BaseTouched": 8,
+      "ThrowReleased": 5,
+      "GroundContact": 12,
+      "FairBallDeclared": 2,
+      "BaseAwarded": 4,
+      "HalfInningEnded": 2,
+      "GameEnded": 1
+    },
+    "throw_deviations": 5,
+    "record_bytes": 887304,
+    "load_ms": 97.79,
+    "seek_median_ms": 0.126,
+    "seek_p95_ms": 0.214,
+    "performance": {
+      "bot_watchdog_ms": 2000,
+      "python": "3.13.9 (tags/v3.13.9:8183fa5, Oct 14 2025, 14:09:13) [MSC v.1944 64 bit (AMD64)]",
+      "sim_ticks": 9916,
+      "wall_seconds_ms": 17636
+    }
+  },
+  {
+    "record": "v2-scoring-demo",
+    "summary": {
+      "completed_halves": {
+        "away": 1,
+        "home": 1
+      },
+      "final_state_hash": "27b0e057016522142ad8a3b8de6ffa9a3493fb0f370aad527e2e760fdfa6adaf",
+      "finish_after_inning": 1,
+      "reason": "fair_inning_completed",
+      "replay_state_hash": "f5df1c72e5336dcea3f894847780f06c5fd8a51ccc7a7d795bde63d884ab51c8",
+      "score": {
+        "away": 1,
+        "home": 2
+      },
+      "sim_tick": 12881,
+      "status": "completed",
+      "winner": "home"
+    },
+    "verification": {
+      "verification_status": "verified_record",
+      "verification_scope": "TXT SHA-256 integrity and final viewer projection; no physics re-simulation",
+      "record_status": "completed",
+      "verified_through_tick": 12881,
+      "source_hash": "8d1d5ea00419b3da4df2bbb0c18f43921aea197ac15d68afff4c5dfba04703df",
+      "summary": {
+        "completed_halves": {
+          "away": 1,
+          "home": 1
+        },
+        "final_state_hash": "27b0e057016522142ad8a3b8de6ffa9a3493fb0f370aad527e2e760fdfa6adaf",
+        "finish_after_inning": 1,
+        "reason": "fair_inning_completed",
+        "replay_state_hash": "f5df1c72e5336dcea3f894847780f06c5fd8a51ccc7a7d795bde63d884ab51c8",
+        "score": {
+          "away": 1,
+          "home": 2
+        },
+        "sim_tick": 12881,
+        "status": "completed",
+        "winner": "home"
+      }
+    },
+    "event_counts": {
+      "GameStarted": 1,
+      "HalfInningStarted": 2,
+      "PlateAppearanceStarted": 11,
+      "PitchReleased": 11,
+      "SwingStarted": 11,
+      "BatContact": 11,
+      "DiveStarted": 9,
+      "BallCaught": 13,
+      "RunnerOut": 6,
+      "ThrowReleased": 7,
+      "RegulationExpired": 1,
+      "PlayEnded": 11,
+      "HomeRun": 2,
+      "BaseAwarded": 16,
+      "BaseTouched": 21,
+      "RunPending": 3,
+      "RunScored": 3,
+      "GroundContact": 16,
+      "FairBallDeclared": 3,
+      "HalfInningEnded": 2,
+      "GameEnded": 1
+    },
+    "throw_deviations": 7,
+    "record_bytes": 1211964,
+    "load_ms": 140.63,
+    "seek_median_ms": 0.114,
+    "seek_p95_ms": 0.194,
+    "performance": {
+      "bot_watchdog_ms": 2000,
+      "python": "3.13.9 (tags/v3.13.9:8183fa5, Oct 14 2025, 14:09:13) [MSC v.1944 64 bit (AMD64)]",
+      "sim_ticks": 12881,
+      "wall_seconds_ms": 23110
+    }
+  },
+  {
+    "record": "v2-full-match",
+    "summary": {
+      "completed_halves": {
+        "away": 10,
+        "home": 10
+      },
+      "final_state_hash": "cbd2776d2eb44a734976c2f29a477d33762e01530cf17214c781a40201ea01cd",
+      "finish_after_inning": 10,
+      "reason": "fair_inning_completed",
+      "replay_state_hash": "96f41bf3084b6dfd1b123767090fec5014e1be9804973ca929d5cb8808e3cea6",
+      "score": {
+        "away": 0,
+        "home": 13
+      },
+      "sim_tick": 117662,
+      "status": "completed",
+      "winner": "home"
+    },
+    "verification": {
+      "verification_status": "verified_record",
+      "verification_scope": "TXT SHA-256 integrity and final viewer projection; no physics re-simulation",
+      "record_status": "completed",
+      "verified_through_tick": 117662,
+      "source_hash": "563bd9cff1cec2758a5e8c3b76856582adf7fc793b24ee7c7d8377d817d787f7",
+      "summary": {
+        "completed_halves": {
+          "away": 10,
+          "home": 10
+        },
+        "final_state_hash": "cbd2776d2eb44a734976c2f29a477d33762e01530cf17214c781a40201ea01cd",
+        "finish_after_inning": 10,
+        "reason": "fair_inning_completed",
+        "replay_state_hash": "96f41bf3084b6dfd1b123767090fec5014e1be9804973ca929d5cb8808e3cea6",
+        "score": {
+          "away": 0,
+          "home": 13
+        },
+        "sim_tick": 117662,
+        "status": "completed",
+        "winner": "home"
+      }
+    },
+    "event_counts": {
+      "GameStarted": 1,
+      "HalfInningStarted": 20,
+      "PlateAppearanceStarted": 89,
+      "PitchReleased": 89,
+      "SwingStarted": 89,
+      "BatContact": 89,
+      "DiveStarted": 75,
+      "BallCaught": 115,
+      "RunnerOut": 60,
+      "PlayEnded": 89,
+      "BaseTouched": 123,
+      "ThrowReleased": 55,
+      "GroundContact": 115,
+      "FairBallDeclared": 20,
+      "BaseAwarded": 84,
+      "HalfInningEnded": 20,
+      "HomeRun": 9,
+      "RunPending": 13,
+      "RunScored": 13,
+      "RegulationExpired": 1,
+      "GameEnded": 1
+    },
+    "throw_deviations": 55,
+    "record_bytes": 9618785,
+    "load_ms": 1120.45,
+    "seek_median_ms": 0.15,
+    "seek_p95_ms": 0.268,
+    "performance": {
+      "bot_watchdog_ms": 2000,
+      "python": "3.13.9 (tags/v3.13.9:8183fa5, Oct 14 2025, 14:09:13) [MSC v.1944 64 bit (AMD64)]",
+      "sim_ticks": 117662,
+      "wall_seconds_ms": 204367
+    }
+  }
+]

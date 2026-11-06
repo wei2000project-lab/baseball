@@ -1,4 +1,5 @@
 """Isolate sources/build/output; reuse only explicitly recorded toolchain caches."""
+import argparse
 import importlib.metadata
 import json
 import os
@@ -12,6 +13,9 @@ ROOT=Path(__file__).resolve().parents[1]
 
 
 def main():
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--report',default=str(ROOT/'workspace/tests/reports/v2-cleanroom.json'))
+    args=parser.parse_args()
     target=ROOT/'workspace/build/cleanroom'/str(time.time_ns());target.mkdir(parents=True)
     names=subprocess.check_output(['git','-c','core.quotepath=false','ls-files','-z','--cached','--others','--exclude-standard'],cwd=ROOT).decode('utf-8').split('\0')
     for name in filter(None,names):
@@ -42,7 +46,7 @@ def main():
         report['passed']=True
     except Exception as e:report['error']=str(e);raise
     finally:
-        (ROOT/'workspace/tests/reports/p7-cleanroom.json').write_text(json.dumps(report,indent=2,ensure_ascii=True)+'\n',encoding='utf-8',newline='\n')
+        Path(args.report).write_text(json.dumps(report,indent=2,ensure_ascii=True)+'\n',encoding='utf-8',newline='\n')
     print(json.dumps({'passed':True,'commands':len(commands),'isolated_root':str(target)}),flush=True)
 
 

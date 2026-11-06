@@ -47,6 +47,25 @@ Vec action_velocity(int kind, Vec d, int64_t power, int64_t azimuth, int64_t ele
     return normalize(d,speed);
 }
 
+Vec contact_velocity(const Q* in, const Q* c, Q* quality) {
+    // in: power, azimuth, elevation, elapsed ticks (Q), duration (Q), x, z.
+    // c: min/max speed, narrowing, timing loss, spatial loss, speed floor,
+    //    box x centre/half width, z centre/half height, deflection millidegrees.
+    Q power=clamp(in[0],0,65535);
+    Q half=clamp(mul(in[4]/2,ONE-checked(Wide(c[2])*power/65535)),ONE/8,1000*ONE);
+    Q t=clamp(div(in[3]-in[4]/2,half),-ONE,ONE);
+    Q x=clamp(div(in[5]-c[6],c[7]),-ONE,ONE);
+    Q z=clamp(div(in[6]-c[8],c[9]),-ONE,ONE);
+    Q qt=ONE-mul(c[3],mul(t,t));
+    Q qp=clamp(ONE-mul(c[4],mul(x,x)+mul(z,z)),0,ONE);
+    *quality=mul(qt,qp);
+    Q factor=c[5]+mul(ONE-c[5],*quality);
+    Q speed=mul(c[0]+checked(Wide(c[1]-c[0])*power/65535),factor);
+    Q az=clamp(in[1]+checked(Wide(c[10])*(t+x)/ONE),-80000,80000);
+    Q el=clamp(in[2]+checked(Wide(c[10])*z/ONE),-15000,75000);
+    Q n[3];return action_velocity(2,{0,0,0},65535,az,el,speed,speed,n);
+}
+
 Q sweep_box(Vec a, Vec b, const Q* box, Q r) {
     Q starts[3]={a.x,a.y,a.z}, ends[3]={b.x,b.y,b.z}, enter=0, leave=ONE;
     for(int i=0;i<3;i++) {

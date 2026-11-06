@@ -20,6 +20,41 @@ API int bb_action(int kind,const int64_t* input,const int64_t* speeds,int64_t* o
         return 0;
     } catch(...) { return -1; }
 }
+API int bb_contact(const int64_t* input,const int64_t* config,int64_t* out) {
+    try { write_vec(out,bb::contact_velocity(input,config,out+3));return 0; }
+    catch(...) {return -1;}
+}
+API int bb_field_skill(int op,const int64_t* input,const int64_t* c,int64_t* out) {
+    try {
+        using namespace bb;
+        Vec running={input[0],input[1],0},ball=vec(input+2);
+        Q speed=magnitude(running),fraction=clamp(bb::div(speed,c[0]),0,ONE);
+        if(op==0) {
+            out[0]=mul(c[1],ONE-mul(c[2],mul(fraction,fraction)))+(input[5]?c[5]:0);
+            Q limit=c[3]-mul(c[4],speed)+(input[5]?c[6]:0);
+            out[1]=magnitude(sub(ball,running))<=limit;
+            out[2]=limit;out[3]=magnitude(sub(ball,running));
+        } else if(op==1)write_vec(out,normalize(add(ball,scale(running,c[7])),magnitude(ball)));
+        else if(op==2)write_vec(out,add(scale(ball,c[8]),scale(running,ONE/5)));
+        else return -1;
+        return 0;
+    } catch(...) {return -1;}
+}
+API int bb_pitch_scatter(const int64_t* input,const int64_t* c,int64_t* out) {
+    try {
+        using namespace bb;
+        Vec v=vec(input);Q speed=magnitude(v);
+        Q fraction=c[0]==c[1]?ONE:clamp(bb::div(speed-c[0],c[1]-c[0]),0,ONE);
+        Q envelope=mul(c[2],mul(fraction,fraction));
+        // A public six-pitch release pattern, not an unseeded/random accuracy roll.
+        Q phase=input[4]%6;Q signs[6]={-3,1,2,-1,3,-2};
+        Q ex=checked(Wide(envelope)*signs[phase]/3);
+        Q ez=checked(Wide(envelope)*signs[(phase*5+1)%6]/3);
+        Q time=bb::div(input[3],-v.y);
+        Vec scattered=normalize({v.x+bb::div(ex,time),v.y,v.z+bb::div(ez,time)},speed);
+        write_vec(out,scattered);out[3]=ex;out[4]=ez;out[5]=envelope;return 0;
+    }catch(...) {return -1;}
+}
 API int64_t bb_sweep_box(const int64_t* from,const int64_t* to,const int64_t* box,int64_t radius) {
     try { return bb::sweep_box(vec(from),vec(to),box,radius); }catch(...) { return -2; }
 }

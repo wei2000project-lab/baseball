@@ -61,11 +61,9 @@ def test_match_crash_archives_aborted_and_terminal_checkpoint(tmp_path):
     path=make_bot(tmp_path,'sys.exit(3)')
     summary=run_match(path,ROOT/"bots/examples/minimal.py",quick_config(),"7",tmp_path/"result")
     assert summary["status"]=="aborted" and summary["winner"] is None
-    manifest=json.loads((tmp_path/"result/manifest.json").read_text())
-    assert manifest["record_status"]=="aborted" and manifest["file_index"]
-    cps=[json.loads(x) for x in (tmp_path/"result/checkpoints.jsonl").read_text().splitlines()]
-    assert cps[-1]["state_hash"]==summary["final_state_hash"]
-    assert any(json.loads(x)["fault"] for x in (tmp_path/"result/actions.jsonl").read_text().splitlines())
+    from replay import ReplayRecord
+    r=ReplayRecord(tmp_path/"result")
+    assert r.verify()["summary"]==summary and r.seek(r.final_tick)["terminal_status"]=="aborted"
 
 
 def test_thrower_does_not_recatch_own_ball_at_release():

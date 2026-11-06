@@ -41,7 +41,7 @@ class Bot:
         if s["phase"]!="BALL_IN_PLAY":return []
         fielders=[p for p in s["players"] if p["team_id"]==team]
         b=s["ball"];held=b["holder_id"]
-        plans={p["id"]:make(p["id"],"catch",enabled=True) for p in fielders}
+        plans={p["id"]:make(p["id"],"catch",enabled=True) for p in fielders if not p["active_intents"].get("catch",False)}
         if held:
             self.receiver=None
             forces=[r for r in s["runners"] if r["force_obligation"] is not None]
@@ -76,6 +76,8 @@ class Bot:
         target=[max(-84,min(84,position[0]+velocity[0]*t)),max(-14,min(104,position[1]+velocity[1]*t))]
         chaser=min(fielders,key=lambda p:(math.dist(xy(p),target),p["id"]))
         plans[chaser["id"]]=move(chaser["id"],target)
+        if math.dist(xy(chaser),position[:2])<1.9 and position[2]<2.5 and s["sim_tick"]>=chaser.get("dive_ready_tick",10**9):
+            plans[chaser["id"]]=make(chaser["id"],"dive")
         return list(plans.values())
 
 
