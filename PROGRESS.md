@@ -1,8 +1,18 @@
 # 開發進度
 
-目前階段：**P0–P7、2.0.0、C++ Bot 與啟動器已封存；2.1.0 量測／守備成本實驗通過功能驗收，平衡調參尚未完成**。本次實驗里程碑 tag：`advancement-v2.1.0-experimental`；不能當作平衡達標 release。新版進度見下節、BALANCE.md 與 workspace/ACCEPTANCE.md。
+目前階段：**交接；使用者目前實測「無法完賽、雙方未得分」仍未解**。既有功能測試與加速里程碑不代表這兩項問題已修好。請優先閱讀 [HANDOFF.md](HANDOFF.md)，包含可直接還原的停滯快照、原樣保留的主要Bot、重現指令及接續驗收。
 
 目前操作限制：使用者正在使用電腦；不得要求電腦控制權限或操作／切換使用者視窗。後續改用 CLI、隱藏離屏 renderer、記錄副本與背景測試驗收。
+
+## GitHub交接（2026-11-07）
+
+- 使用者要求將現況提交至 https://github.com/wei2000project-lab/baseball 並提供接手文件；本次不宣稱完賽／零得分已修復，也不繼續改規則或Bot策略。
+- 新增HANDOFF.md及有界診斷reproduce_stall.py。主要組合base_bot對GPT_tactical_cpp、seed42在tick14434捕捉600ticks無場上狀態變化、比分0:0；報告含完整config/state/RNG，非只有觀看投影。
+- snapshot hash ef08ee6d0e9751b476a6c7e87d79978fdf8f40d905216882c41dc9890a3fb712已驗證可還原；不送新指令再跑1000ticks仍不變、兩跑者safe=false、terminal=null。這是缺陷證據，不是修復或完賽。
+- 為讓GitHub接手者可重現，本次將原先未追蹤的bots/GPT_tactical_cpp/bot.cpp及README原樣納入，沒有改策略。bot.cpp SHA256為82b1872572ce5edc4d611cee40c1ac1d4ea767ab1db1f22fa25b9c96bcb18bfc。舊章節提到不提交該Bot是本次上傳前的歷史狀態。
+- 遠端初查沒有既有提交，設定origin並將本機分支命名main，保留既有提交與tags；不force push、不建立已修復的release。
+- 交付前隔離來源重新建置10個命令全過，含145項Python、7項JS及32項隱藏GUI；另重建問題C++Bot，仍得到相同config／完整state hash與原始碼SHA。重建後binary program SHA不同，不能要求不同建置binary相等；這份重現證據不是修復證明。
+- 規則與Bot互動的責任仍需檢驗，不能只以「Bot問題」結案；停滯中止保護與擴大測試樣本偏好仍未取得，交接保留這些限制。
 
 ## 對戰效能改善（完成；tag: performance-v1）
 

@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "captured_tick": 14434,
+  "restored_state_hash": "ef08ee6d0e9751b476a6c7e87d79978fdf8f40d905216882c41dc9890a3fb712",
+  "ticks_advanced_without_new_actions": 1000,
+  "final_tick": 15434,
+  "viewer_state_unchanged": true,
+  "terminal_result": null,
+  "runner_safe": {
+    "home.P04": false,
+    "home.P05": false
+  },
+  "note": "Confirms unresolved state without new actions; not a completed game or an end-to-end fix."
+}

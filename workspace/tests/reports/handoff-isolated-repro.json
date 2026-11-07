@@ -1,0 +1,52 @@
+{
+  "passed": true,
+  "source_isolated": true,
+  "compiler_cache_reused": true,
+  "captured_tick": 14434,
+  "state_hash": "ef08ee6d0e9751b476a6c7e87d79978fdf8f40d905216882c41dc9890a3fb712",
+  "same_full_state": true,
+  "same_config": true,
+  "bot_source_sha256": "82b1872572ce5edc4d611cee40c1ac1d4ea767ab1db1f22fa25b9c96bcb18bfc",
+  "original_programs": {
+    "away": {
+      "program_sha256": "2cb29db55fbfd3a2653375b2575efc4a0444353765c18e345cc8677dc372e3ec",
+      "seed": "15716365118942522187",
+      "resource_limits": {
+        "type": "host_ready",
+        "memory_limit_bytes": 268435456,
+        "active_process_limit": 2
+      }
+    },
+    "home": {
+      "program_sha256": "f815ce624f98d289118bb7e316bfd50f9c78a11009d42deda690070e589ba318",
+      "seed": "344715705032385570",
+      "resource_limits": {
+        "type": "host_ready",
+        "memory_limit_bytes": 268435456,
+        "active_process_limit": 2
+      }
+    }
+  },
+  "rebuilt_programs": {
+    "away": {
+      "program_sha256": "2cb29db55fbfd3a2653375b2575efc4a0444353765c18e345cc8677dc372e3ec",
+      "seed": "15716365118942522187",
+      "resource_limits": {
+        "type": "host_ready",
+        "memory_limit_bytes": 268435456,
+        "active_process_limit": 2
+      }
+    },
+    "home": {
+      "program_sha256": "cdd9367d5c469056b96b496efe0cdc93bcc8676fa3dcd56e52a2c962a5bc7006",
+      "seed": "344715705032385570",
+      "resource_limits": {
+        "type": "host_ready",
+        "memory_limit_bytes": 268435456,
+        "active_process_limit": 2
+      }
+    }
+  },
+  "formal_outcome": null,
+  "note": "Rebuilt program SHA includes compiled binary and differs across these builds; source/config/full GameState match exactly. This verifies the defect reproduces, not that the defect is fixed."
+}

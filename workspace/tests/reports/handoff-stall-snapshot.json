@@ -1,0 +1,782 @@
+{
+  "capture_only": true,
+  "formal_outcome": null,
+  "reason": "unchanged_live_play",
+  "unchanged_ticks": 600,
+  "config": {
+    "version": "2.1.0",
+    "rules": {
+      "tick_rate_hz": 120,
+      "decision_interval_ticks": 1,
+      "regulation_ticks": 1200,
+      "plate_appearance_setup_ticks": 360,
+      "pitch_reset_ticks": 240,
+      "half_inning_change_ticks": 1200,
+      "pitch_release_deadline_ticks": 960,
+      "max_ticks": 432000,
+      "max_pitches": 10000,
+      "settle_ticks": 120,
+      "loose_ball_recovery_ticks": 600,
+      "swing_delay_ticks": 6,
+      "swing_duration_ticks": 12,
+      "half_run_cap": 10,
+      "half_pa_cap": 15,
+      "dive_duration_ticks": 24,
+      "dive_cooldown_ticks": 360,
+      "catch_retry_ticks": 30,
+      "catch_recovery_ticks": 36,
+      "throw_windup_ticks": 27
+    },
+    "physics": {
+      "version": "2.1.0",
+      "gravity_q": "42119241033",
+      "ball_radius_q": "158913790",
+      "ground_restitution_q": "1503238554",
+      "wall_restitution_q": "2147483648",
+      "ground_retention_q": "3435973837",
+      "rolling_deceleration_q": "17179869184",
+      "stop_speed_q": "214748365",
+      "rolling_threshold_q": "2147483648",
+      "player_speed_q": "35433480192",
+      "player_acceleration_q": "42949672960",
+      "catch_radius_q": "3865470566",
+      "catch_height_q": "10737418240",
+      "tag_radius_q": "2576980378",
+      "pitch_height_q": "7730941133",
+      "throw_height_q": "6871947674",
+      "pitch_min_speed_q": "64424509440",
+      "pitch_max_speed_q": "193273528320",
+      "throw_min_speed_q": "21474836480",
+      "throw_max_speed_q": "120259084288",
+      "bat_min_speed_q": "42949672960",
+      "bat_max_speed_q": "150323855360",
+      "swing_narrowing_q": "2147483648",
+      "timing_loss_q": "3006477107",
+      "spatial_loss_q": "3113851290",
+      "contact_speed_floor_q": "1503238554",
+      "contact_deflection_mdeg": 8000,
+      "fielder_speed_q": "35433480192",
+      "fielder_acceleration_q": "60129542144",
+      "dive_radius_bonus_q": "3435973837",
+      "catch_running_radius_loss_q": "1288490189",
+      "catch_control_speed_q": "188978561024",
+      "catch_running_control_loss_q": "7730941133",
+      "dive_control_bonus_q": "42949672960",
+      "throw_running_error_q": "2576980378",
+      "drop_retention_q": "1932735283",
+      "pitch_max_error_q": "2061584302",
+      "held_speed_multiplier_q": "3435973837"
+    },
+    "field": {
+      "version": "2.1.0",
+      "base_radius_q": "1288490189",
+      "wall_radius_q": "429496729600",
+      "wall_height_q": "10737418240",
+      "xmin_q": "-365072220160",
+      "xmax_q": "365072220160",
+      "ymin_q": "-64424509440",
+      "ymax_q": "450971566080",
+      "strike_xmin_q": "-927712936",
+      "strike_xmax_q": "927712936",
+      "strike_zmin_q": "2147483648",
+      "strike_zmax_q": "4724464026",
+      "bases_q": [
+        [
+          "0",
+          "0"
+        ],
+        [
+          "83313775608",
+          "83313775608"
+        ],
+        [
+          "0",
+          "166627551216"
+        ],
+        [
+          "-83313775608",
+          "83313775608"
+        ]
+      ],
+      "defense_q": [
+        [
+          "0",
+          "79199196938"
+        ],
+        [
+          "0",
+          "-8589934592"
+        ],
+        [
+          "85899345920",
+          "85899345920"
+        ],
+        [
+          "51539607552",
+          "146028888064"
+        ],
+        [
+          "-85899345920",
+          "85899345920"
+        ],
+        [
+          "-51539607552",
+          "146028888064"
+        ],
+        [
+          "-193273528320",
+          "279172874240"
+        ],
+        [
+          "0",
+          "343597383680"
+        ],
+        [
+          "193273528320",
+          "279172874240"
+        ]
+      ],
+      "bat_box_q": [
+        "-2362232013",
+        "2362232013",
+        "-1288490189",
+        "3221225472",
+        "1073741824",
+        "6442450944"
+      ],
+      "body_box_q": [
+        "-4294967296",
+        "-2362232013",
+        "-1503238554",
+        "1503238554",
+        "858993459",
+        "7730941133"
+      ]
+    }
+  },
+  "seed": "42",
+  "away": "bots/base_bot",
+  "home": "bots/GPT_tactical_cpp",
+  "engine_source_sha256": "21d949b0a0d16d7f6eb304b1b4003c71e711d9a20de7b803f7658ff7634d0b3f",
+  "bots": {
+    "away": {
+      "program_sha256": "2cb29db55fbfd3a2653375b2575efc4a0444353765c18e345cc8677dc372e3ec",
+      "seed": "15716365118942522187",
+      "resource_limits": {
+        "type": "host_ready",
+        "memory_limit_bytes": 268435456,
+        "active_process_limit": 2
+      }
+    },
+    "home": {
+      "program_sha256": "f815ce624f98d289118bb7e316bfd50f9c78a11009d42deda690070e589ba318",
+      "seed": "344715705032385570",
+      "resource_limits": {
+        "type": "host_ready",
+        "memory_limit_bytes": 268435456,
+        "active_process_limit": 2
+      }
+    }
+  },
+  "state_hash": "ef08ee6d0e9751b476a6c7e87d79978fdf8f40d905216882c41dc9890a3fb712",
+  "state": {
+    "schema_version": "2.1.0",
+    "ruleset_version": "2.1.0",
+    "physics_version": "2.1.0",
+    "map_version": "2.1.0",
+    "config_hash": "403c85526019c1a68de976310a7c6deb29a34fbf649eb92b83ebd7035f55ed94",
+    "sim_tick": 14434,
+    "phase": "BALL_IN_PLAY",
+    "phase_start_tick": 12511,
+    "phase_deadline_tick": 12511,
+    "inning": 1,
+    "half": "bottom",
+    "transition_from_half": null,
+    "pending_transition": null,
+    "regulation_expired": true,
+    "finish_after_inning": 1,
+    "score": {
+      "away": 0,
+      "home": 0
+    },
+    "outs": 2,
+    "balls": 0,
+    "strikes": 0,
+    "batting_order_index_by_team": {
+      "away": 4,
+      "home": 4
+    },
+    "completed_halves": {
+      "away": 1,
+      "home": 0
+    },
+    "play_id": 9,
+    "plate_appearance_id": 9,
+    "pitch_id": 9,
+    "pitches_total": 9,
+    "ball": {
+      "mode": "fielder_held",
+      "position_q": [
+        "5844222190",
+        "98302275534",
+        "6871947674"
+      ],
+      "velocity_q": [
+        "0",
+        "0",
+        "0"
+      ],
+      "holder_id": "away.P01",
+      "origin": "throw",
+      "has_touched_ground_since_bat": true,
+      "fair_foul_status": "fair",
+      "release_exclusion_id": null
+    },
+    "players": [
+      {
+        "id": "away.P01",
+        "team_id": "away",
+        "role": "P",
+        "position_q": [
+          "5844222190",
+          "98302275534"
+        ],
+        "velocity_q": [
+          "0",
+          "0"
+        ],
+        "active_intents": {
+          "catch": true
+        },
+        "dive_until_tick": 13796,
+        "dive_ready_tick": 14132,
+        "catch_ready_tick": 0,
+        "catch_recovery_until_tick": 13810,
+        "throw_release_tick": 0,
+        "pending_throw": null
+      },
+      {
+        "id": "away.P02",
+        "team_id": "away",
+        "role": "C",
+        "position_q": [
+          "0",
+          "-8589934592"
+        ],
+        "velocity_q": [
+          "0",
+          "0"
+        ],
+        "active_intents": {
+          "catch": true
+        },
+        "dive_until_tick": 0,
+        "dive_ready_tick": 0,
+        "catch_ready_tick": 0,
+        "catch_recovery_until_tick": 0,
+        "throw_release_tick": 0,
+        "pending_throw": null
+      },
+      {
+        "id": "away.P03",
+        "team_id": "away",
+        "role": "1B",
+        "position_q": [
+          "85899345920",
+          "85899345920"
+        ],
+        "velocity_q": [
+          "0",
+          "0"
+        ],
+        "active_intents": {
+          "catch": true
+        },
+        "dive_until_tick": 0,
+        "dive_ready_tick": 0,
+        "catch_ready_tick": 0,
+        "catch_recovery_until_tick": 0,
+        "throw_release_tick": 0,
+        "pending_throw": null
+      },
+      {
+        "id": "away.P04",
+        "team_id": "away",
+        "role": "2B",
+        "position_q": [
+          "91501102110",
+          "378290741011"
+        ],
+        "velocity_q": [
+          "0",
+          "0"
+        ],
+        "active_intents": {
+          "catch": true
+        },
+        "dive_until_tick": 13356,
+        "dive_ready_tick": 13692,
+        "catch_ready_tick": 0,
+        "catch_recovery_until_tick": 13374,
+        "throw_release_tick": 0,
+        "pending_throw": null
+      },
+      {
+        "id": "away.P05",
+        "team_id": "away",
+        "role": "3B",
+        "position_q": [
+          "-85899345920",
+          "85899345920"
+        ],
+        "velocity_q": [
+          "0",
+          "0"
+        ],
+        "active_intents": {
+          "catch": true
+        },
+        "dive_until_tick": 0,
+        "dive_ready_tick": 0,
+        "catch_ready_tick": 0,
+        "catch_recovery_until_tick": 0,
+        "throw_release_tick": 0,
+        "pending_throw": null
+      },
+      {
+        "id": "away.P06",
+        "team_id": "away",
+        "role": "SS",
+        "position_q": [
+          "-109826976872",
+          "219614695591"
+        ],
+        "velocity_q": [
+          "0",
+          "0"
+        ],
+        "active_intents": {
+          "catch": true
+        },
+        "dive_until_tick": 6976,
+        "dive_ready_tick": 7312,
+        "catch_ready_tick": 0,
+        "catch_recovery_until_tick": 0,
+        "throw_release_tick": 0,
+        "pending_throw": null
+      },
+      {
+        "id": "away.P07",
+        "team_id": "away",
+        "role": "LF",
+        "position_q": [
+          "-172207280528",
+          "342012056728"
+        ],
+        "velocity_q": [
+          "0",
+          "0"
+        ],
+        "active_intents": {
+          "catch": true
+        },
+        "dive_until_tick": 7362,
+        "dive_ready_tick": 7698,
+        "catch_ready_tick": 0,
+        "catch_recovery_until_tick": 0,
+        "throw_release_tick": 0,
+        "pending_throw": null
+      },
+      {
+        "id": "away.P08",
+        "team_id": "away",
+        "role": "CF",
+        "position_q": [
+          "-31777761775",
+          "390780405410"
+        ],
+        "velocity_q": [
+          "0",
+          "0"
+        ],
+        "active_intents": {
+          "catch": true
+        },
+        "dive_until_tick": 11503,
+        "dive_ready_tick": 11839,
+        "catch_ready_tick": 0,
+        "catch_recovery_until_tick": 0,
+        "throw_release_tick": 0,
+        "pending_throw": null
+      },
+      {
+        "id": "away.P09",
+        "team_id": "away",
+        "role": "RF",
+        "position_q": [
+          "193273528320",
+          "279172874240"
+        ],
+        "velocity_q": [
+          "0",
+          "0"
+        ],
+        "active_intents": {
+          "catch": true
+        },
+        "dive_until_tick": 0,
+        "dive_ready_tick": 0,
+        "catch_ready_tick": 0,
+        "catch_recovery_until_tick": 0,
+        "throw_release_tick": 0,
+        "pending_throw": null
+      },
+      {
+        "id": "home.P01",
+        "team_id": "home",
+        "role": "P",
+        "position_q": [
+          "-901082681",
+          "921008646"
+        ],
+        "velocity_q": [
+          "0",
+          "0"
+        ],
+        "active_intents": {},
+        "dive_until_tick": 0,
+        "dive_ready_tick": 0,
+        "catch_ready_tick": 0,
+        "catch_recovery_until_tick": 0,
+        "throw_release_tick": 0,
+        "pending_throw": null
+      },
+      {
+        "id": "home.P02",
+        "team_id": "home",
+        "role": "C",
+        "position_q": [
+          "39910631814",
+          "41422334474"
+        ],
+        "velocity_q": [
+          "25495312319",
+          "24607327531"
+        ],
+        "active_intents": {},
+        "dive_until_tick": 0,
+        "dive_ready_tick": 0,
+        "catch_ready_tick": 0,
+        "catch_recovery_until_tick": 0,
+        "throw_release_tick": 0,
+        "pending_throw": null
+      },
+      {
+        "id": "home.P03",
+        "team_id": "home",
+        "role": "1B",
+        "position_q": [
+          "38635866203",
+          "40191968102"
+        ],
+        "velocity_q": [
+          "25495312319",
+          "24607327531"
+        ],
+        "active_intents": {},
+        "dive_until_tick": 0,
+        "dive_ready_tick": 0,
+        "catch_ready_tick": 0,
+        "catch_recovery_until_tick": 0,
+        "throw_release_tick": 0,
+        "pending_throw": null
+      },
+      {
+        "id": "home.P04",
+        "team_id": "home",
+        "role": "2B",
+        "position_q": [
+          "-21062867532",
+          "21528666506"
+        ],
+        "velocity_q": [
+          "0",
+          "0"
+        ],
+        "active_intents": {},
+        "dive_until_tick": 0,
+        "dive_ready_tick": 0,
+        "catch_ready_tick": 0,
+        "catch_recovery_until_tick": 0,
+        "throw_release_tick": 0,
+        "pending_throw": null
+      },
+      {
+        "id": "home.P05",
+        "team_id": "home",
+        "role": "3B",
+        "position_q": [
+          "60291384056",
+          "105002872328"
+        ],
+        "velocity_q": [
+          "0",
+          "0"
+        ],
+        "active_intents": {},
+        "dive_until_tick": 0,
+        "dive_ready_tick": 0,
+        "catch_ready_tick": 0,
+        "catch_recovery_until_tick": 0,
+        "throw_release_tick": 0,
+        "pending_throw": null
+      },
+      {
+        "id": "home.P06",
+        "team_id": "home",
+        "role": "SS",
+        "position_q": [
+          "2149462626",
+          "166773066848"
+        ],
+        "velocity_q": [
+          "0",
+          "0"
+        ],
+        "active_intents": {},
+        "dive_until_tick": 0,
+        "dive_ready_tick": 0,
+        "catch_ready_tick": 0,
+        "catch_recovery_until_tick": 0,
+        "throw_release_tick": 0,
+        "pending_throw": null
+      },
+      {
+        "id": "home.P07",
+        "team_id": "home",
+        "role": "LF",
+        "position_q": [
+          "-193273528320",
+          "279172874240"
+        ],
+        "velocity_q": [
+          "0",
+          "0"
+        ],
+        "active_intents": {},
+        "dive_until_tick": 0,
+        "dive_ready_tick": 0,
+        "catch_ready_tick": 0,
+        "catch_recovery_until_tick": 0,
+        "throw_release_tick": 0,
+        "pending_throw": null
+      },
+      {
+        "id": "home.P08",
+        "team_id": "home",
+        "role": "CF",
+        "position_q": [
+          "2696019",
+          "343595922873"
+        ],
+        "velocity_q": [
+          "0",
+          "0"
+        ],
+        "active_intents": {},
+        "dive_until_tick": 0,
+        "dive_ready_tick": 0,
+        "catch_ready_tick": 0,
+        "catch_recovery_until_tick": 0,
+        "throw_release_tick": 0,
+        "pending_throw": null
+      },
+      {
+        "id": "home.P09",
+        "team_id": "home",
+        "role": "RF",
+        "position_q": [
+          "193271577184",
+          "279173973254"
+        ],
+        "velocity_q": [
+          "0",
+          "0"
+        ],
+        "active_intents": {},
+        "dive_until_tick": 0,
+        "dive_ready_tick": 0,
+        "catch_ready_tick": 0,
+        "catch_recovery_until_tick": 0,
+        "throw_release_tick": 0,
+        "pending_throw": null
+      }
+    ],
+    "runners": [
+      {
+        "id": "home.P04",
+        "origin_base": 1,
+        "last_legal_base": 3,
+        "target_base": null,
+        "force_obligation": null,
+        "retouch_obligation": null,
+        "alive": true,
+        "touched_bases": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "leg_base": 4,
+        "running_direction": 1,
+        "initial_order": 1,
+        "has_first": true
+      },
+      {
+        "id": "home.P05",
+        "origin_base": 0,
+        "last_legal_base": 1,
+        "target_base": null,
+        "force_obligation": null,
+        "retouch_obligation": null,
+        "alive": true,
+        "touched_bases": [
+          0,
+          1
+        ],
+        "leg_base": 2,
+        "running_direction": 1,
+        "initial_order": 2,
+        "has_first": true
+      }
+    ],
+    "pitch_start_bases": [
+      {
+        "id": "home.P01",
+        "origin_base": 1,
+        "last_legal_base": 2,
+        "target_base": null,
+        "force_obligation": null,
+        "retouch_obligation": null,
+        "alive": true,
+        "touched_bases": [
+          0,
+          1,
+          1,
+          1,
+          2
+        ],
+        "leg_base": 3,
+        "running_direction": 1,
+        "initial_order": 0,
+        "has_first": true
+      },
+      {
+        "id": "home.P04",
+        "origin_base": 0,
+        "last_legal_base": 1,
+        "target_base": null,
+        "force_obligation": null,
+        "retouch_obligation": null,
+        "alive": true,
+        "touched_bases": [
+          0,
+          1
+        ],
+        "leg_base": 1,
+        "running_direction": 1,
+        "initial_order": 1,
+        "has_first": true
+      }
+    ],
+    "force_state": [
+      {
+        "runner_id": "home.P05",
+        "target_base": 1,
+        "depends_on": []
+      },
+      {
+        "runner_id": "home.P04",
+        "target_base": 2,
+        "depends_on": [
+          "home.P05"
+        ]
+      },
+      {
+        "runner_id": "home.P01",
+        "target_base": 3,
+        "depends_on": [
+          "home.P05",
+          "home.P04"
+        ]
+      }
+    ],
+    "pending_runs": [
+      {
+        "runner_id": "home.P01",
+        "time": [
+          13398,
+          2939636777
+        ],
+        "order": 0
+      }
+    ],
+    "pending_appeals": [],
+    "swing_windows": {
+      "start_tick": 12507,
+      "end_tick": 12519,
+      "action": {
+        "action_id": "tc-34044",
+        "azimuth_mdeg": 20000,
+        "elevation_mdeg": 24000,
+        "kind": "swing",
+        "player_id": "home.P05",
+        "power_u16": 65535
+      }
+    },
+    "settle_counter": 0,
+    "recovery_counter": 0,
+    "scheduled_actions": [],
+    "pending_boundary_events": [],
+    "rng_stream_states": {
+      "setup": [
+        "8851475810254775608",
+        "4449369230549606457",
+        "16246858341680065861",
+        "4740898733074348272"
+      ],
+      "engine": [
+        "5396541782416978846",
+        "15569385443399888257",
+        "113182730011302767",
+        "5338018818913029757"
+      ]
+    },
+    "action_cursor": 28868,
+    "last_event_seq": 41659,
+    "terminal_status": null,
+    "termination_reason": null,
+    "half_runs": 0,
+    "half_pa": 5,
+    "batter_id": "home.P05",
+    "swing_used": true,
+    "third_out": null,
+    "throw_start_bases": [
+      {
+        "id": "home.P04",
+        "base": 3
+      },
+      {
+        "id": "home.P05",
+        "base": 1
+      }
+    ],
+    "original_runner_order": [
+      "home.P01",
+      "home.P04",
+      "home.P05"
+    ]
+  },
+  "wall_seconds": 17.225,
+  "record_note": "Diagnostic stop leaves match.txt incomplete; do not count it as completed or a win."
+}

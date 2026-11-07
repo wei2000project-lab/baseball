@@ -1,0 +1,151 @@
+{
+  "passed": true,
+  "source_files": 264,
+  "source_directory": "C:\\Users\\weiwei\\Desktop\\ai_project\\baseball\\workspace\\build\\cleanroom\\1794035031687318200",
+  "toolchain_cache_reused": true,
+  "python": "3.13.9 (tags/v3.13.9:8183fa5, Oct 14 2025, 14:09:13) [MSC v.1944 64 bit (AMD64)]",
+  "pywin32": "312",
+  "pytest": "9.1.1",
+  "commands": [
+    {
+      "args": [
+        "D:\\ai_models\\Python\\Python313\\python.exe",
+        "workspace/build_native.py",
+        "--compiler",
+        "C:\\Users\\weiwei\\Desktop\\ai_project\\baseball\\.tools\\ziglang\\zig.exe",
+        "--cache-root",
+        "C:\\Users\\weiwei\\Desktop\\ai_project\\baseball\\workspace\\build\\zig-cache"
+      ],
+      "exit_code": 0,
+      "elapsed_ms": 12868,
+      "stdout_tail": "C:\\Users\\weiwei\\Desktop\\ai_project\\baseball\\workspace\\build\\cleanroom\\1794035031687318200\\workspace\\build\\native-aaf4c0f76c48ff6a\\baseball.dll\n",
+      "stderr_tail": ""
+    },
+    {
+      "args": [
+        "node",
+        "C:\\Users\\weiwei\\Desktop\\ai_project\\baseball\\.tools\\npm-runtime\\package\\bin\\npm-cli.js",
+        "ci",
+        "--prefix",
+        "workspace",
+        "--offline",
+        "--no-audit",
+        "--no-fund"
+      ],
+      "exit_code": 0,
+      "elapsed_ms": 7833,
+      "stdout_tail": "\nadded 13 packages in 7s\n",
+      "stderr_tail": "npm notice run baseball-bot-viewer@2.1.0 postinstall\nnpm notice run node electron/install-runtime.cjs\n"
+    },
+    {
+      "args": [
+        "D:\\ai_models\\Python\\Python313\\python.exe",
+        "-m",
+        "pytest",
+        "workspace/tests",
+        "-q"
+      ],
+      "exit_code": 0,
+      "elapsed_ms": 82888,
+      "stdout_tail": "........................................................................ [ 49%]\n........................................................................ [ 99%]\n.                                                                        [100%]\n145 passed in 82.35s (0:01:22)\n",
+      "stderr_tail": ""
+    },
+    {
+      "args": [
+        "node",
+        "--test",
+        "workspace/tests/viewer.test.mjs"
+      ],
+      "exit_code": 0,
+      "elapsed_ms": 128,
+      "stdout_tail": "\u2714 binary search includes exact ticks and chunk boundaries (0.6284ms)\n\u2714 interpolation preserves authority and never crosses contact cuts (0.4973ms)\n\u2714 quarter and eight speed and frame rates reach the same logical tick (0.4476ms)\n\u2714 visual offsets and origin corrections never mutate logical positions (0.631ms)\n\u2714 LRU keeps at most three chunks and coalesces concurrent requests (0.4862ms)\n\u2714 delivered visual profile accepts finite offsets and stays independent (1.8353ms)\n\u2714 invalid visual transforms and unknown fields fail closed (0.2823ms)\n\u2139 tests 7\n\u2139 suites 0\n\u2139 pass 7\n\u2139 fail 0\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 74.447\n",
+      "stderr_tail": ""
+    },
+    {
+      "args": [
+        "D:\\ai_models\\Python\\Python313\\python.exe",
+        "workspace/match.py",
+        "--away",
+        "bots/base_bot",
+        "--home",
+        "bots/base_bot",
+        "--seed",
+        "42",
+        "--regulation-ticks",
+        "1200",
+        "--output",
+        "results/cleanroom-match"
+      ],
+      "exit_code": 0,
+      "elapsed_ms": 14246,
+      "stdout_tail": "{\"completed_halves\":{\"away\":1,\"home\":1},\"final_state_hash\":\"a9de974163ca2956bd87e92c1ecb9822486dbbb4b950190673a55a3388699960\",\"finish_after_inning\":1,\"reason\":\"fair_inning_completed\",\"replay_state_hash\":\"2a19133f1d1b6fe70ddc20446eca647f39e0088276a9357d2e0e32119de99e8a\",\"score\":{\"away\":1,\"home\":1},\"sim_tick\":15031,\"status\":\"completed\",\"winner\":null}\n",
+      "stderr_tail": ""
+    },
+    {
+      "args": [
+        "D:\\ai_models\\Python\\Python313\\python.exe",
+        "workspace/replay.py",
+        "verify",
+        "--input",
+        "results/cleanroom-match",
+        "--from-start"
+      ],
+      "exit_code": 0,
+      "elapsed_ms": 274,
+      "stdout_tail": "{\"record_status\":\"completed\",\"source_hash\":\"e04f09e08ec5e3ff88eb953e59f73593b4063d5e50db9abdf7234683492da057\",\"summary\":{\"completed_halves\":{\"away\":1,\"home\":1},\"final_state_hash\":\"a9de974163ca2956bd87e92c1ecb9822486dbbb4b950190673a55a3388699960\",\"finish_after_inning\":1,\"reason\":\"fair_inning_completed\",\"replay_state_hash\":\"2a19133f1d1b6fe70ddc20446eca647f39e0088276a9357d2e0e32119de99e8a\",\"score\":{\"away\":1,\"home\":1},\"sim_tick\":15031,\"status\":\"completed\",\"winner\":null},\"verification_scope\":\"TXT SHA-256 integrity and final viewer projection; no physics re-simulation\",\"verification_status\":\"verified_record\",\"verified_through_tick\":15031}\n",
+      "stderr_tail": ""
+    },
+    {
+      "args": [
+        "D:\\ai_models\\Python\\Python313\\python.exe",
+        "workspace/replay.py",
+        "frames",
+        "--input",
+        "results/cleanroom-match",
+        "--output",
+        "results/cleanroom-match/cache/frames"
+      ],
+      "exit_code": 0,
+      "elapsed_ms": 1922,
+      "stdout_tail": "{\"cache_status\":\"ready\",\"output\":\"C:\\\\Users\\\\weiwei\\\\Desktop\\\\ai_project\\\\baseball\\\\workspace\\\\build\\\\cleanroom\\\\1794035031687318200\\\\results\\\\cleanroom-match\\\\cache\\\\frames\",\"source_hash\":\"e04f09e08ec5e3ff88eb953e59f73593b4063d5e50db9abdf7234683492da057\",\"total_frames\":4236,\"verification_status\":\"verified_record\"}\n",
+      "stderr_tail": ""
+    },
+    {
+      "args": [
+        "D:\\ai_models\\Python\\Python313\\python.exe",
+        "workspace/unpack_demo.py",
+        "--output",
+        "results/offline-demo"
+      ],
+      "exit_code": 0,
+      "elapsed_ms": 95,
+      "stdout_tail": "{\"output\": \"C:\\\\Users\\\\weiwei\\\\Desktop\\\\ai_project\\\\baseball\\\\workspace\\\\build\\\\cleanroom\\\\1794035031687318200\\\\results\\\\offline-demo\", \"summary\": {\"completed_halves\": {\"away\": 1, \"home\": 1}, \"final_state_hash\": \"a9de974163ca2956bd87e92c1ecb9822486dbbb4b950190673a55a3388699960\", \"finish_after_inning\": 1, \"reason\": \"fair_inning_completed\", \"replay_state_hash\": \"2a19133f1d1b6fe70ddc20446eca647f39e0088276a9357d2e0e32119de99e8a\", \"score\": {\"away\": 1, \"home\": 1}, \"sim_tick\": 15031, \"status\": \"completed\", \"winner\": null}}\n",
+      "stderr_tail": ""
+    },
+    {
+      "args": [
+        "D:\\ai_models\\Python\\Python313\\python.exe",
+        "workspace/replay.py",
+        "verify",
+        "--input",
+        "results/offline-demo"
+      ],
+      "exit_code": 0,
+      "elapsed_ms": 273,
+      "stdout_tail": "{\"record_status\":\"completed\",\"source_hash\":\"e04f09e08ec5e3ff88eb953e59f73593b4063d5e50db9abdf7234683492da057\",\"summary\":{\"completed_halves\":{\"away\":1,\"home\":1},\"final_state_hash\":\"a9de974163ca2956bd87e92c1ecb9822486dbbb4b950190673a55a3388699960\",\"finish_after_inning\":1,\"reason\":\"fair_inning_completed\",\"replay_state_hash\":\"2a19133f1d1b6fe70ddc20446eca647f39e0088276a9357d2e0e32119de99e8a\",\"score\":{\"away\":1,\"home\":1},\"sim_tick\":15031,\"status\":\"completed\",\"winner\":null},\"verification_scope\":\"TXT SHA-256 integrity and final viewer projection; no physics re-simulation\",\"verification_status\":\"verified_record\",\"verified_through_tick\":15031}\n",
+      "stderr_tail": ""
+    },
+    {
+      "args": [
+        "D:\\ai_models\\Python\\Python313\\python.exe",
+        "launcher/verify_launcher.py",
+        "--report",
+        "workspace/build/launcher-acceptance.json"
+      ],
+      "exit_code": 0,
+      "elapsed_ms": 4132,
+      "stdout_tail": "{\"passed\": true, \"checks\": 32, \"cases\": 3}\n",
+      "stderr_tail": ""
+    }
+  ]
+}
