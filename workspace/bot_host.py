@@ -108,7 +108,19 @@ class BotHost:
 
     def send(self,message):
         if self.error:raise BotFault(self.error)
-        try:self.process.stdin.write(canonical(message)+b"\n");self.process.stdin.flush()
+        try:data=canonical(message)
+        except ValueError:raise BotFault("stdin_io")
+        self._send_bytes(data)
+
+    def send_observation(self,decision_id,sim_tick,state_json,legal_action_types):
+        """Reuse the same canonical public snapshot bytes for both teams."""
+        envelope=canonical(dict(type='observe',protocol_version=PROTOCOL,decision_id=decision_id,
+            sim_tick=sim_tick,team_id=self.team,state=None,legal_action_types=legal_action_types))
+        self._send_bytes(envelope.replace(b'"state":null',b'"state":'+state_json,1))
+
+    def _send_bytes(self,data):
+        if self.error:raise BotFault(self.error)
+        try:self.process.stdin.write(data+b"\n");self.process.stdin.flush()
         except (OSError,ValueError):raise BotFault("stdin_io")
 
     def receive(self,decision_id):

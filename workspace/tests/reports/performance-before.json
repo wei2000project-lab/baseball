@@ -1,0 +1,233 @@
+{
+  "config": {
+    "version": "2.1.0",
+    "rules": {
+      "tick_rate_hz": 120,
+      "decision_interval_ticks": 1,
+      "regulation_ticks": 1200,
+      "plate_appearance_setup_ticks": 360,
+      "pitch_reset_ticks": 240,
+      "half_inning_change_ticks": 1200,
+      "pitch_release_deadline_ticks": 960,
+      "max_ticks": 432000,
+      "max_pitches": 10000,
+      "settle_ticks": 120,
+      "loose_ball_recovery_ticks": 600,
+      "swing_delay_ticks": 6,
+      "swing_duration_ticks": 12,
+      "half_run_cap": 10,
+      "half_pa_cap": 15,
+      "dive_duration_ticks": 24,
+      "dive_cooldown_ticks": 360,
+      "catch_retry_ticks": 30,
+      "catch_recovery_ticks": 36,
+      "throw_windup_ticks": 27
+    },
+    "physics": {
+      "version": "2.1.0",
+      "gravity_q": "42119241033",
+      "ball_radius_q": "158913790",
+      "ground_restitution_q": "1503238554",
+      "wall_restitution_q": "2147483648",
+      "ground_retention_q": "3435973837",
+      "rolling_deceleration_q": "17179869184",
+      "stop_speed_q": "214748365",
+      "rolling_threshold_q": "2147483648",
+      "player_speed_q": "35433480192",
+      "player_acceleration_q": "42949672960",
+      "catch_radius_q": "3865470566",
+      "catch_height_q": "10737418240",
+      "tag_radius_q": "2576980378",
+      "pitch_height_q": "7730941133",
+      "throw_height_q": "6871947674",
+      "pitch_min_speed_q": "64424509440",
+      "pitch_max_speed_q": "193273528320",
+      "throw_min_speed_q": "21474836480",
+      "throw_max_speed_q": "120259084288",
+      "bat_min_speed_q": "42949672960",
+      "bat_max_speed_q": "150323855360",
+      "swing_narrowing_q": "2147483648",
+      "timing_loss_q": "3006477107",
+      "spatial_loss_q": "3113851290",
+      "contact_speed_floor_q": "1503238554",
+      "contact_deflection_mdeg": 8000,
+      "fielder_speed_q": "35433480192",
+      "fielder_acceleration_q": "60129542144",
+      "dive_radius_bonus_q": "3435973837",
+      "catch_running_radius_loss_q": "1288490189",
+      "catch_control_speed_q": "188978561024",
+      "catch_running_control_loss_q": "7730941133",
+      "dive_control_bonus_q": "42949672960",
+      "throw_running_error_q": "2576980378",
+      "drop_retention_q": "1932735283",
+      "pitch_max_error_q": "2061584302",
+      "held_speed_multiplier_q": "3435973837"
+    },
+    "field": {
+      "version": "2.1.0",
+      "base_radius_q": "1288490189",
+      "wall_radius_q": "429496729600",
+      "wall_height_q": "10737418240",
+      "xmin_q": "-365072220160",
+      "xmax_q": "365072220160",
+      "ymin_q": "-64424509440",
+      "ymax_q": "450971566080",
+      "strike_xmin_q": "-927712936",
+      "strike_xmax_q": "927712936",
+      "strike_zmin_q": "2147483648",
+      "strike_zmax_q": "4724464026",
+      "bases_q": [
+        [
+          "0",
+          "0"
+        ],
+        [
+          "83313775608",
+          "83313775608"
+        ],
+        [
+          "0",
+          "166627551216"
+        ],
+        [
+          "-83313775608",
+          "83313775608"
+        ]
+      ],
+      "defense_q": [
+        [
+          "0",
+          "79199196938"
+        ],
+        [
+          "0",
+          "-8589934592"
+        ],
+        [
+          "85899345920",
+          "85899345920"
+        ],
+        [
+          "51539607552",
+          "146028888064"
+        ],
+        [
+          "-85899345920",
+          "85899345920"
+        ],
+        [
+          "-51539607552",
+          "146028888064"
+        ],
+        [
+          "-193273528320",
+          "279172874240"
+        ],
+        [
+          "0",
+          "343597383680"
+        ],
+        [
+          "193273528320",
+          "279172874240"
+        ]
+      ],
+      "bat_box_q": [
+        "-2362232013",
+        "2362232013",
+        "-1288490189",
+        "3221225472",
+        "1073741824",
+        "6442450944"
+      ],
+      "body_box_q": [
+        "-4294967296",
+        "-2362232013",
+        "-1503238554",
+        "1503238554",
+        "858993459",
+        "7730941133"
+      ]
+    }
+  },
+  "seed": "42",
+  "away": "bots/base_bot",
+  "home": "bots/base_bot",
+  "python": "3.13.9 (tags/v3.13.9:8183fa5, Oct 14 2025, 14:09:13) [MSC v.1944 64 bit (AMD64)]",
+  "source_fingerprints": {
+    "engine": "524c6ee27796bd31b4f9e741997b3efd8042f2be231832c192ab0414b092cbf9",
+    "native": "aaf4c0f76c48ff6a0aee9294f8b91eae24c3793b3a231ee8976b9076fba15e08",
+    "match.py": "902bc948fb97c9e837c7eea282250cb50936b5ab4f6c6102bf4d124b019e00b5",
+    "bot_host.py": "a328ac488c6fdff161d4f90bb89ac7752147acdf30497b798dd88dbe024877c8"
+  },
+  "reference_sha256": "e04f09e08ec5e3ff88eb953e59f73593b4063d5e50db9abdf7234683492da057",
+  "runs": [
+    {
+      "seconds": 32.536901,
+      "txt_sha256": "e04f09e08ec5e3ff88eb953e59f73593b4063d5e50db9abdf7234683492da057",
+      "summary": {
+        "status": "completed",
+        "score": {
+          "away": 1,
+          "home": 1
+        },
+        "winner": null,
+        "completed_halves": {
+          "away": 1,
+          "home": 1
+        },
+        "finish_after_inning": 1,
+        "sim_tick": 15031,
+        "reason": "fair_inning_completed",
+        "final_state_hash": "a9de974163ca2956bd87e92c1ecb9822486dbbb4b950190673a55a3388699960",
+        "replay_state_hash": "2a19133f1d1b6fe70ddc20446eca647f39e0088276a9357d2e0e32119de99e8a"
+      }
+    },
+    {
+      "seconds": 32.516342,
+      "txt_sha256": "e04f09e08ec5e3ff88eb953e59f73593b4063d5e50db9abdf7234683492da057",
+      "summary": {
+        "status": "completed",
+        "score": {
+          "away": 1,
+          "home": 1
+        },
+        "winner": null,
+        "completed_halves": {
+          "away": 1,
+          "home": 1
+        },
+        "finish_after_inning": 1,
+        "sim_tick": 15031,
+        "reason": "fair_inning_completed",
+        "final_state_hash": "a9de974163ca2956bd87e92c1ecb9822486dbbb4b950190673a55a3388699960",
+        "replay_state_hash": "2a19133f1d1b6fe70ddc20446eca647f39e0088276a9357d2e0e32119de99e8a"
+      }
+    },
+    {
+      "seconds": 32.146736,
+      "txt_sha256": "e04f09e08ec5e3ff88eb953e59f73593b4063d5e50db9abdf7234683492da057",
+      "summary": {
+        "status": "completed",
+        "score": {
+          "away": 1,
+          "home": 1
+        },
+        "winner": null,
+        "completed_halves": {
+          "away": 1,
+          "home": 1
+        },
+        "finish_after_inning": 1,
+        "sim_tick": 15031,
+        "reason": "fair_inning_completed",
+        "final_state_hash": "a9de974163ca2956bd87e92c1ecb9822486dbbb4b950190673a55a3388699960",
+        "replay_state_hash": "2a19133f1d1b6fe70ddc20446eca647f39e0088276a9357d2e0e32119de99e8a"
+      }
+    }
+  ],
+  "median_seconds": 32.516342,
+  "mean_seconds": 32.399993,
+  "ticks_per_second": 462.2598692066899,
+  "all_identical": true
+}

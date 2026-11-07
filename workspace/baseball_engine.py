@@ -2,7 +2,7 @@
 import copy
 from configuration import validate_config, VERSION, SUPPORTED_RULES
 from native import Native
-from numeric import digest, RNG, stream_seed, q
+from numeric import digest, RNG, stream_seed, q, clone_json
 from contracts import validate_named, validate, SCHEMAS
 from numeric import strict_loads, ONE
 
@@ -56,7 +56,7 @@ class BaseballEngine:
         self.restore(initial_state)
 
     def snapshot(self):
-        return copy.deepcopy(self.state)
+        return clone_json(self.state)
 
     def restore(self, snapshot):
         validate_named(snapshot, "state")
@@ -67,7 +67,7 @@ class BaseballEngine:
             raise ValueError("state_configuration_version_mismatch")
         if self.config is not None and snapshot["config_hash"] != digest(self.config):
             raise ValueError("configuration_mismatch")
-        self.state = copy.deepcopy(snapshot)
+        self.state = clone_json(snapshot)
         self.check_invariants()
         self.events = []
 

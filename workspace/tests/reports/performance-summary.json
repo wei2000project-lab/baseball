@@ -1,0 +1,42 @@
+{
+  "status": "performance_verified_no_rules_change",
+  "ruleset_version": "2.1.0",
+  "physics_version": "2.1.0",
+  "before_median_seconds": 32.516342,
+  "after_median_seconds": 12.787503,
+  "speedup": 2.5428218472363215,
+  "reduction_percent": 60.67361144128698,
+  "before_runs": 3,
+  "after_runs": 3,
+  "sim_ticks": 15031,
+  "txt_byte_identical": true,
+  "sha256": "e04f09e08ec5e3ff88eb953e59f73593b4063d5e50db9abdf7234683492da057",
+  "python_tests": 145,
+  "javascript_tests": 7,
+  "production_bots_modified": false,
+  "desktop_control_used": false,
+  "cpp_matchup_note": "Both old and optimized engines reproduce inactive runners between bases. No Bot strategy or stall-abort policy changed; tests stopped deliberately.",
+  "hidden_launcher_checks": 32,
+  "full_regulation_ticks": 108000,
+  "full_match_seconds": 88.691575,
+  "full_match_summary": {
+    "status": "completed",
+    "score": {
+      "away": 1,
+      "home": 4
+    },
+    "winner": "home",
+    "completed_halves": {
+      "away": 8,
+      "home": 8
+    },
+    "finish_after_inning": 8,
+    "sim_tick": 111486,
+    "reason": "fair_inning_completed",
+    "final_state_hash": "145aa6146e1409436b1ba58315d95aa359e4da40fc92ec5d21719d877266ecf0",
+    "replay_state_hash": "26320f65f5f46a63c3f852c11ff90bf727b73389b280a84944dde58f154d0476"
+  },
+  "full_match_txt_sha256": "671cbd4ed11a74096a4dd454af9d37a024c4d677a9de471dc1dec5ee5ef286ed",
+  "full_match_replay_verified": true,
+  "tag": "performance-v1"
+}

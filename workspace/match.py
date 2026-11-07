@@ -1,6 +1,6 @@
 """Single-match entry point. Bot scheduling and recording; no baseball rulings."""
 import argparse
-from contextlib import ExitStack
+import hashlib
 from pathlib import Path
 import sys
 import time
@@ -30,20 +30,21 @@ def run_match(away,home,config,seed,output,timeout=2.0,max_record_bytes=512*1024
         while not engine.terminal_result():
             records=[];s=engine.state
             if s["sim_tick"]%config["rules"]["decision_interval_ticks"]==0 or s["phase"]!=last_phase:
-                last_phase=s["phase"];requests={};observations={team:engine.observe(team) for team in ("away","home")}
+                last_phase=s["phase"];requests={}
+                # Both teams see the same public state; keep their envelopes/IDs separate.
+                state_json=canonical(engine.observe("away"))
+                observation_hash=hashlib.sha256(state_json).hexdigest()
                 faults={}
                 for team in ("away","home"):
                     seq+=1;decision_id=f"d{seq:09}";requests[team]=(seq,decision_id)
-                    try:hosts[team].send({"type":"observe","protocol_version":"1.0.0","decision_id":decision_id,
-                        "sim_tick":s["sim_tick"],"team_id":team,"state":observations[team],
-                        "legal_action_types":legal_types(engine,team)})
+                    try:hosts[team].send_observation(decision_id,s["sim_tick"],state_json,legal_types(engine,team))
                     except Exception as error:faults[team]=str(error)[:256]
                 for team in ("away","home"):
                     raw=None;parse_error=None;actions=None
                     if team not in faults:
                         try:actions,raw,parse_error=hosts[team].receive(requests[team][1])
                         except Exception as error:faults[team]=str(error)[:256]
-                    record=decision_record(engine,team,actions,requests[team][0],raw)
+                    record=decision_record(engine,team,actions,requests[team][0],raw,observation_hash=observation_hash)
                     record["fault"]=faults.get(team);record["parse_error"]=parse_error
                     records.append(record)
             before=engine.snapshot()

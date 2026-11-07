@@ -1,0 +1,77 @@
+{
+  "status": "live_play_stalled_by_inactive_bots",
+  "note": "Simulation clock continues and Bots answer observations; field/runner state no longer changes. This is not a frozen engine tick. Test processes stopped deliberately to avoid waiting for max_ticks.",
+  "observations": [
+    {
+      "case": "performance-cpp-before",
+      "last_recorded_change_tick": 13834,
+      "phase": "BALL_IN_PLAY",
+      "score": {
+        "away": 0,
+        "home": 0
+      },
+      "ball_holder": "away.P01",
+      "runners": [
+        {
+          "force_obligation": null,
+          "id": "home.P04",
+          "last_legal_base": 3,
+          "retouch_obligation": null,
+          "target_base": null,
+          "position_m": [
+            -4.9040810046717525,
+            5.0125332796014845
+          ]
+        },
+        {
+          "force_obligation": null,
+          "id": "home.P05",
+          "last_legal_base": 1,
+          "retouch_obligation": null,
+          "target_base": null,
+          "position_m": [
+            14.037681756541133,
+            24.447886349633336
+          ]
+        }
+      ],
+      "seconds_since_last_record_write": 314.878
+    },
+    {
+      "case": "performance-cpp-after",
+      "last_recorded_change_tick": 13834,
+      "phase": "BALL_IN_PLAY",
+      "score": {
+        "away": 0,
+        "home": 0
+      },
+      "ball_holder": "away.P01",
+      "runners": [
+        {
+          "force_obligation": null,
+          "id": "home.P04",
+          "last_legal_base": 3,
+          "retouch_obligation": null,
+          "target_base": null,
+          "position_m": [
+            -4.9040810046717525,
+            5.0125332796014845
+          ]
+        },
+        {
+          "force_obligation": null,
+          "id": "home.P05",
+          "last_legal_base": 1,
+          "retouch_obligation": null,
+          "target_base": null,
+          "position_m": [
+            14.037681756541133,
+            24.447886349633336
+          ]
+        }
+      ],
+      "seconds_since_last_record_write": 178.959
+    }
+  ],
+  "production_bot_modified": false
+}

@@ -1,0 +1,276 @@
+{
+  "total_seconds": 128.3170773000002,
+  "total_calls": 526792925,
+  "functions": [
+    {
+      "file": "copy.py",
+      "line": 119,
+      "function": "deepcopy",
+      "primitive_calls": 842667,
+      "total_calls": 58766580,
+      "self_seconds": 34.488571,
+      "cumulative_seconds": 70.277234
+    },
+    {
+      "file": "numeric.py",
+      "line": 16,
+      "function": "_normalize",
+      "primitive_calls": 61140,
+      "total_calls": 26233435,
+      "self_seconds": 20.154983,
+      "cumulative_seconds": 35.754818
+    },
+    {
+      "file": "copy.py",
+      "line": 218,
+      "function": "_deepcopy_dict",
+      "primitive_calls": 378593,
+      "total_calls": 3820583,
+      "self_seconds": 10.068211,
+      "cumulative_seconds": 69.112059
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'get' of 'dict' objects>",
+      "primitive_calls": 117622781,
+      "total_calls": 117622781,
+      "self_seconds": 9.64181,
+      "cumulative_seconds": 9.64181
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method builtins.id>",
+      "primitive_calls": 75079721,
+      "total_calls": 75079721,
+      "self_seconds": 4.912707,
+      "cumulative_seconds": 4.912707
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method builtins.isinstance>",
+      "primitive_calls": 58625754,
+      "total_calls": 58625754,
+      "self_seconds": 4.01171,
+      "cumulative_seconds": 4.044925
+    },
+    {
+      "file": "copy.py",
+      "line": 192,
+      "function": "_deepcopy_list",
+      "primitive_calls": 1140650,
+      "total_calls": 4125022,
+      "self_seconds": 3.913977,
+      "cumulative_seconds": 55.865699
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method builtins.sorted>",
+      "primitive_calls": 2885431,
+      "total_calls": 2885435,
+      "self_seconds": 3.533467,
+      "cumulative_seconds": 8.609913
+    },
+    {
+      "file": "numeric.py",
+      "line": 25,
+      "function": "<lambda>",
+      "primitive_calls": 19404808,
+      "total_calls": 19404808,
+      "self_seconds": 3.034988,
+      "cumulative_seconds": 5.062192
+    },
+    {
+      "file": "encoder.py",
+      "line": 205,
+      "function": "iterencode",
+      "primitive_calls": 132552,
+      "total_calls": 132552,
+      "self_seconds": 3.034887,
+      "cumulative_seconds": 3.034887
+    },
+    {
+      "file": "copy.py",
+      "line": 173,
+      "function": "_deepcopy_atomic",
+      "primitive_calls": 50820975,
+      "total_calls": 50820975,
+      "self_seconds": 2.829806,
+      "cumulative_seconds": 2.829806
+    },
+    {
+      "file": "copy.py",
+      "line": 232,
+      "function": "_keep_alive",
+      "primitive_calls": 7945605,
+      "total_calls": 7945605,
+      "self_seconds": 2.532766,
+      "cumulative_seconds": 3.92469
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'sub' of 're.Pattern' objects>",
+      "primitive_calls": 61140,
+      "total_calls": 61140,
+      "self_seconds": 2.403666,
+      "cumulative_seconds": 2.403666
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method unicodedata.normalize>",
+      "primitive_calls": 28783171,
+      "total_calls": 28783171,
+      "self_seconds": 2.193388,
+      "cumulative_seconds": 2.193388
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'encode' of 'str' objects>",
+      "primitive_calls": 19769998,
+      "total_calls": 19769998,
+      "self_seconds": 2.141625,
+      "cumulative_seconds": 2.141625
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'append' of 'list' objects>",
+      "primitive_calls": 16583385,
+      "total_calls": 16583385,
+      "self_seconds": 1.616589,
+      "cumulative_seconds": 1.616589
+    },
+    {
+      "file": "native.py",
+      "line": 12,
+      "function": "array",
+      "primitive_calls": 1046392,
+      "total_calls": 1046392,
+      "self_seconds": 1.369203,
+      "cumulative_seconds": 2.452437
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'items' of 'dict' objects>",
+      "primitive_calls": 9499471,
+      "total_calls": 9499471,
+      "self_seconds": 1.061853,
+      "cumulative_seconds": 1.061853
+    },
+    {
+      "file": "contracts.py",
+      "line": 13,
+      "function": "validate",
+      "primitive_calls": 16789,
+      "total_calls": 344594,
+      "self_seconds": 0.965523,
+      "cumulative_seconds": 1.31806
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'readline' of '_io.BufferedReader' objects>",
+      "primitive_calls": 3,
+      "total_calls": 30068,
+      "self_seconds": 0.68407,
+      "cumulative_seconds": 0.048297
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method builtins.len>",
+      "primitive_calls": 7059177,
+      "total_calls": 7059340,
+      "self_seconds": 0.605032,
+      "cumulative_seconds": 0.605063
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method builtins.any>",
+      "primitive_calls": 1077004,
+      "total_calls": 1077004,
+      "self_seconds": 0.588209,
+      "cumulative_seconds": 1.036938
+    },
+    {
+      "file": "txt_record.py",
+      "line": 21,
+      "function": "project",
+      "primitive_calls": 15033,
+      "total_calls": 15033,
+      "self_seconds": 0.579367,
+      "cumulative_seconds": 1.951027
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'acquire' of '_thread.lock' objects>",
+      "primitive_calls": 143713,
+      "total_calls": 172013,
+      "self_seconds": 0.55908,
+      "cumulative_seconds": 0.550029
+    },
+    {
+      "file": "baseball_engine.py",
+      "line": 74,
+      "function": "check_invariants",
+      "primitive_calls": 15032,
+      "total_calls": 15032,
+      "self_seconds": 0.525342,
+      "cumulative_seconds": 1.350865
+    },
+    {
+      "file": "threading.py",
+      "line": 1000,
+      "function": "_bootstrap",
+      "primitive_calls": 1,
+      "total_calls": 4,
+      "self_seconds": 0.508749,
+      "cumulative_seconds": 128.235721
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'flush' of '_io.BufferedWriter' objects>",
+      "primitive_calls": 30091,
+      "total_calls": 30091,
+      "self_seconds": 0.447956,
+      "cumulative_seconds": 0.447956
+    },
+    {
+      "file": "native.py",
+      "line": 14,
+      "function": "<genexpr>",
+      "primitive_calls": 5103346,
+      "total_calls": 5103346,
+      "self_seconds": 0.439419,
+      "cumulative_seconds": 0.439419
+    },
+    {
+      "file": "native.py",
+      "line": 115,
+      "function": "lerp",
+      "primitive_calls": 189379,
+      "total_calls": 189379,
+      "self_seconds": 0.435823,
+      "cumulative_seconds": 1.177121
+    },
+    {
+      "file": "numeric.py",
+      "line": 31,
+      "function": "canonical",
+      "primitive_calls": 61140,
+      "total_calls": 61140,
+      "self_seconds": 0.405171,
+      "cumulative_seconds": 42.080772
+    }
+  ]
+}

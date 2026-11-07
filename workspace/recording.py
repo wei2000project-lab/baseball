@@ -13,9 +13,9 @@ def batch_from_record(record):
     return {k:record[k] for k in BATCH_FIELDS}
 
 
-def decision_record(engine, team, requested, seq, raw_response=None):
+def decision_record(engine, team, requested, seq, raw_response=None,*,observation_hash=None):
     return {"seq":seq,"decision_id":f"d{seq:09}","observation_tick":engine.state["sim_tick"],
-            "applied_tick":engine.state["sim_tick"],"observation_hash":digest(engine.observe(team)),
+            "applied_tick":engine.state["sim_tick"],"observation_hash":observation_hash if observation_hash is not None else digest(engine.observe(team)),
             "raw_response":raw_response,"parse_error":None,"fault":None,"fallback":None,
             **engine.validate_intents(team,requested)}
 

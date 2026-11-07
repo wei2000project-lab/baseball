@@ -8,6 +8,14 @@ ONE = 1 << 32
 MASK = (1 << 64) - 1
 
 
+def clone_json(value):
+    """Copy a JSON tree; its scalar values and string keys are immutable."""
+    kind=type(value)
+    if kind is dict:return {k:clone_json(v) for k,v in value.items()}
+    if kind is list:return [clone_json(v) for v in value]
+    return value
+
+
 def q(value):
     value = Fraction(str(value)) * ONE
     return str(round(value))  # Fraction: exact nearest, ties to even
